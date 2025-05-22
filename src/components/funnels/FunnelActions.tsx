@@ -101,7 +101,7 @@ const FunnelActions = () => {
           onClick={handleAutoAssignAction}
         >
           <Clock className="w-4 h-4 mr-2" />
-          Auto-assign quotes {">"}72h
+          Auto-assign quotes &gt;72h
         </Button>
       </div>
     </div>
