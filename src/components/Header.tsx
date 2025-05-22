@@ -8,20 +8,21 @@ const Header = () => {
     <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/0c589e91-71e8-46aa-89f8-e0b62156ee97.png" 
-              alt="P²RA Logo" 
-              className="h-10"
-            />
-            <div>
-              <h1 className="text-xl font-semibold text-praktora-burgundy">
-                PRAKTORA_PRÁXIS
-              </h1>
-              <p className="text-xs text-gray-500">P²RA: INTELLIGENCE IN MOTION</p>
-            </div>
-          </div>
+          <img 
+            src="/lovable-uploads/0c589e91-71e8-46aa-89f8-e0b62156ee97.png" 
+            alt="P²RA Logo" 
+            className="h-10"
+          />
         </div>
+        
+        {/* Centered company name and tagline */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <h1 className="text-xl font-semibold text-praktora-burgundy">
+            PRAKTORA_PRÁXIS
+          </h1>
+          <p className="text-xs text-gray-500">P²RA: INTELLIGENCE IN MOTION</p>
+        </div>
+        
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="rounded-full">
             <MoonIcon className="h-5 w-5" />
