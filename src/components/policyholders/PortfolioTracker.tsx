@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -310,11 +311,13 @@ const PortfolioTracker = () => {
           <TabsContent value="policies" className="p-0">
             <div className="p-4 bg-white border-b flex flex-wrap gap-2 items-center">
               <div className="flex-1 min-w-[200px]">
-                <Input 
-                  placeholder="Search policies..." 
-                  className="max-w-xs"
-                  startDecorator={<Search className="h-4 w-4" />}
-                />
+                <div className="relative max-w-xs">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input 
+                    placeholder="Search policies..." 
+                    className="max-w-xs pl-10"
+                  />
+                </div>
               </div>
               <div className="flex gap-2 flex-wrap">
                 <Select value={classFilter} onValueChange={setClassFilter}>
@@ -454,11 +457,13 @@ const PortfolioTracker = () => {
           <TabsContent value="enquiries" className="p-0">
             <div className="p-4 bg-white border-b flex flex-wrap gap-2 items-center">
               <div className="flex-1 min-w-[200px]">
-                <Input 
-                  placeholder="Search enquiries..." 
-                  className="max-w-xs"
-                  startDecorator={<Search className="h-4 w-4" />}
-                />
+                <div className="relative max-w-xs">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input 
+                    placeholder="Search enquiries..." 
+                    className="max-w-xs pl-10"
+                  />
+                </div>
               </div>
               <div className="flex gap-2 flex-wrap">
                 <Select defaultValue="all">
@@ -586,11 +591,13 @@ const PortfolioTracker = () => {
           <TabsContent value="claims" className="p-0">
             <div className="p-4 bg-white border-b flex flex-wrap gap-2 items-center">
               <div className="flex-1 min-w-[200px]">
-                <Input 
-                  placeholder="Search claims..." 
-                  className="max-w-xs"
-                  startDecorator={<Search className="h-4 w-4" />}
-                />
+                <div className="relative max-w-xs">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input 
+                    placeholder="Search claims..." 
+                    className="max-w-xs pl-10"
+                  />
+                </div>
               </div>
               <div className="flex gap-2 flex-wrap">
                 <Select defaultValue="all">
