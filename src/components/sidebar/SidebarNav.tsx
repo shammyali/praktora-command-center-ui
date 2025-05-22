@@ -89,6 +89,8 @@ const SidebarNav = () => {
         icon={RadarIcon} 
         label="P²RA Radar" 
         badge="NEW"
+        active={location.pathname === "/radar"}
+        to="/radar"
       />
       <SidebarItem 
         icon={BarChart4Icon} 
