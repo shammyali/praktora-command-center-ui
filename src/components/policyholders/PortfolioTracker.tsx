@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -314,7 +313,7 @@ const PortfolioTracker = () => {
                 <Input 
                   placeholder="Search policies..." 
                   className="max-w-xs"
-                  prefix={<Search className="h-4 w-4 mr-2" />}
+                  startDecorator={<Search className="h-4 w-4" />}
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
@@ -458,7 +457,7 @@ const PortfolioTracker = () => {
                 <Input 
                   placeholder="Search enquiries..." 
                   className="max-w-xs"
-                  prefix={<Search className="h-4 w-4 mr-2" />}
+                  startDecorator={<Search className="h-4 w-4" />}
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
@@ -590,7 +589,7 @@ const PortfolioTracker = () => {
                 <Input 
                   placeholder="Search claims..." 
                   className="max-w-xs"
-                  prefix={<Search className="h-4 w-4 mr-2" />}
+                  startDecorator={<Search className="h-4 w-4" />}
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
