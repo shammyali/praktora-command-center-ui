@@ -256,7 +256,9 @@ const Sidebar = () => {
           <SidebarItem 
             icon={UsersIcon} 
             label="Policyholders" 
-            badge="NEW" 
+            badge="NEW"
+            active={location.pathname === "/policyholders"}
+            to="/policyholders" 
           />
           <SidebarItem 
             icon={MailIcon} 

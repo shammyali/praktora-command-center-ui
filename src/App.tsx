@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import LiveWorkflows from "./pages/LiveWorkflows";
 import WhatsAppHub from "./pages/WhatsAppHub";
 import ActiveEnquiries from "./pages/ActiveEnquiries";
+import PolicyholderProfile from "./pages/PolicyholderProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/workflows" element={<LiveWorkflows />} />
           <Route path="/whatsapp" element={<WhatsAppHub />} />
           <Route path="/enquiries" element={<ActiveEnquiries />} />
+          <Route path="/policyholders" element={<PolicyholderProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
