@@ -15,7 +15,10 @@ const VoiceCommandWithTooltip = ({ onCommand }: VoiceCommandWithTooltipProps) =>
   const sampleCommands = [
     "Summarize the last 2 hours",
     "List quotes over AED 25,000",
-    "Who hasn't closed any quotes this week?"
+    "Who hasn't closed any quotes this week?",
+    "Show all high priority workflows",
+    "What's the status of claim CL-2023-001?",
+    "How many policies are awaiting renewal?"
   ];
   
   return (

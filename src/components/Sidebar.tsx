@@ -236,6 +236,8 @@ const Sidebar = () => {
             label="Live Workflows" 
             badge={7} 
             greenDot={true} 
+            active={location.pathname === "/workflows"}
+            to="/workflows"
           />
           <SidebarItem 
             icon={MessageCircleIcon} 
