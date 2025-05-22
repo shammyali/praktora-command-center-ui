@@ -4,7 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { UserCheck, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { UserCheck, Star, Phone, Mail, MessageSquare } from "lucide-react";
+import { toast } from "sonner";
 
 const PolicyholderOverview = () => {
   // Sample data - would be replaced with real data from API
@@ -21,6 +23,22 @@ const PolicyholderOverview = () => {
     whatsApp: "+971 50 123 4567",
     kycCompletionStatus: "completed", // completed, incomplete, expiring
     kycCompletionPercentage: 100,
+  };
+
+  const handleEmailContact = () => {
+    window.open(`mailto:${policyholder.email}`);
+    toast.success(`Opening email to ${policyholder.email}`);
+  };
+
+  const handlePhoneContact = () => {
+    window.open(`tel:${policyholder.mobile}`);
+    toast.success(`Calling ${policyholder.mobile}`);
+  };
+
+  const handleWhatsAppContact = () => {
+    // WhatsApp API link format
+    window.open(`https://wa.me/${policyholder.whatsApp.replace(/\s+/g, "")}`);
+    toast.success(`Opening WhatsApp chat with ${policyholder.whatsApp}`);
   };
 
   return (
@@ -84,15 +102,45 @@ const PolicyholderOverview = () => {
             <div className="grid grid-cols-1 gap-y-2 mb-4">
               <div>
                 <p className="text-sm text-muted-foreground">Email</p>
-                <p>{policyholder.email}</p>
+                <div className="flex items-center gap-2">
+                  <p>{policyholder.email}</p>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleEmailContact}
+                    className="p-1 h-auto"
+                  >
+                    <Mail className="h-4 w-4 text-praktora-burgundy" />
+                  </Button>
+                </div>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Mobile</p>
-                <p>{policyholder.mobile}</p>
+                <div className="flex items-center gap-2">
+                  <p>{policyholder.mobile}</p>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handlePhoneContact}
+                    className="p-1 h-auto"
+                  >
+                    <Phone className="h-4 w-4 text-praktora-burgundy" />
+                  </Button>
+                </div>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">WhatsApp</p>
-                <p>{policyholder.whatsApp}</p>
+                <div className="flex items-center gap-2">
+                  <p>{policyholder.whatsApp}</p>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleWhatsAppContact}
+                    className="p-1 h-auto"
+                  >
+                    <MessageSquare className="h-4 w-4 text-praktora-burgundy" />
+                  </Button>
+                </div>
               </div>
             </div>
             
@@ -113,10 +161,6 @@ const PolicyholderOverview = () => {
               <Progress 
                 value={policyholder.kycCompletionPercentage} 
                 className="h-2" 
-                indicatorClassName={
-                  policyholder.kycCompletionStatus === "completed" ? "bg-green-500" : 
-                  policyholder.kycCompletionStatus === "incomplete" ? "bg-red-500" : "bg-amber-500"
-                }
               />
             </div>
           </div>

@@ -47,8 +47,7 @@ const PolicyholderProfile = () => {
     <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header 
-          // Fixed: Passing props in the correct format expected by the Header component
+        <Header
           title="Policyholder Profile" 
           subtitle="Customer Intelligence Hub"
         />
