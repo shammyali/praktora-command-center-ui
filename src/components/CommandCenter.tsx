@@ -1,11 +1,12 @@
 
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon } from "lucide-react";
+import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 import { Badge } from "./ui/badge";
+import { useState } from "react";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -51,14 +52,34 @@ const CommandSuggestion = ({ text }: { text: string }) => {
   return (
     <Badge 
       variant="outline" 
-      className="px-3 py-1 cursor-pointer hover:bg-gray-100 border-[#9C2D55]/50 text-gray-700"
+      className="px-3 py-1 cursor-pointer hover:bg-[#9C2D55]/10 active:bg-[#9C2D55]/20 transition-colors duration-150 border-[#9C2D55]/50 text-gray-700"
     >
       {text}
     </Badge>
   );
 };
 
+const EmptyEngagements = () => {
+  return (
+    <Card className="border border-dashed bg-white/50 p-4 text-center">
+      <div className="flex flex-col items-center gap-2">
+        <PenIcon className="h-5 w-5 text-gray-400" />
+        <p className="text-sm text-gray-600">
+          No active engagements at the moment. Use Instant Commands to get started.
+        </p>
+      </div>
+    </Card>
+  );
+};
+
 const CommandCenter = () => {
+  const [activeEngagements, setActiveEngagements] = useState([
+    { title: "Commercial Insurance Renewal", description: "ABC Manufacturing renewal due in 30 days" },
+    { title: "New Business Quote", description: "XYZ Corp liability coverage proposal" },
+    { title: "Claims Processing", description: "Follow up on open claims for Johnson account" },
+    { title: "Risk Assessment", description: "Complete risk profile for healthcare client" }
+  ]);
+
   return (
     <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
@@ -96,22 +117,17 @@ const CommandCenter = () => {
               <Button variant="ghost" size="sm" className="text-sm">View all</Button>
             </div>
             <div className="space-y-3">
-              <ProjectCard 
-                title="Commercial Insurance Renewal" 
-                description="ABC Manufacturing renewal due in 30 days" 
-              />
-              <ProjectCard 
-                title="New Business Quote" 
-                description="XYZ Corp liability coverage proposal" 
-              />
-              <ProjectCard 
-                title="Claims Processing" 
-                description="Follow up on open claims for Johnson account" 
-              />
-              <ProjectCard 
-                title="Risk Assessment" 
-                description="Complete risk profile for healthcare client" 
-              />
+              {activeEngagements.length > 0 ? (
+                activeEngagements.map((project, index) => (
+                  <ProjectCard 
+                    key={index}
+                    title={project.title} 
+                    description={project.description} 
+                  />
+                ))
+              ) : (
+                <EmptyEngagements />
+              )}
             </div>
           </div>
         </div>
@@ -126,7 +142,10 @@ const CommandCenter = () => {
             <ResizablePanel defaultSize={70} minSize={50}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
                 <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
-                  <p className="text-gray-500 italic">Try: 'Compare RSA and AXA for MI002' or 'Create endorsement for GPM123'</p>
+                  <div className="flex items-center gap-2">
+                    <SparklesIcon className="h-5 w-5 text-[#5A6B82]" />
+                    <p className="text-[#5A6B82] italic font-semibold">Try: 'Compare RSA and AXA for MI002' or 'Create endorsement for GPM123'</p>
+                  </div>
                 </div>
               </div>
             </ResizablePanel>
@@ -178,3 +197,4 @@ const CommandCenter = () => {
 };
 
 export default CommandCenter;
+

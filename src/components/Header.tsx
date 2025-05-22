@@ -24,8 +24,8 @@ const Header = () => {
         
         <div className="flex items-center gap-4">
           <div className="flex items-center mr-2">
-            <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5"></span>
-            <span className="text-xs text-gray-500">P²RA Status: Online</span>
+            <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5 animate-pulse-slow"></span>
+            <span className="text-xs text-gray-600">P²RA Status: Online</span>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full">
             <MoonIcon className="h-5 w-5" />
