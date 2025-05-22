@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
@@ -6,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { RefreshCw, Volume2, AlertTriangle, Export, BarChart2 } from "lucide-react";
+import { RefreshCw, Volume2, AlertTriangle, FileDown, BarChart2 } from "lucide-react";
 import { 
   activeEnquiries, 
   EnquiryItem, 
@@ -186,7 +185,7 @@ export default function ActiveEnquiries() {
                 onClick={handleExport}
                 className="hidden sm:flex items-center gap-1"
               >
-                <Export className="h-3.5 w-3.5" />
+                <FileDown className="h-3.5 w-3.5" />
                 Export
               </Button>
               
