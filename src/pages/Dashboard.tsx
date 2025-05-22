@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -8,7 +7,6 @@ import AiHighlights from "@/components/dashboard/AiHighlights";
 import AgentLeaderboard from "@/components/dashboard/AgentLeaderboard";
 import CriticalAlerts from "@/components/dashboard/CriticalAlerts";
 import VoiceCommand from "@/components/dashboard/VoiceCommand";
-import AskPRA from "@/components/dashboard/AskPRA";
 
 const Dashboard = () => {
   const [voiceCommandResult, setVoiceCommandResult] = useState<string | null>(null);
@@ -45,11 +43,11 @@ const Dashboard = () => {
           )}
           
           <div className="mb-6">
-            <ActivityTimeline />
+            <CriticalAlerts />
           </div>
-
+          
           <div className="mb-6">
-            <AskPRA />
+            <ActivityTimeline />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -64,10 +62,6 @@ const Dashboard = () => {
             <div className="lg:col-span-4">
               <AgentLeaderboard />
             </div>
-          </div>
-          
-          <div className="mt-6">
-            <CriticalAlerts />
           </div>
         </main>
       </div>
