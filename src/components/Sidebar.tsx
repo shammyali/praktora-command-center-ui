@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -28,18 +29,12 @@ interface SidebarItemProps {
   redDot?: boolean;
   greenDot?: boolean;
   onClick?: () => void;
+  to?: string;
 }
 
-const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot, greenDot, onClick }: SidebarItemProps) => {
-  return (
-    <Button
-      variant="ghost"
-      className={cn(
-        "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        active && "bg-sidebar-accent font-medium text-[#9C2D55]"
-      )}
-      onClick={onClick}
-    >
+const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot, greenDot, onClick, to }: SidebarItemProps) => {
+  const content = (
+    <>
       <Icon className={cn("h-5 w-5", active && "text-[#9C2D55]")} />
       <span className="flex-grow text-left">{label}</span>
       {dots && (
@@ -86,6 +81,37 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot, greenDot,
           {badge}
         </span>
       )}
+    </>
+  );
+
+  if (to) {
+    return (
+      <Button
+        variant="ghost"
+        className={cn(
+          "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          active && "bg-sidebar-accent font-medium text-[#9C2D55]"
+        )}
+        onClick={onClick}
+        asChild
+      >
+        <Link to={to}>
+          {content}
+        </Link>
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      className={cn(
+        "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        active && "bg-sidebar-accent font-medium text-[#9C2D55]"
+      )}
+      onClick={onClick}
+    >
+      {content}
     </Button>
   );
 };
@@ -176,6 +202,7 @@ const AISupportChat = () => {
 
 const Sidebar = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
 
   return (
     <div className="flex h-full w-60 flex-col border-r border-gray-200 bg-sidebar">
@@ -192,13 +219,44 @@ const Sidebar = () => {
       
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid gap-1 px-2">
-          <SidebarItem icon={HomeIcon} label="Dashboard" active />
-          <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} greenDot={true} />
-          <SidebarItem icon={MessageCircleIcon} label="WhatsApp" badge={3} greenDot={true} />
-          <SidebarItem icon={FileTextIcon} label="Active Enquiries" dots={3} />
-          <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
-          <SidebarItem icon={MailIcon} label="Unactioned email" badge={5} redDot={true} />
-          <SidebarItem icon={HistoryIcon} label="History" />
+          <SidebarItem 
+            icon={HomeIcon} 
+            label="Dashboard" 
+            active={location.pathname === "/dashboard"} 
+            to="/dashboard" 
+          />
+          <SidebarItem 
+            icon={FolderIcon} 
+            label="Live Workflows" 
+            badge={7} 
+            greenDot={true} 
+          />
+          <SidebarItem 
+            icon={MessageCircleIcon} 
+            label="WhatsApp" 
+            badge={3} 
+            greenDot={true} 
+          />
+          <SidebarItem 
+            icon={FileTextIcon} 
+            label="Active Enquiries" 
+            dots={3} 
+          />
+          <SidebarItem 
+            icon={UsersIcon} 
+            label="Policyholders" 
+            badge="NEW" 
+          />
+          <SidebarItem 
+            icon={MailIcon} 
+            label="Unactioned email" 
+            badge={5} 
+            redDot={true} 
+          />
+          <SidebarItem 
+            icon={HistoryIcon} 
+            label="History" 
+          />
         </nav>
 
         <Separator className="my-4" />
