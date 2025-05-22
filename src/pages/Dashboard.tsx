@@ -8,6 +8,7 @@ import AiHighlights from "@/components/dashboard/AiHighlights";
 import AgentLeaderboard from "@/components/dashboard/AgentLeaderboard";
 import CriticalAlerts from "@/components/dashboard/CriticalAlerts";
 import VoiceCommand from "@/components/dashboard/VoiceCommand";
+import AskPRA from "@/components/dashboard/AskPRA";
 
 const Dashboard = () => {
   const [voiceCommandResult, setVoiceCommandResult] = useState<string | null>(null);
@@ -45,6 +46,10 @@ const Dashboard = () => {
           
           <div className="mb-6">
             <ActivityTimeline />
+          </div>
+
+          <div className="mb-6">
+            <AskPRA />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

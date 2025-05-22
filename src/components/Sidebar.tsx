@@ -221,6 +221,12 @@ const Sidebar = () => {
         <nav className="grid gap-1 px-2">
           <SidebarItem 
             icon={HomeIcon} 
+            label="P²RA" 
+            active={location.pathname === "/"} 
+            to="/" 
+          />
+          <SidebarItem 
+            icon={HomeIcon} 
             label="Dashboard" 
             active={location.pathname === "/dashboard"} 
             to="/dashboard" 
@@ -265,16 +271,12 @@ const Sidebar = () => {
           Support & AI Assistance
         </div>
         <nav className="grid gap-1 px-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <div>
-                <SidebarItem icon={MessageSquareIcon} label="Ask P²RA" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-4" align="start">
-              <AISupportChat />
-            </PopoverContent>
-          </Popover>
+          <SidebarItem 
+            icon={MessageSquareIcon} 
+            label="Ask P²RA" 
+            active={false} 
+            to="/dashboard" 
+          />
           <SidebarItem icon={SettingsIcon} label="Settings" />
         </nav>
       </div>
