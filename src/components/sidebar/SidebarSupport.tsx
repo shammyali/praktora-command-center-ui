@@ -22,7 +22,6 @@ const SidebarSupport = () => {
           active={showAIChat}
           onClick={() => setShowAIChat(!showAIChat)}
         />
-        <SidebarItem icon={SettingsIcon} label="Settings" />
       </nav>
       
       {showAIChat && (
@@ -30,6 +29,11 @@ const SidebarSupport = () => {
           <AISupportChat />
         </div>
       )}
+      
+      {/* Settings item moved below the AI chat */}
+      <nav className="grid gap-1 px-2 mt-2">
+        <SidebarItem icon={SettingsIcon} label="Settings" />
+      </nav>
     </>
   );
 };
