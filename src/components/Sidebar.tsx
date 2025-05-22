@@ -21,9 +21,10 @@ interface SidebarItemProps {
   label: string;
   active?: boolean;
   badge?: string | number;
+  dots?: number;
 }
 
-const SidebarItem = ({ icon: Icon, label, active, badge }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, active, badge, dots }: SidebarItemProps) => {
   return (
     <Button
       variant="ghost"
@@ -34,6 +35,17 @@ const SidebarItem = ({ icon: Icon, label, active, badge }: SidebarItemProps) => 
     >
       <Icon className={cn("h-5 w-5", active && "text-[#9C2D55]")} />
       <span className="flex-grow text-left">{label}</span>
+      {dots && (
+        <div className="flex gap-1 ml-2">
+          {Array.from({ length: dots }).map((_, i) => (
+            <span 
+              key={i} 
+              className="h-2 w-2 rounded-full bg-green-500 animate-pulse-slow"
+              style={{ animationDelay: `${i * 0.3}s` }}
+            />
+          ))}
+        </div>
+      )}
       {badge && (
         <span className={cn(
           "ml-auto rounded-full px-2 py-0.5 text-xs",
@@ -69,7 +81,7 @@ const Sidebar = () => {
           <SidebarItem icon={HomeIcon} label="Dashboard" active />
           <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} />
           <SidebarItem icon={MessageCircleIcon} label="WhatsApp" />
-          <SidebarItem icon={FileTextIcon} label="Documents" />
+          <SidebarItem icon={FileTextIcon} label="Active Enquiries" dots={3} />
           <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
           <SidebarItem icon={HistoryIcon} label="History" />
         </nav>
