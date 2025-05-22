@@ -20,8 +20,9 @@ const Header = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <h1 className="text-lg font-semibold text-praktora-burgundy relative">
             P²RA: Intelligence in Motion
-            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy"></span>
-            <span className="absolute bottom-0 left-0 h-[2px] w-[30%] bg-white opacity-70 blur-sm animate-glow-move"></span>
+            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
+              <span className="absolute h-full w-[20%] bg-white/30 animate-shine"></span>
+            </span>
           </h1>
           <p className="text-xs text-[#9C2D55]">Connected. Listening. Ready for Execution...</p>
         </div>
