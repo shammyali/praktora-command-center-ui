@@ -39,9 +39,13 @@ const Header = () => {
             <BellIcon className="h-5 w-5" />
             <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
           </Button>
-          <a href="#" className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm">
-            Switch to PraktoraWeb
-            <ExternalLinkIcon className="h-4 w-4" />
+          <a href="#" className="flex items-center gap-1">
+            <img 
+              src="/lovable-uploads/a312dc92-7543-4167-80ca-a8dd1b16bcc6.png" 
+              alt="PraktoraWeb Logo" 
+              className="h-6 transition-transform hover:scale-105" 
+            />
+            <ExternalLinkIcon className="h-4 w-4 text-blue-600 hover:text-blue-800" />
           </a>
           <Avatar className="h-8 w-8">
             <AvatarFallback className="bg-praktora-burgundy text-white">BP</AvatarFallback>
