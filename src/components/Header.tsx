@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const Header = () => {
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
           <h1 className="text-xl font-semibold text-praktora-burgundy mr-2">
