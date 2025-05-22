@@ -197,7 +197,7 @@ const CommandCenter = () => {
             {/* Prompt Area - 30% of the available space initially */}
             <ResizablePanel defaultSize={30} minSize={15}>
               <div className="h-full p-5 bg-white overflow-auto">
-                <Card className="shadow-md h-[200px] border-[#9C2D55]/20 flex flex-col">
+                <Card className="shadow-md h-[250px] border-[#9C2D55]/20 flex flex-col">
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-medium text-lg">P²RA Command Console</h3>
