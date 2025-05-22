@@ -1,19 +1,19 @@
 
 import { useState } from "react";
-import { Filter } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Filter, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 interface WorkflowFiltersProps {
   onFilterChange: (filters: WorkflowFilters) => void;
@@ -25,6 +25,43 @@ export interface WorkflowFilters {
   assignedAgent: string;
   age: string;
 }
+
+const businessClasses = [
+  { label: "All Classes", value: "all" },
+  { label: "Motor", value: "motor" },
+  { label: "Medical", value: "medical" },
+  { label: "Property", value: "property" },
+  { label: "Liability", value: "liability" },
+  { label: "Specialty", value: "specialty" },
+];
+
+const stageGroups = [
+  { label: "All Stages", value: "all" },
+  { label: "Pre-Quote", value: "pre-quote" },
+  { label: "Quote", value: "quote" },
+  { label: "Post-Issuance", value: "post-issuance" },
+  { label: "Settlement", value: "settlement" },
+];
+
+const agents = [
+  { label: "All Agents", value: "all" },
+  { label: "Ahmed K.", value: "Ahmed K." },
+  { label: "Sara L.", value: "Sara L." },
+  { label: "Mohammed R.", value: "Mohammed R." },
+  { label: "Fatima Q.", value: "Fatima Q." },
+  { label: "Hassan Z.", value: "Hassan Z." },
+  { label: "Layla M.", value: "Layla M." },
+  { label: "Omar J.", value: "Omar J." },
+];
+
+const ageOptions = [
+  { label: "Any Age", value: "all" },
+  { label: "1+ days", value: "1" },
+  { label: "3+ days", value: "3" },
+  { label: "5+ days", value: "5" },
+  { label: "7+ days", value: "7" },
+  { label: "14+ days", value: "14" },
+];
 
 const WorkflowFilters = ({ onFilterChange }: WorkflowFiltersProps) => {
   const [filters, setFilters] = useState<WorkflowFilters>({
@@ -39,6 +76,43 @@ const WorkflowFilters = ({ onFilterChange }: WorkflowFiltersProps) => {
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
+  
+  const CustomDropdown = ({ 
+    options, 
+    value, 
+    onChange, 
+    label 
+  }: { 
+    options: { label: string; value: string; }[],
+    value: string,
+    onChange: (value: string) => void,
+    label: string
+  }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="h-8 justify-between">
+          {options.find(opt => opt.value === value)?.label || label}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        {options.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            className={cn(
+              "flex items-center gap-2 cursor-pointer",
+              option.value === value && "bg-muted"
+            )}
+          >
+            {option.value === value && <Check className="h-4 w-4" />}
+            <span className={option.value === value ? "font-medium" : ""}>
+              {option.label}
+            </span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <Popover>
@@ -54,85 +128,43 @@ const WorkflowFilters = ({ onFilterChange }: WorkflowFiltersProps) => {
           
           <div className="space-y-1">
             <label className="text-xs font-medium">Business Class</label>
-            <Select
+            <CustomDropdown
+              options={businessClasses}
               value={filters.businessClass}
-              onValueChange={(value) => handleFilterChange("businessClass", value)}
-            >
-              <SelectTrigger className="h-8">
-                <SelectValue placeholder="All Classes" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Classes</SelectItem>
-                <SelectItem value="motor">Motor</SelectItem>
-                <SelectItem value="medical">Medical</SelectItem>
-                <SelectItem value="property">Property</SelectItem>
-                <SelectItem value="liability">Liability</SelectItem>
-                <SelectItem value="specialty">Specialty</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(value) => handleFilterChange("businessClass", value)}
+              label="All Classes"
+            />
           </div>
           
           <div className="space-y-1">
             <label className="text-xs font-medium">Workflow Stage Group</label>
-            <Select
+            <CustomDropdown
+              options={stageGroups}
               value={filters.stageGroup}
-              onValueChange={(value) => handleFilterChange("stageGroup", value)}
-            >
-              <SelectTrigger className="h-8">
-                <SelectValue placeholder="All Stages" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Stages</SelectItem>
-                <SelectItem value="pre-quote">Pre-Quote</SelectItem>
-                <SelectItem value="quote">Quote</SelectItem>
-                <SelectItem value="post-issuance">Post-Issuance</SelectItem>
-                <SelectItem value="settlement">Settlement</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(value) => handleFilterChange("stageGroup", value)}
+              label="All Stages"
+            />
           </div>
           
           <div className="space-y-1">
             <label className="text-xs font-medium">Assigned Agent</label>
-            <Select
+            <CustomDropdown
+              options={agents}
               value={filters.assignedAgent}
-              onValueChange={(value) => handleFilterChange("assignedAgent", value)}
-            >
-              <SelectTrigger className="h-8">
-                <SelectValue placeholder="All Agents" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Agents</SelectItem>
-                <SelectItem value="Ahmed K.">Ahmed K.</SelectItem>
-                <SelectItem value="Sara L.">Sara L.</SelectItem>
-                <SelectItem value="Mohammed R.">Mohammed R.</SelectItem>
-                <SelectItem value="Fatima Q.">Fatima Q.</SelectItem>
-                <SelectItem value="Hassan Z.">Hassan Z.</SelectItem>
-                <SelectItem value="Layla M.">Layla M.</SelectItem>
-                <SelectItem value="Omar J.">Omar J.</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(value) => handleFilterChange("assignedAgent", value)}
+              label="All Agents"
+            />
           </div>
           
           <div className="space-y-1">
             <label className="text-xs font-medium">Age</label>
-            <Select
+            <CustomDropdown
+              options={ageOptions}
               value={filters.age}
-              onValueChange={(value) => handleFilterChange("age", value)}
-            >
-              <SelectTrigger className="h-8">
-                <SelectValue placeholder="Any Age" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Any Age</SelectItem>
-                <SelectItem value="1">1+ days</SelectItem>
-                <SelectItem value="3">3+ days</SelectItem>
-                <SelectItem value="5">5+ days</SelectItem>
-                <SelectItem value="7">7+ days</SelectItem>
-                <SelectItem value="14">14+ days</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(value) => handleFilterChange("age", value)}
+              label="Any Age"
+            />
           </div>
-          
         </div>
       </PopoverContent>
     </Popover>
