@@ -3,6 +3,7 @@ import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -46,9 +47,9 @@ const ProjectCard = ({ title, description }: ProjectCardProps) => {
 
 const CommandCenter = () => {
   return (
-    <div className="flex-1 overflow-auto bg-gradient-to-br from-white to-blue-50">
+    <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
-        {/* Right Panel for Action Cards and Recent Projects - Now moved to top */}
+        {/* Right Panel for Action Cards and Recent Projects */}
         <div className="fixed top-16 right-0 bottom-0 w-80 border-l border-gray-200 bg-white p-5 overflow-auto z-10">
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
@@ -102,34 +103,51 @@ const CommandCenter = () => {
           </div>
         </div>
         
-        {/* Main Content Area - Now full height and positioned at bottom */}
-        <div className="fixed left-60 right-80 bottom-0 top-16 p-5 bg-gradient-to-br from-white to-blue-50">
-          <div className="flex flex-col h-full justify-end">
-            <div className="mb-0">
-              <Card className="shadow-md border-praktora-burgundy/20">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-lg">AI Assistant</h3>
-                    <span className="text-xs text-gray-500">20/2000</span>
-                  </div>
-                  <Separator className="my-3" />
-                  <Textarea 
-                    placeholder="Ask any question about clients, policies, or market trends..." 
-                    className="min-h-48 resize-none focus-visible:ring-0 border-none bg-transparent" 
-                  />
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">Attach</Button>
-                      <Button variant="outline" size="sm">Templates</Button>
+        {/* Main Content Area - Using ResizablePanelGroup for flexible sizing */}
+        <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
+          <ResizablePanelGroup
+            direction="vertical"
+            className="h-full"
+          >
+            {/* Display Area - 70% of the available space initially */}
+            <ResizablePanel defaultSize={70} minSize={50}>
+              <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
+                <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
+                  <p className="text-gray-500">This is the display area for prompt output</p>
+                </div>
+              </div>
+            </ResizablePanel>
+            
+            <ResizableHandle withHandle />
+            
+            {/* Prompt Area - 30% of the available space initially */}
+            <ResizablePanel defaultSize={30} minSize={15}>
+              <div className="h-full p-5 bg-white">
+                <Card className="shadow-md h-full border-praktora-burgundy/20 flex flex-col">
+                  <CardContent className="p-5 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium text-lg">AI Assistant</h3>
+                      <span className="text-xs text-gray-500">20/2000</span>
                     </div>
-                    <Button size="sm" className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white">
-                      Send Request
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+                    <Separator className="my-3" />
+                    <Textarea 
+                      placeholder="Ask any question about clients, policies, or market trends..." 
+                      className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
+                    />
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">Attach</Button>
+                        <Button variant="outline" size="sm">Templates</Button>
+                      </div>
+                      <Button size="sm" className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white">
+                        Send Request
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </div>
     </div>
