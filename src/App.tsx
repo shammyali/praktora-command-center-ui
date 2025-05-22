@@ -12,6 +12,7 @@ import ActiveEnquiries from "./pages/ActiveEnquiries";
 import PolicyholderProfile from "./pages/PolicyholderProfile";
 import UnactionedEmailHub from "./pages/UnactionedEmailHub";
 import TelegramHub from "./pages/TelegramHub";
+import IntelligenceHub from "./pages/IntelligenceHub";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/policyholders" element={<PolicyholderProfile />} />
           <Route path="/emails" element={<UnactionedEmailHub />} />
           <Route path="/telegram" element={<TelegramHub />} />
+          <Route path="/intelligence" element={<IntelligenceHub />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
