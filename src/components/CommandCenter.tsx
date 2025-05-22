@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
@@ -219,7 +218,9 @@ const CommandCenter = () => {
                 <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
                   <div className="flex items-center gap-2">
                     <SparklesIcon className="h-5 w-5 text-[#5A6B82]" />
-                    <p className="text-[#5A6B82] italic font-semibold">Try: 'Compare RSA and AXA for MI002' or 'Create endorsement for GPM123'</p>
+                    <p className="text-[#5A6B82] italic font-semibold">
+                      Try: 'Compare RSA and AXA for MP2118' or 'Create endorsement for GM123/1'
+                    </p>
                   </div>
                 </div>
               </div>
@@ -241,28 +242,37 @@ const CommandCenter = () => {
                     <div className="flex gap-2 mb-3 flex-wrap">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="Create New Enquiry" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Start a new customer query with auto-filled market requirements</p>
-                        </TooltipContent>
-                      </Tooltip>
-
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion text="Upload Emirates ID" />
+                          <CommandSuggestion text="Upload Emirates ID and generate new enquiry" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Scan and auto-extract customer details from Emirates ID</p>
                         </TooltipContent>
                       </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <CommandSuggestion text="Convert quote MP2396 to policy and issue invoice" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Automatically convert an existing quote to policy and generate invoice</p>
+                        </TooltipContent>
+                      </Tooltip>
                       
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="Track Pending Endorsements" />
+                          <CommandSuggestion text="Send WhatsApp quote to Ali Qamar" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>View all endorsements awaiting insurer approval</p>
+                          <p>Send quote details via WhatsApp to the customer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <CommandSuggestion text="List all unpaid invoices over 30 days" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>View all outstanding invoices that are overdue by 30+ days</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
