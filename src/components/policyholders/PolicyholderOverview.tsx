@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { UserCheck, Star, Phone, Mail, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const PolicyholderOverview = () => {
   // Sample data - would be replaced with real data from API
   const policyholder = {
     name: "Ahmed Al Maktoum",
-    type: "Individual",
+    type: "Individual", // or "Company"
     isVip: true,
     assignedAgent: "Sarah Johnson",
     source: "Agent",
@@ -23,6 +24,8 @@ const PolicyholderOverview = () => {
     whatsApp: "+971 50 123 4567",
     kycCompletionStatus: "completed", // completed, incomplete, expiring
     kycCompletionPercentage: 100,
+    // New field for profile image or company logo
+    profileImage: "/lovable-uploads/66a81866-061b-4545-bd43-d1742f06411f.png" // Sample placeholder
   };
 
   const handleEmailContact = () => {
@@ -41,50 +44,79 @@ const PolicyholderOverview = () => {
     toast.success(`Opening WhatsApp chat with ${policyholder.whatsApp}`);
   };
 
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .toUpperCase();
+  };
+
   return (
     <Card className="border-t-4 border-t-[#9C2D55]">
       <CardContent className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left column - Client basic info */}
+          {/* Left column - Client basic info and profile image */}
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-2xl font-semibold">{policyholder.name}</h2>
-              {policyholder.isVip && (
-                <Badge className="bg-amber-500">
-                  <Star className="h-3 w-3 mr-1" />
-                  VIP
-                </Badge>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3">
-              <div>
-                <p className="text-sm text-muted-foreground">Client Type</p>
-                <p>{policyholder.type}</p>
+            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-4">
+              {/* Profile Image or Logo */}
+              <div className="flex-shrink-0">
+                <Avatar className="h-32 w-32 border-2 border-[#9C2D55]">
+                  <AvatarImage 
+                    src={policyholder.profileImage} 
+                    alt={`${policyholder.name} ${policyholder.type === "Individual" ? "photo" : "logo"}`} 
+                  />
+                  <AvatarFallback className="text-3xl bg-[#9C2D55] text-white">
+                    {getInitials(policyholder.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-xs text-center mt-1 text-muted-foreground">
+                  {policyholder.type === "Individual" ? "Client Photo" : "Company Logo"}
+                </div>
               </div>
+
+              {/* Client Name and VIP Badge */}
               <div>
-                <p className="text-sm text-muted-foreground">Assigned Agent</p>
-                <p>{policyholder.assignedAgent}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Source</p>
-                <p>{policyholder.source}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Category/Group</p>
-                <p>{policyholder.category}</p>
-              </div>
-              <div className="col-span-1 md:col-span-2">
-                <p className="text-sm text-muted-foreground">Client Status</p>
-                <Badge 
-                  className={
-                    policyholder.status === "Active" ? "bg-green-500" : 
-                    policyholder.status === "Inactive" ? "bg-gray-500" :
-                    policyholder.status === "Dormant" ? "bg-amber-500" : "bg-red-500"
-                  }
-                >
-                  {policyholder.status}
-                </Badge>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-semibold">{policyholder.name}</h2>
+                  {policyholder.isVip && (
+                    <Badge className="bg-amber-500">
+                      <Star className="h-3 w-3 mr-1" />
+                      VIP
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3 mt-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Client Type</p>
+                    <p>{policyholder.type}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Assigned Agent</p>
+                    <p>{policyholder.assignedAgent}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Source</p>
+                    <p>{policyholder.source}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Category/Group</p>
+                    <p>{policyholder.category}</p>
+                  </div>
+                  <div className="col-span-1 md:col-span-2">
+                    <p className="text-sm text-muted-foreground">Client Status</p>
+                    <Badge 
+                      className={
+                        policyholder.status === "Active" ? "bg-green-500" : 
+                        policyholder.status === "Inactive" ? "bg-gray-500" :
+                        policyholder.status === "Dormant" ? "bg-amber-500" : "bg-red-500"
+                      }
+                    >
+                      {policyholder.status}
+                    </Badge>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
