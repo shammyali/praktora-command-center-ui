@@ -1,9 +1,11 @@
+
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
+import { Badge } from "./ui/badge";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -45,33 +47,44 @@ const ProjectCard = ({ title, description }: ProjectCardProps) => {
   );
 };
 
+const CommandSuggestion = ({ text }: { text: string }) => {
+  return (
+    <Badge 
+      variant="outline" 
+      className="px-3 py-1 cursor-pointer hover:bg-gray-100 border-[#9C2D55]/50 text-gray-700"
+    >
+      {text}
+    </Badge>
+  );
+};
+
 const CommandCenter = () => {
   return (
     <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
-        {/* Right Panel for Action Cards and Recent Projects */}
+        {/* Right Panel for Instant Commands and Active Engagements */}
         <div className="fixed top-16 right-0 bottom-0 w-80 border-l border-gray-200 bg-white p-5 overflow-auto z-10">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+            <h2 className="text-lg font-semibold mb-4">Instant Commands</h2>
             <div className="space-y-3">
               <ActionCard 
                 icon={PenIcon} 
-                title="Create policy draft" 
+                title="Start New Policy" 
                 color="bg-amber-400" 
               />
               <ActionCard 
                 icon={ImageIcon} 
-                title="Generate proposals" 
+                title="Compare Quotes" 
                 color="bg-blue-400" 
               />
               <ActionCard 
                 icon={UserIcon} 
-                title="Client onboarding" 
+                title="Register New Customer" 
                 color="bg-green-400" 
               />
               <ActionCard 
                 icon={CodeIcon} 
-                title="Policy analysis" 
+                title="Summarize Coverage" 
                 color="bg-purple-400" 
               />
             </div>
@@ -79,7 +92,7 @@ const CommandCenter = () => {
 
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Recent Projects</h2>
+              <h2 className="text-lg font-semibold">Active Engagements</h2>
               <Button variant="ghost" size="sm" className="text-sm">View all</Button>
             </div>
             <div className="space-y-3">
@@ -113,7 +126,7 @@ const CommandCenter = () => {
             <ResizablePanel defaultSize={70} minSize={50}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
                 <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
-                  <p className="text-gray-500">This is the display area for prompt output</p>
+                  <p className="text-gray-500 italic">Try: 'Compare RSA and AXA for MI002' or 'Create endorsement for GPM123'</p>
                 </div>
               </div>
             </ResizablePanel>
@@ -123,13 +136,20 @@ const CommandCenter = () => {
             {/* Prompt Area - 30% of the available space initially */}
             <ResizablePanel defaultSize={30} minSize={15}>
               <div className="h-full p-5 bg-white">
-                <Card className="shadow-md h-full border-praktora-burgundy/20 flex flex-col">
+                <Card className="shadow-md h-full border-[#9C2D55]/20 flex flex-col">
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-lg">AI Assistant</h3>
+                      <h3 className="font-medium text-lg">P²RA Command Console</h3>
                       <span className="text-xs text-gray-500">20/2000</span>
                     </div>
                     <Separator className="my-3" />
+                    
+                    <div className="flex gap-2 mb-3">
+                      <CommandSuggestion text="Create New Enquiry" />
+                      <CommandSuggestion text="Upload Emirates ID" />
+                      <CommandSuggestion text="Track Pending Endorsements" />
+                    </div>
+                    
                     <Textarea 
                       placeholder="Ask any question about clients, policies, or market trends..." 
                       className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
@@ -139,8 +159,11 @@ const CommandCenter = () => {
                         <Button variant="outline" size="sm">Attach</Button>
                         <Button variant="outline" size="sm">Templates</Button>
                       </div>
-                      <Button size="sm" className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white">
-                        Send Request
+                      <Button 
+                        size="sm" 
+                        className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white"
+                      >
+                        Execute Command
                       </Button>
                     </div>
                   </CardContent>

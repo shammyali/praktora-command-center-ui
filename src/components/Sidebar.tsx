@@ -29,10 +29,10 @@ const SidebarItem = ({ icon: Icon, label, active, badge }: SidebarItemProps) => 
       variant="ghost"
       className={cn(
         "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        active && "bg-sidebar-accent font-medium"
+        active && "bg-sidebar-accent font-medium text-[#9C2D55]"
       )}
     >
-      <Icon className="h-5 w-5" />
+      <Icon className={cn("h-5 w-5", active && "text-[#9C2D55]")} />
       <span className="flex-grow text-left">{label}</span>
       {badge && (
         <span className={cn(
@@ -67,10 +67,10 @@ const Sidebar = () => {
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid gap-1 px-2">
           <SidebarItem icon={HomeIcon} label="Dashboard" active />
-          <SidebarItem icon={FolderIcon} label="Projects" badge={7} />
-          <SidebarItem icon={FileIcon} label="Templates" />
+          <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} />
+          <SidebarItem icon={FileIcon} label="Command Templates" />
           <SidebarItem icon={FileTextIcon} label="Documents" />
-          <SidebarItem icon={UsersIcon} label="Clients" badge="NEW" />
+          <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
           <SidebarItem icon={HistoryIcon} label="History" />
         </nav>
 

@@ -64,7 +64,7 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				praktora: {
-					burgundy: '#9b2242',
+					burgundy: '#9C2D55',  // Updated to match the specified brand color
 					gray: '#f5f5f7',
 					dark: '#333333',
 				}
