@@ -106,7 +106,7 @@ const Sidebar = () => {
         <nav className="grid gap-1 px-2">
           <SidebarItem icon={HomeIcon} label="Dashboard" active />
           <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} greenDot={true} />
-          <SidebarItem icon={MessageCircleIcon} label="WhatsApp" />
+          <SidebarItem icon={MessageCircleIcon} label="WhatsApp" badge={3} greenDot={true} />
           <SidebarItem icon={FileTextIcon} label="Active Enquiries" dots={3} />
           <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
           <SidebarItem icon={MailIcon} label="Unactioned email" badge={5} redDot={true} />
