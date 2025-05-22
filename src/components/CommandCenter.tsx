@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon } from "lucide-react";
@@ -48,47 +47,9 @@ const ProjectCard = ({ title, description }: ProjectCardProps) => {
 const CommandCenter = () => {
   return (
     <div className="flex-1 overflow-auto bg-gradient-to-br from-white to-blue-50">
-      <div className="flex h-full">
-        {/* Main AI Assistant Section */}
-        <div className="flex-1 px-6 py-8">
-          <div className="mx-auto max-w-2xl">
-            <div className="mb-8 text-center">
-              <h1 className="text-3xl font-bold mb-3">Welcome to P²RA</h1>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Get started by creating a new project or using the AI assistant. Not sure where to start?
-                Our platform streamlines your insurance broking operations.
-              </p>
-            </div>
-            
-            <div className="mt-8">
-              <Card className="shadow-md border-praktora-burgundy/20">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-lg">AI Assistant</h3>
-                    <span className="text-xs text-gray-500">20/2000</span>
-                  </div>
-                  <Separator className="my-3" />
-                  <Textarea 
-                    placeholder="Ask any question about clients, policies, or market trends..." 
-                    className="min-h-48 resize-none focus-visible:ring-0 border-none bg-transparent" 
-                  />
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">Attach</Button>
-                      <Button variant="outline" size="sm">Templates</Button>
-                    </div>
-                    <Button size="sm" className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white">
-                      Send Request
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-        
-        {/* Right Panel for Action Cards and Recent Projects */}
-        <div className="w-80 border-l border-gray-200 bg-white p-5 overflow-auto">
+      <div className="flex flex-col h-full">
+        {/* Right Panel for Action Cards and Recent Projects - Now moved to top */}
+        <div className="fixed top-16 right-0 bottom-0 w-80 border-l border-gray-200 bg-white p-5 overflow-auto z-10">
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
             <div className="space-y-3">
@@ -137,6 +98,36 @@ const CommandCenter = () => {
                 title="Risk Assessment" 
                 description="Complete risk profile for healthcare client" 
               />
+            </div>
+          </div>
+        </div>
+        
+        {/* Main Content Area - Now full height and positioned at bottom */}
+        <div className="fixed left-60 right-80 bottom-0 top-16 p-5 bg-gradient-to-br from-white to-blue-50">
+          <div className="flex flex-col h-full justify-end">
+            <div className="mb-0">
+              <Card className="shadow-md border-praktora-burgundy/20">
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium text-lg">AI Assistant</h3>
+                    <span className="text-xs text-gray-500">20/2000</span>
+                  </div>
+                  <Separator className="my-3" />
+                  <Textarea 
+                    placeholder="Ask any question about clients, policies, or market trends..." 
+                    className="min-h-48 resize-none focus-visible:ring-0 border-none bg-transparent" 
+                  />
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">Attach</Button>
+                      <Button variant="outline" size="sm">Templates</Button>
+                    </div>
+                    <Button size="sm" className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white">
+                      Send Request
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
