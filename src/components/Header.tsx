@@ -15,9 +15,13 @@ const Header = () => {
           />
         </div>
         
-        {/* Welcome message in the center */}
+        {/* P2RA image in the center */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <h2 className="text-lg md:text-xl font-medium text-praktora-burgundy">Welcome to Praktora Práxis</h2>
+          <img 
+            src="/lovable-uploads/697ccaf3-c184-41b8-9126-e6f758cc6368.png" 
+            alt="P2RA: Intelligence in Motion" 
+            className="h-6 md:h-8" 
+          />
         </div>
         
         <div className="flex items-center gap-4">
