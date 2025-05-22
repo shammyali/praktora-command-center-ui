@@ -23,6 +23,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Link, useLocation } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -123,6 +124,7 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot, greenDot,
 const AISupportChat = () => {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<{type: 'user' | 'ai', content: string}[]>([]);
+  const { toast } = useToast();
 
   const handleSendMessage = () => {
     if (!query.trim()) return;
@@ -145,6 +147,11 @@ const AISupportChat = () => {
       }
       
       setMessages(prev => [...prev, {type: 'ai', content: response}]);
+      toast({
+        title: "P²RA Assistant",
+        description: "New response received",
+        variant: "default",
+      });
     }, 1000);
     
     setQuery("");
@@ -206,6 +213,7 @@ const AISupportChat = () => {
 
 const Sidebar = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAIChat, setShowAIChat] = useState(false);
   const location = useLocation();
 
   return (
@@ -311,11 +319,17 @@ const Sidebar = () => {
           <SidebarItem 
             icon={MessageSquareIcon} 
             label="Ask P²RA" 
-            active={false} 
-            to="/dashboard" 
+            active={showAIChat}
+            onClick={() => setShowAIChat(!showAIChat)}
           />
           <SidebarItem icon={SettingsIcon} label="Settings" />
         </nav>
+        
+        {showAIChat && (
+          <div className="mt-2 px-3">
+            <AISupportChat />
+          </div>
+        )}
       </div>
       
       <div className="mt-auto border-t border-gray-200 p-4">
