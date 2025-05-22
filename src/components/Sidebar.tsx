@@ -10,7 +10,7 @@ import {
   HistoryIcon,
   SettingsIcon,
   HelpCircleIcon,
-  FileIcon
+  MessageCircleIcon
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -68,7 +68,7 @@ const Sidebar = () => {
         <nav className="grid gap-1 px-2">
           <SidebarItem icon={HomeIcon} label="Dashboard" active />
           <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} />
-          <SidebarItem icon={FileIcon} label="Command Templates" />
+          <SidebarItem icon={MessageCircleIcon} label="WhatsApp" />
           <SidebarItem icon={FileTextIcon} label="Documents" />
           <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
           <SidebarItem icon={HistoryIcon} label="History" />
