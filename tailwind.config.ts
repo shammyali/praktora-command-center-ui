@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -94,21 +95,14 @@ export default {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
 				},
-				'underline-glow': {
+				'glow-move': {
 					'0%': { 
-						boxShadow: '0 0 5px rgba(156, 45, 85, 0.3)',
-						opacity: '0.7',
-						transform: 'translateX(-100%)' 
-					},
-					'50%': { 
-						boxShadow: '0 0 10px rgba(156, 45, 85, 0.8)', 
-						opacity: '1',
-						transform: 'translateX(0)' 
+						transform: 'translateX(-100%)',
+						boxShadow: '0 0 10px 5px rgba(156, 45, 85, 0.5)'
 					},
 					'100%': { 
-						boxShadow: '0 0 5px rgba(156, 45, 85, 0.3)',
-						opacity: '0.7',
-						transform: 'translateX(100%)' 
+						transform: 'translateX(400%)',
+						boxShadow: '0 0 10px 5px rgba(156, 45, 85, 0.5)'
 					}
 				}
 			},
@@ -116,7 +110,7 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'pulse-slow': 'pulse-slow 10s infinite',
-				'underline-glow': 'underline-glow 3s ease-in-out infinite'
+				'glow-move': 'glow-move 3s ease-in-out infinite'
 			}
 		}
 	},
