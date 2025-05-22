@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
@@ -154,7 +153,7 @@ const CommandCenter = () => {
             
             {/* Prompt Area - 30% of the available space initially */}
             <ResizablePanel defaultSize={30} minSize={15}>
-              <div className="h-full p-5 bg-white">
+              <div className="h-full p-5 bg-white overflow-auto">
                 <Card className="shadow-md h-full border-[#9C2D55]/20 flex flex-col">
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
@@ -163,7 +162,7 @@ const CommandCenter = () => {
                     </div>
                     <Separator className="my-3" />
                     
-                    <div className="flex gap-2 mb-3">
+                    <div className="flex gap-2 mb-3 flex-wrap">
                       <CommandSuggestion text="Create New Enquiry" />
                       <CommandSuggestion text="Upload Emirates ID" />
                       <CommandSuggestion text="Track Pending Endorsements" />
@@ -173,14 +172,14 @@ const CommandCenter = () => {
                       placeholder="Ask any question about clients, policies, or market trends..." 
                       className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
                     />
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center justify-between mt-4 pt-2">
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm">Attach</Button>
                         <Button variant="outline" size="sm">Templates</Button>
                       </div>
                       <Button 
                         size="sm" 
-                        className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white"
+                        className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
                       >
                         Execute Command
                       </Button>
@@ -197,4 +196,3 @@ const CommandCenter = () => {
 };
 
 export default CommandCenter;
-
