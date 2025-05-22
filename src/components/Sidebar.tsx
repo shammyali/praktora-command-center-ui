@@ -281,12 +281,13 @@ const Sidebar = () => {
             active={location.pathname === "/emails"}
             to="/emails"
           />
-          {/* New menu items */}
           <SidebarItem 
             icon={SendIcon} 
             label="Telegram" 
             badge={2}
             greenDot={true}
+            active={location.pathname === "/telegram"}
+            to="/telegram"
           />
           <SidebarItem 
             icon={BrainCircuitIcon} 
