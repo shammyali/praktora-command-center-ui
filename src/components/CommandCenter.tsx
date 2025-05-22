@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
@@ -38,24 +37,15 @@ interface ProjectCardProps {
   status?: string;
   statusColor?: "green" | "yellow" | "red" | "blue";
   animate?: boolean;
-  clientName?: string;
+  customerName: string;
 }
 
-const ProjectCard = ({ title, description, status, statusColor = "blue", animate = false, clientName }: ProjectCardProps) => {
-  // Extract client name from title if provided separately
-  const formattedTitle = clientName 
-    ? title.replace(clientName, `<strong>${clientName}</strong>`) 
-    : title;
-
+const ProjectCard = ({ title, description, status, statusColor = "blue", animate = false, customerName }: ProjectCardProps) => {
   return (
     <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-1">
-          <h3 
-            className="font-medium" 
-            dangerouslySetInnerHTML={{ __html: formattedTitle }}
-          />
-          {status && (
+        {status && (
+          <div className="flex justify-end mb-1">
             <span 
               className={`text-xs font-medium
                 ${statusColor === "green" ? "text-green-700" : 
@@ -67,7 +57,12 @@ const ProjectCard = ({ title, description, status, statusColor = "blue", animate
             >
               {status}
             </span>
-          )}
+          </div>
+        )}
+        <div className="mb-1">
+          <h3 className="font-medium">
+            {title} <span className="font-bold">{customerName}</span>
+          </h3>
         </div>
         <p className="text-sm text-gray-500">{description}</p>
       </CardContent>
@@ -102,31 +97,32 @@ const EmptyEngagements = () => {
 const CommandCenter = () => {
   const [activeEngagements, setActiveEngagements] = useState([
     { 
-      title: "Workmen's Compensation Renewal - ", 
-      clientName: "Star Trading LLC",
+      title: "Workmen's Compensation Renewal -",
+      customerName: "Tom Robers",
       description: "Comprehensive coverage renewal assessment required", 
       status: "Awaiting Confirmation",
       statusColor: "yellow" as const,
       animate: true
     },
     { 
-      title: "New Motor Quote - ", 
-      clientName: "Abdullah Salman",
+      title: "New Motor Quote -",
+      customerName: "Abdullah Ali",
       description: "Comprehensive coverage proposal ready for review", 
       status: "Quoted",
       statusColor: "yellow" as const,
       animate: false
     },
     { 
-      title: "Medical Claim - ", 
-      clientName: "Robert Andrew",
+      title: "Medical Claim -",
+      customerName: "Vijay Singh",
       description: "Claim assessment completed and approved", 
       status: "Claim Settled",
       statusColor: "green" as const,
       animate: false
     },
     { 
-      title: "Risk Assessment", 
+      title: "Risk Assessment",
+      customerName: "Mohan Lal",
       description: "Complete risk profile for healthcare client", 
       status: "In Progress",
       statusColor: "blue" as const,
@@ -176,7 +172,7 @@ const CommandCenter = () => {
                   <ProjectCard 
                     key={index}
                     title={engagement.title}
-                    clientName={engagement.clientName}
+                    customerName={engagement.customerName}
                     description={engagement.description}
                     status={engagement.status}
                     statusColor={engagement.statusColor}
