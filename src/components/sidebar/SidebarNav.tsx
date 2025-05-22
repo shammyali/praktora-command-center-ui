@@ -108,6 +108,8 @@ const SidebarNav = () => {
       <SidebarItem 
         icon={HistoryIcon} 
         label="History" 
+        active={location.pathname === "/history"}
+        to="/history"
       />
     </nav>
   );
