@@ -18,7 +18,7 @@ const Header = () => {
         
         {/* Command Panel in the center */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <h1 className="text-lg font-semibold">P²RA: Intelligence in Motion</h1>
+          <h1 className="text-lg font-semibold text-praktora-burgundy">P²RA: Intelligence in Motion</h1>
           <p className="text-xs text-[#9C2D55]">Connected. Listening. Ready for Execution...</p>
         </div>
         
