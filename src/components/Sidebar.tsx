@@ -12,7 +12,12 @@ import {
   MessageSquareIcon,
   MessageCircleIcon,
   MailIcon,
-  SparklesIcon
+  SparklesIcon,
+  BrainCircuitIcon,
+  RadarIcon,
+  BarChart4Icon,
+  FlaskRoundIcon,
+  SendIcon
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -265,6 +270,31 @@ const Sidebar = () => {
             label="Unactioned email" 
             badge={5} 
             redDot={true} 
+          />
+          {/* New menu items */}
+          <SidebarItem 
+            icon={SendIcon} 
+            label="Telegram" 
+            badge={2}
+            greenDot={true}
+          />
+          <SidebarItem 
+            icon={BrainCircuitIcon} 
+            label="Intelligence & Analytics" 
+          />
+          <SidebarItem 
+            icon={RadarIcon} 
+            label="P²RA Radar" 
+            badge="NEW"
+          />
+          <SidebarItem 
+            icon={BarChart4Icon} 
+            label="Conversion Funnels" 
+          />
+          <SidebarItem 
+            icon={FlaskRoundIcon} 
+            label="Automations Lab"
+            badge="BETA" 
           />
           <SidebarItem 
             icon={HistoryIcon} 
