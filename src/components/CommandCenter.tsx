@@ -1,3 +1,4 @@
+
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
@@ -89,22 +90,22 @@ const CommandCenter = () => {
             <div className="space-y-3">
               <ActionCard 
                 icon={PenIcon} 
-                title="Start New Policy" 
+                title="Quote Launch" 
                 color="bg-amber-400" 
               />
               <ActionCard 
                 icon={ImageIcon} 
-                title="Compare Quotes" 
+                title="Initiate Policy Services" 
                 color="bg-blue-400" 
               />
               <ActionCard 
                 icon={UserIcon} 
-                title="Register New Customer" 
+                title="Log Claim FNOL" 
                 color="bg-green-400" 
               />
               <ActionCard 
                 icon={CodeIcon} 
-                title="Summarize Coverage" 
+                title="What's Pending" 
                 color="bg-purple-400" 
               />
             </div>
