@@ -47,24 +47,25 @@ const ActionCard = ({
 
 // KYC Status Badge component
 const KycStatusBadge = ({ status }: { status: "YES" | "NO" | "PEP" | "Request" }) => {
-  const getStatusColors = () => {
+  const getStatusColor = () => {
     switch (status) {
       case "YES":
-        return "bg-green-100 text-green-800 border-green-300";
+        return "text-green-600 font-bold";
       case "NO":
-        return "bg-red-100 text-red-800 border-red-300";
+        return "text-red-600 font-bold";
       case "PEP":
-        return "bg-red-100 text-red-800 border-red-300 animate-pulse-slow";
+        return "text-red-600 font-bold animate-pulse-slow";
       case "Request":
-        return "bg-blue-100 text-blue-800 border-blue-300";
+        return "text-blue-600 font-bold";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "text-gray-600 font-bold";
     }
   };
 
   return (
-    <div className={`inline-flex items-center px-2.5 py-1 rounded border ${getStatusColors()}`}>
-      <span className="text-sm font-medium">KYC - {status}</span>
+    <div className="inline-flex items-center">
+      <span className="text-sm font-medium text-black">KYC - </span>
+      <span className={`text-sm ml-1 ${getStatusColor()}`}>{status}</span>
     </div>
   );
 };
