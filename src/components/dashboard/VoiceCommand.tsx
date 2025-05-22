@@ -14,21 +14,14 @@ const VoiceCommand = ({ onCommand }: VoiceCommandProps) => {
   const handleVoiceCommand = () => {
     setIsListening(true);
     
-    // Simulated voice command processing
-    const exampleCommands = [
-      "P²RA, show me the top 5 delayed claims",
-      "Summarize today's activity in 2 lines"
-    ];
-    
-    // Randomly select one of the example commands
-    const randomCommand = exampleCommands[Math.floor(Math.random() * exampleCommands.length)];
-    
+    // Simulate voice command processing
     toast.info("Processing voice command...");
     
-    // Simulate processing time
+    // Simulate delay and provide a response
     setTimeout(() => {
-      toast.success(`Command recognized: "${randomCommand}"`);
-      onCommand(randomCommand);
+      const command = "Show me the top 5 delayed claims";
+      toast.success(`Command recognized: "${command}"`);
+      onCommand(command);
       setIsListening(false);
     }, 2000);
   };
