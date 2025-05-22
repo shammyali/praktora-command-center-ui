@@ -40,8 +40,11 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots }: SidebarItemProp
           {Array.from({ length: dots }).map((_, i) => (
             <span 
               key={i} 
-              className="h-2 w-2 rounded-full bg-green-500 animate-pulse-slow"
-              style={{ animationDelay: `${i * 0.3}s` }}
+              className="h-2 w-2 rounded-full bg-green-500"
+              style={{
+                animation: 'dot-progress 1.5s infinite',
+                animationDelay: `${i * 0.5}s`
+              }}
             />
           ))}
         </div>
