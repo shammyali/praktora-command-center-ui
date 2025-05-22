@@ -278,6 +278,8 @@ const Sidebar = () => {
             label="Unactioned email" 
             badge={5} 
             redDot={true} 
+            active={location.pathname === "/emails"}
+            to="/emails"
           />
           {/* New menu items */}
           <SidebarItem 
