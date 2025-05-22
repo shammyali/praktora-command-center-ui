@@ -17,7 +17,7 @@ const KycRiskSummary = () => {
     aiNote: "Medium risk due to 2 rejected claims and overdue premium."
   };
 
-  const getBadgeColor = (status: string, type: string) => {
+  const getBadgeColor = (status: string | boolean, type: string) => {
     if (type === "kyc") {
       return status === "completed" ? "bg-green-500" : status === "expired" ? "bg-red-500" : "bg-amber-500";
     } else if (type === "pep") {
@@ -30,7 +30,7 @@ const KycRiskSummary = () => {
     return "bg-gray-500";
   };
 
-  const getStatusText = (status: string, type: string) => {
+  const getStatusText = (status: string | boolean, type: string) => {
     if (type === "kyc") {
       return status === "completed" ? "Completed" : status === "expired" ? "Expired" : "Incomplete";
     } else if (type === "pep") {
@@ -38,9 +38,9 @@ const KycRiskSummary = () => {
     } else if (type === "sanctions") {
       return status === "flagged" ? "Flagged" : "Cleared";
     } else if (type === "risk") {
-      return status.charAt(0).toUpperCase() + status.slice(1);
+      return typeof status === "string" ? status.charAt(0).toUpperCase() + status.slice(1) : "";
     }
-    return status;
+    return String(status);
   };
 
   return (
