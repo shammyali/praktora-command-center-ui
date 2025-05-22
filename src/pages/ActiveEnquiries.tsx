@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { RefreshCw, Volume2, AlertTriangle } from "lucide-react";
+import { RefreshCw, Volume2, AlertTriangle, Export, BarChart2 } from "lucide-react";
 import { 
   activeEnquiries, 
   EnquiryItem, 
@@ -18,6 +18,29 @@ import EnquiryTable from "@/components/enquiries/EnquiryTable";
 import EnquiryFilters from "@/components/enquiries/EnquiryFilters";
 import EnquirySidebar from "@/components/enquiries/EnquirySidebar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Progress } from "@/components/ui/progress";
+
+// New trend data for the mini trend view
+const trendData = {
+  conversionByClass: [
+    { name: "Motor", rate: 67 },
+    { name: "Medical", rate: 42 },
+    { name: "Property", rate: 58 },
+    { name: "Liability", rate: 31 },
+  ],
+  conversionBySource: [
+    { name: "WhatsApp", rate: 72 },
+    { name: "Portal", rate: 44 },
+    { name: "Agent", rate: 63 },
+    { name: "Direct", rate: 51 },
+  ],
+  dropoffReasons: [
+    { name: "Quote Not Sent", count: 32 },
+    { name: "No Client Reply", count: 48 },
+    { name: "Delayed Pricing", count: 21 },
+    { name: "Competitor Win", count: 14 },
+  ]
+};
 
 export default function ActiveEnquiries() {
   const [filteredEnquiries, setFilteredEnquiries] = useState<EnquiryItem[]>(activeEnquiries);
@@ -25,6 +48,7 @@ export default function ActiveEnquiries() {
   const [selectedEnquiry, setSelectedEnquiry] = useState<EnquiryItem | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [showTrendView, setShowTrendView] = useState(false);
   
   // Handle filter changes
   const handleFilterChange = (filters: any) => {
@@ -109,6 +133,21 @@ export default function ActiveEnquiries() {
     setFilteredEnquiries(urgentEnquiries);
   };
 
+  // NEW: Handle export
+  const handleExport = () => {
+    toast.success("Exporting enquiries to Excel...");
+    
+    // Simulate export delay
+    setTimeout(() => {
+      toast.success("Enquiries exported successfully");
+    }, 1500);
+  };
+
+  // NEW: Toggle trend view
+  const toggleTrendView = () => {
+    setShowTrendView(!showTrendView);
+  };
+
   useEffect(() => {
     // Simulate initial loading
     setIsLoading(true);
@@ -127,10 +166,30 @@ export default function ActiveEnquiries() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div>
               <h1 className="text-2xl font-bold text-praktora-burgundy">Active Enquiries</h1>
-              <p className="text-sm text-gray-500">Command Grid for Quote Conversion</p>
+              <p className="text-sm text-gray-500">Enhanced Intelligence Mode</p>
             </div>
             
             <div className="flex items-center gap-2 self-start">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleTrendView}
+                className={`hidden sm:flex items-center gap-1 ${showTrendView ? 'border-praktora-burgundy text-praktora-burgundy' : ''}`}
+              >
+                <BarChart2 className="h-3.5 w-3.5" />
+                Trend View
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleExport}
+                className="hidden sm:flex items-center gap-1"
+              >
+                <Export className="h-3.5 w-3.5" />
+                Export
+              </Button>
+              
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -208,6 +267,76 @@ export default function ActiveEnquiries() {
               </CardContent>
             </Card>
           </div>
+          
+          {/* Mini Trend View */}
+          {showTrendView && (
+            <div className="mb-5 animate-fade-in">
+              <Card>
+                <CardHeader className="py-3">
+                  <CardTitle className="text-sm">Conversion Insights</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid sm:grid-cols-3 gap-6">
+                    {/* Conversion by Class */}
+                    <div>
+                      <h4 className="text-xs font-semibold mb-2">By Business Class</h4>
+                      <div className="space-y-2">
+                        {trendData.conversionByClass.map((item) => (
+                          <div key={item.name} className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span>{item.name}</span>
+                              <span className="font-medium">{item.rate}%</span>
+                            </div>
+                            <Progress value={item.rate} className="h-1.5" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Conversion by Source */}
+                    <div>
+                      <h4 className="text-xs font-semibold mb-2">By Source</h4>
+                      <div className="space-y-2">
+                        {trendData.conversionBySource.map((item) => (
+                          <div key={item.name} className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span>{item.name}</span>
+                              <span className="font-medium">{item.rate}%</span>
+                            </div>
+                            <Progress 
+                              value={item.rate} 
+                              className="h-1.5" 
+                              indicatorClassName="bg-praktora-burgundy"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Drop-off Reasons */}
+                    <div>
+                      <h4 className="text-xs font-semibold mb-2">Drop-off Reasons</h4>
+                      <div className="space-y-2">
+                        {trendData.dropoffReasons.map((item) => (
+                          <div key={item.name} className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span>{item.name}</span>
+                              <span className="font-medium">{item.count}</span>
+                            </div>
+                            <Progress 
+                              value={(item.count / Math.max(...trendData.dropoffReasons.map(i => i.count))) * 100} 
+                              className="h-1.5"
+                              indicatorClassName="bg-amber-500"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
           
           {/* Filters */}
           <div className="mb-4">

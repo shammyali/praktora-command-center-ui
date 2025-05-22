@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Table,
@@ -10,11 +9,18 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
-import { MoreHorizontal, MessageCircle, Mail, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { MoreHorizontal, MessageCircle, Mail, CheckCircle, XCircle, AlertTriangle, Lightbulb, FileText } from "lucide-react";
 import { EnquiryItem } from "@/data/enquiriesData";
 import EnquiryStageIndicator from "./EnquiryStageIndicator";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +41,9 @@ const EnquiryTable = ({
   onSelectEnquiry,
   selectedEnquiryId
 }: EnquiryTableProps) => {
+  const [quotePreviewOpen, setQuotePreviewOpen] = useState(false);
+  const [selectedQuote, setSelectedQuote] = useState<EnquiryItem | null>(null);
+
   // Function to get status color
   const getStatusColor = (status: string) => {
     const statusMap: Record<string, string> = {
@@ -95,6 +104,45 @@ const EnquiryTable = ({
     return (daysOld > 2 && !enquiry.quoteSent) || enquiry.aiSuggestionPriority === 'high';
   };
 
+  // NEW: Generate AI suggestion based on enquiry data
+  const getAISuggestion = (enquiry: EnquiryItem) => {
+    const daysOld = enquiry.age !== 'Today' ? parseInt(enquiry.age) : 0;
+    
+    if (!enquiry.quoteSent && daysOld > 1) {
+      return "Quote not sent — recommend sending within SLA";
+    } else if (enquiry.quoteSent && !enquiry.policyIssued && daysOld > 3) {
+      return "Client hasn't responded in " + daysOld + " days — suggest follow-up";
+    } else if (enquiry.quoteSent && enquiry.status === "Awaiting Client Confirmation" && daysOld > 2) {
+      return "Follow up on client decision — conversion opportunity";
+    } else if (enquiry.status === "Quote Ready" && daysOld > 1) {
+      return "Quote ready but not sent — action required";
+    } else if (enquiry.quoteSent && enquiry.status === "Quoted" && daysOld > 4) {
+      return "No policy issued after confirmation — review conversion risk";
+    }
+    
+    return null;
+  };
+
+  // NEW: Get age color for visual indicator
+  const getAgeColor = (days: number) => {
+    if (days < 2) return "bg-green-500"; 
+    if (days >= 2 && days <= 4) return "bg-orange-500";
+    return "bg-red-500";
+  };
+
+  // NEW: Calculate progress value for age bar (capped at 100% after 7 days)
+  const getAgeProgress = (days: number) => {
+    return Math.min(days * 14, 100);
+  };
+
+  // NEW: Handle quote preview click
+  const handleQuotePreview = (enquiry: EnquiryItem) => {
+    if (enquiry.quoteSent) {
+      setSelectedQuote(enquiry);
+      setQuotePreviewOpen(true);
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -106,10 +154,11 @@ const EnquiryTable = ({
             <TableHead>Source</TableHead>
             <TableHead>Assigned Agent</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="w-[80px]">Age</TableHead>
+            <TableHead className="w-[120px]">Age</TableHead>
             <TableHead className="w-[80px] text-center">Quote</TableHead>
             <TableHead className="w-[80px] text-center">Policy</TableHead>
             <TableHead className="w-[50px]">Link</TableHead>
+            <TableHead className="w-[50px]">P²RA</TableHead>
             <TableHead className="w-[100px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -117,6 +166,9 @@ const EnquiryTable = ({
           {enquiries.map((enquiry) => {
             const isUrgent = isUrgentEnquiry(enquiry);
             const isSelected = selectedEnquiryId === enquiry.id;
+            const aiSuggestion = getAISuggestion(enquiry);
+            const daysOld = enquiry.age !== 'Today' ? parseInt(enquiry.age) : 0;
+            const ageColor = getAgeColor(daysOld);
             
             return (
               <TableRow 
@@ -154,13 +206,34 @@ const EnquiryTable = ({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <span className={parseInt(enquiry.age) > 3 && !enquiry.quoteSent ? 'text-red-500 font-medium' : ''}>
-                    {enquiry.age}
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className={parseInt(enquiry.age) > 3 && !enquiry.quoteSent ? 'text-red-500 font-medium' : ''}>
+                      {enquiry.age}
+                    </span>
+                    <Progress 
+                      value={getAgeProgress(daysOld)} 
+                      className="h-1.5" 
+                      indicatorClassName={ageColor}
+                    />
+                  </div>
                 </TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
                   {enquiry.quoteSent ? 
-                    <CheckCircle className="h-4 w-4 text-green-500 mx-auto" /> : 
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-5 w-5 p-0"
+                          onClick={() => handleQuotePreview(enquiry)}
+                        >
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Click to preview quote</p>
+                      </TooltipContent>
+                    </Tooltip> : 
                     <XCircle className="h-4 w-4 text-red-400 mx-auto" />
                   }
                 </TableCell>
@@ -174,6 +247,18 @@ const EnquiryTable = ({
                   <div className="flex items-center justify-center">
                     {renderCommunicationLink(enquiry)}
                   </div>
+                </TableCell>
+                <TableCell>
+                  {aiSuggestion && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Lightbulb className="h-4 w-4 text-amber-500" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-[250px]">
+                        <p>{aiSuggestion}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -205,6 +290,69 @@ const EnquiryTable = ({
           })}
         </TableBody>
       </Table>
+
+      {/* Quote Preview Dialog */}
+      <Dialog open={quotePreviewOpen} onOpenChange={setQuotePreviewOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Quote Preview
+            </DialogTitle>
+          </DialogHeader>
+          {selectedQuote && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold">{selectedQuote.customerName}</h3>
+                <p className="text-sm text-muted-foreground">{selectedQuote.id}</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-sm font-medium">Business Class</p>
+                  <p className="text-praktora-burgundy">{selectedQuote.businessClass}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Line</p>
+                  <p>{selectedQuote.businessLine || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Premium</p>
+                  <p className="text-lg font-semibold">AED 4,750.00</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Insurer</p>
+                  <p>Praktora Insurance Co.</p>
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <p className="text-sm font-medium">Key Terms</p>
+                <ul className="text-sm mt-2 space-y-1">
+                  <li>• Coverage: Comprehensive</li>
+                  <li>• Deductible: AED 1,000</li>
+                  <li>• Validity: 12 months</li>
+                </ul>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setQuotePreviewOpen(false)}
+                >
+                  Close
+                </Button>
+                <Button onClick={() => {
+                  toast.success("Quote document downloaded");
+                  setQuotePreviewOpen(false);
+                }}>
+                  Download PDF
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
