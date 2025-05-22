@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import LiveWorkflows from "./pages/LiveWorkflows";
 import WhatsAppHub from "./pages/WhatsAppHub";
+import ActiveEnquiries from "./pages/ActiveEnquiries";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workflows" element={<LiveWorkflows />} />
           <Route path="/whatsapp" element={<WhatsAppHub />} />
+          <Route path="/enquiries" element={<ActiveEnquiries />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

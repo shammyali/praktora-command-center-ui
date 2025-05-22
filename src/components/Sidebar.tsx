@@ -17,7 +17,6 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
-import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
 import { Link, useLocation } from "react-router-dom";
 
 interface SidebarItemProps {
@@ -250,7 +249,9 @@ const Sidebar = () => {
           <SidebarItem 
             icon={FileTextIcon} 
             label="Active Enquiries" 
-            dots={3} 
+            dots={3}
+            active={location.pathname === "/enquiries"}
+            to="/enquiries"
           />
           <SidebarItem 
             icon={UsersIcon} 
