@@ -1,17 +1,22 @@
+
 import { MoonIcon, BellIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+
 const Header = () => {
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
-          <img src="/lovable-uploads/d0552695-0b71-4745-ba07-934a5776da0e.png" alt="P²RA Logo" className="h-10" />
+          {/* Left side empty to balance the layout */}
         </div>
         
-        {/* Centered company name and tagline */}
+        {/* Centered logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          
-          
+          <img 
+            src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
+            alt="Praktora Práxis Logo" 
+            className="h-12 md:h-14" 
+          />
         </div>
         
         <div className="flex items-center gap-4">
@@ -33,4 +38,5 @@ const Header = () => {
       </div>
     </header>;
 };
+
 export default Header;
