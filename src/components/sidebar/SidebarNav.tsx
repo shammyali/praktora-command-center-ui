@@ -101,7 +101,9 @@ const SidebarNav = () => {
       <SidebarItem 
         icon={FlaskRoundIcon} 
         label="Automations Lab"
-        badge="BETA" 
+        badge="BETA"
+        active={location.pathname === "/automations"}
+        to="/automations"
       />
       <SidebarItem 
         icon={HistoryIcon} 
