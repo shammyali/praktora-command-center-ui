@@ -1,7 +1,9 @@
 
+import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import CommandCenter from "@/components/CommandCenter";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -9,7 +11,16 @@ const Index = () => {
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <CommandCenter />
+        <div className="flex-1 overflow-auto">
+          <div className="p-4">
+            <Link to="/dashboard">
+              <Button className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 mb-4">
+                Go to P²RA Control Center
+              </Button>
+            </Link>
+          </div>
+          <CommandCenter />
+        </div>
       </div>
     </div>
   );
