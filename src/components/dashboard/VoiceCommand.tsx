@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Microphone, Loader2 } from "lucide-react";
+import { Mic, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 interface VoiceCommandProps {
@@ -47,7 +47,7 @@ const VoiceCommand = ({ onCommand }: VoiceCommandProps) => {
         </>
       ) : (
         <>
-          <Microphone className="h-4 w-4 mr-2" />
+          <Mic className="h-4 w-4 mr-2" />
           Voice Command
         </>
       )}
