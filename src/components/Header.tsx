@@ -4,7 +4,12 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 
-const Header = () => {
+interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const Header = ({ title, subtitle }: HeaderProps) => {
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
@@ -19,12 +24,12 @@ const Header = () => {
         {/* Command Panel in the center */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <h1 className="text-lg font-semibold text-praktora-burgundy relative">
-            P²RA: Intelligence in Motion
+            {title || "P²RA: Intelligence in Motion"}
             <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
               <span className="absolute h-full w-[20%] bg-white/30 animate-shine"></span>
             </span>
           </h1>
-          <p className="text-xs text-[#9C2D55]">Connected. Listening. Ready for Execution...</p>
+          <p className="text-xs text-[#9C2D55]">{subtitle || "Connected. Listening. Ready for Execution..."}</p>
         </div>
         
         <div className="flex items-center gap-4">
