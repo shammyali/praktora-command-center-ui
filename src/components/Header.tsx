@@ -9,7 +9,7 @@ const Header = () => {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
           <img 
-            src="/lovable-uploads/0c589e91-71e8-46aa-89f8-e0b62156ee97.png" 
+            src="/lovable-uploads/d0552695-0b71-4745-ba07-934a5776da0e.png" 
             alt="P²RA Logo" 
             className="h-10"
           />
