@@ -241,7 +241,7 @@ const EnquiryFilters = ({ onFilterChange }: EnquiryFiltersProps) => {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Statuses</SelectItem>
+              <SelectItem value="all">All Statuses</SelectItem>
               {statuses.map((status) => (
                 <SelectItem key={status} value={status}>
                   {status}
@@ -313,7 +313,7 @@ const EnquiryFilters = ({ onFilterChange }: EnquiryFiltersProps) => {
               <SelectValue placeholder="Age" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All</SelectItem>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="24h">{'>'} 24h</SelectItem>
               <SelectItem value="48h">{'>'} 48h</SelectItem>
               <SelectItem value="72h">{'>'} 72h</SelectItem>
