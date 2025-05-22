@@ -24,10 +24,14 @@ export default function WhatsAppHub() {
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header title="WhatsApp Intelligence Hub" subtitle="Powered by P²RA" />
+        <Header />
         
         <div className="p-4">
-          <WhatsAppMiniDashboard stats={mockWhatsAppStats} />
+          <h1 className="text-2xl font-bold text-praktora-burgundy">WhatsApp Intelligence Hub</h1>
+          <p className="text-sm text-gray-500">Powered by P²RA</p>
+          <div className="mt-4">
+            <WhatsAppMiniDashboard stats={mockWhatsAppStats} />
+          </div>
         </div>
         
         <Separator />
