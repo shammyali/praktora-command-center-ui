@@ -243,7 +243,9 @@ const Sidebar = () => {
             icon={MessageCircleIcon} 
             label="WhatsApp" 
             badge={3} 
-            greenDot={true} 
+            greenDot={true}
+            active={location.pathname === "/whatsapp"}
+            to="/whatsapp" 
           />
           <SidebarItem 
             icon={FileTextIcon} 
