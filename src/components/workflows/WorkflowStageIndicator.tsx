@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 interface WorkflowStageIndicatorProps {
@@ -45,11 +46,8 @@ const WorkflowStageIndicator = ({
               <span>Stage {currentIndex + 1} of {allStages.length}</span>
               <span>{progress}% Complete</span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-              <div className={cn(
-                "h-full transition-all duration-500 ease-in-out",
-                getBadgeColor().split(' ')[0]
-              )} style={{ width: `${progress}%` }} />
+            <div className="mb-3">
+              <Progress value={progress} className="h-2" />
             </div>
             <ul className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs">
               {allStages.map((stage, index) => (
@@ -70,15 +68,14 @@ const WorkflowStageIndicator = ({
           </div>
         </TooltipContent>
       </Tooltip>
-      <div className="h-1 w-full rounded-full bg-gray-200">
-        <div 
-          className={cn(
-            "h-full rounded-full transition-all duration-500 ease-in-out",
-            getBadgeColor().split(' ')[0]
-          )}
-          style={{ width: `${progress}%` }} 
-        />
-      </div>
+      <Progress 
+        value={progress} 
+        className="h-1 w-full" 
+        indicatorClassName={cn(
+          getBadgeColor().split(' ')[0],
+          "transition-all duration-500"
+        )}
+      />
     </div>
   );
 };

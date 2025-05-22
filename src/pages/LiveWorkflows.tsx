@@ -8,18 +8,40 @@ import VoiceCommandWithTooltip from "@/components/dashboard/VoiceCommandWithTool
 import WorkflowCategory from "@/components/workflows/WorkflowCategory";
 import { workflowsData } from "@/data/workflowsData";
 import { Badge } from "@/components/ui/badge";
+import WorkflowFilters, { WorkflowFilters as FilterTypes } from "@/components/workflows/WorkflowFilters";
+import { toast } from "sonner";
 
 const LiveWorkflows = () => {
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [filters, setFilters] = useState<FilterTypes>({
+    businessClass: "all",
+    stageGroup: "all",
+    assignedAgent: "all",
+    age: "all"
+  });
   
   const handleRefresh = () => {
     setLastUpdated(new Date());
+    toast.success("Workflows refreshed", {
+      description: "Latest workflow data has been loaded"
+    });
     // In a real app, this would fetch fresh data
   };
   
   const handleVoiceCommand = (command: string) => {
     console.log(`Voice command received in Workflows: ${command}`);
     // Handle voice commands related to workflows
+    
+    if (command.toLowerCase().includes("refresh") || 
+        command.toLowerCase().includes("update")) {
+      handleRefresh();
+    }
+  };
+  
+  const handleFilterChange = (newFilters: FilterTypes) => {
+    setFilters(newFilters);
+    // In a real app, this would filter data
+    console.log("Filters applied:", newFilters);
   };
 
   return (
@@ -32,7 +54,9 @@ const LiveWorkflows = () => {
             <div className="mb-6 flex flex-col gap-1">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-semibold text-gray-900">Live Workflows — Real-time Process Monitoring</h1>
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    Live Workflows — Operational Intelligence Enhanced by P²RA
+                  </h1>
                   <p className="mt-1 text-sm text-gray-600">
                     Monitor and manage active workflows across your brokerage
                   </p>
@@ -69,9 +93,7 @@ const LiveWorkflows = () => {
                       <Badge className="bg-praktora-burgundy hover:bg-praktora-burgundy/90">7 Active</Badge>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Button variant="outline" size="sm">
-                        Filters
-                      </Button>
+                      <WorkflowFilters onFilterChange={handleFilterChange} />
                       <Button variant="outline" size="sm">
                         Export
                       </Button>
