@@ -24,9 +24,10 @@ interface SidebarItemProps {
   badge?: string | number;
   dots?: number;
   redDot?: boolean;
+  greenDot?: boolean;
 }
 
-const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot, greenDot }: SidebarItemProps) => {
   return (
     <Button
       variant="ghost"
@@ -59,6 +60,14 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot }: Sidebar
           }}
         />
       )}
+      {greenDot && (
+        <span 
+          className="h-2.5 w-2.5 rounded-full bg-green-500 ml-2"
+          style={{
+            animation: 'green-dot-pulse 1.5s infinite'
+          }}
+        />
+      )}
       {badge && (
         <span className={cn(
           "ml-auto rounded-full px-2 py-0.5 text-xs",
@@ -66,7 +75,9 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot }: Sidebar
             ? "bg-blue-100 text-blue-800" 
             : redDot
               ? "bg-red-100 text-red-800"
-              : "bg-gray-100 text-gray-800"
+              : greenDot
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-800"
         )}>
           {badge}
         </span>
@@ -94,7 +105,7 @@ const Sidebar = () => {
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid gap-1 px-2">
           <SidebarItem icon={HomeIcon} label="Dashboard" active />
-          <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} />
+          <SidebarItem icon={FolderIcon} label="Live Workflows" badge={7} greenDot={true} />
           <SidebarItem icon={MessageCircleIcon} label="WhatsApp" />
           <SidebarItem icon={FileTextIcon} label="Active Enquiries" dots={3} />
           <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
