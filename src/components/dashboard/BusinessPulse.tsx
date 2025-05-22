@@ -9,18 +9,42 @@ interface KpiCard {
   changeValue?: string;
 }
 
-const kpis: KpiCard[] = [
-  { title: 'New Enquiries Today', value: 27, change: 'up', changeValue: '8%' },
-  { title: 'Quotes Sent', value: 12, change: 'neutral', changeValue: '0%' },
-  { title: 'Policies Issued', value: 5, change: 'down', changeValue: '3%' },
-  { title: 'Claims Filed', value: 3, change: 'up', changeValue: '15%' },
-  { title: 'Pending Endorsements', value: 8, change: 'down', changeValue: '5%' },
-  { title: 'Revenue Today', value: 'AED 12,450', change: 'up', changeValue: '22%' },
-];
+interface BusinessPulseProps {
+  dateRange?: "today" | "week" | "month";
+}
 
-const BusinessPulse = () => {
+const kpiData = {
+  today: [
+    { title: 'New Enquiries Today', value: 27, change: 'up', changeValue: '8%' },
+    { title: 'Quotes Sent', value: 12, change: 'neutral', changeValue: '0%' },
+    { title: 'Policies Issued', value: 5, change: 'down', changeValue: '3%' },
+    { title: 'Claims Filed', value: 3, change: 'up', changeValue: '15%' },
+    { title: 'Pending Endorsements', value: 8, change: 'down', changeValue: '5%' },
+    { title: 'Revenue Today', value: 'AED 12,450', change: 'up', changeValue: '22%' },
+  ],
+  week: [
+    { title: 'New Enquiries (7 Days)', value: 147, change: 'up', changeValue: '12%' },
+    { title: 'Quotes Sent', value: 68, change: 'up', changeValue: '5%' },
+    { title: 'Policies Issued', value: 23, change: 'up', changeValue: '7%' },
+    { title: 'Claims Filed', value: 18, change: 'down', changeValue: '4%' },
+    { title: 'Pending Endorsements', value: 32, change: 'neutral', changeValue: '0%' },
+    { title: 'Revenue (7 Days)', value: 'AED 84,750', change: 'up', changeValue: '15%' },
+  ],
+  month: [
+    { title: 'New Enquiries (Month)', value: 582, change: 'up', changeValue: '18%' },
+    { title: 'Quotes Sent', value: 246, change: 'up', changeValue: '14%' },
+    { title: 'Policies Issued', value: 87, change: 'up', changeValue: '11%' },
+    { title: 'Claims Filed', value: 53, change: 'down', changeValue: '2%' },
+    { title: 'Pending Endorsements', value: 126, change: 'up', changeValue: '8%' },
+    { title: 'Revenue (Month)', value: 'AED 347,890', change: 'up', changeValue: '21%' },
+  ]
+};
+
+const BusinessPulse = ({ dateRange = "today" }: BusinessPulseProps) => {
+  const kpis = kpiData[dateRange];
+  
   return (
-    <Card className="border shadow-sm h-full">
+    <Card className="border shadow-sm h-full animate-fade-in">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">Business Pulse KPIs</CardTitle>
       </CardHeader>
