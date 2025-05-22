@@ -97,10 +97,9 @@
   }
 }
 
-@layer utilities {
-  .bg-sidebar {
-    @apply bg-sidebar;
-  }
+/* Removed the circular dependency by directly applying the background color */
+.bg-sidebar {
+  background-color: hsl(var(--sidebar));
 }
 
 @keyframes pulse {
