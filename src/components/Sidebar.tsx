@@ -10,7 +10,8 @@ import {
   HistoryIcon,
   SettingsIcon,
   HelpCircleIcon,
-  MessageCircleIcon
+  MessageCircleIcon,
+  MailIcon
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -22,9 +23,10 @@ interface SidebarItemProps {
   active?: boolean;
   badge?: string | number;
   dots?: number;
+  redDot?: boolean;
 }
 
-const SidebarItem = ({ icon: Icon, label, active, badge, dots }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, active, badge, dots, redDot }: SidebarItemProps) => {
   return (
     <Button
       variant="ghost"
@@ -49,12 +51,22 @@ const SidebarItem = ({ icon: Icon, label, active, badge, dots }: SidebarItemProp
           ))}
         </div>
       )}
+      {redDot && (
+        <span 
+          className="h-2.5 w-2.5 rounded-full bg-red-500 ml-2"
+          style={{
+            animation: 'red-dot-pulse 1.5s infinite'
+          }}
+        />
+      )}
       {badge && (
         <span className={cn(
           "ml-auto rounded-full px-2 py-0.5 text-xs",
           typeof badge === "string" && badge.toLowerCase() === "new" 
             ? "bg-blue-100 text-blue-800" 
-            : "bg-gray-100 text-gray-800"
+            : redDot
+              ? "bg-red-100 text-red-800"
+              : "bg-gray-100 text-gray-800"
         )}>
           {badge}
         </span>
@@ -86,6 +98,7 @@ const Sidebar = () => {
           <SidebarItem icon={MessageCircleIcon} label="WhatsApp" />
           <SidebarItem icon={FileTextIcon} label="Active Enquiries" dots={3} />
           <SidebarItem icon={UsersIcon} label="Policyholders" badge="NEW" />
+          <SidebarItem icon={MailIcon} label="Unactioned email" badge={5} redDot={true} />
           <SidebarItem icon={HistoryIcon} label="History" />
         </nav>
 
