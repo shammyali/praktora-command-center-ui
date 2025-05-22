@@ -1,6 +1,7 @@
+
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon } from "lucide-react";
+import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
@@ -15,6 +16,7 @@ interface ActionCardProps {
   color: string;
   tooltip: string;
 }
+
 const ActionCard = ({
   icon: Icon,
   title,
@@ -42,6 +44,31 @@ const ActionCard = ({
       </TooltipContent>
     </Tooltip>;
 };
+
+// KYC Status Badge component
+const KycStatusBadge = ({ status }: { status: "YES" | "NO" | "PEP" | "Request" }) => {
+  const getStatusColors = () => {
+    switch (status) {
+      case "YES":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "NO":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "PEP":
+        return "bg-red-100 text-red-800 border-red-300 animate-pulse-slow";
+      case "Request":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
+
+  return (
+    <div className={`inline-flex items-center px-2.5 py-1 rounded border ${getStatusColors()}`}>
+      <span className="text-sm font-medium">KYC - {status}</span>
+    </div>
+  );
+};
+
 interface ProjectCardProps {
   title: string;
   description: string;
@@ -49,34 +76,41 @@ interface ProjectCardProps {
   statusColor?: "green" | "yellow" | "red" | "blue";
   animate?: boolean;
   customerName: string;
+  kycStatus: "YES" | "NO" | "PEP" | "Request";
 }
+
 const ProjectCard = ({
   title,
   description,
   status,
   statusColor = "blue",
   animate = false,
-  customerName
+  customerName,
+  kycStatus
 }: ProjectCardProps) => {
   return <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="p-4">
-        {status && <div className="flex justify-end mb-1">
-            <span className={`text-xs font-medium
+        <div className="flex flex-col space-y-2">
+          <div className="flex justify-between items-center">
+            <KycStatusBadge status={kycStatus} />
+            {status && <span className={`text-xs font-medium
                 ${statusColor === "green" ? "text-green-700" : statusColor === "yellow" ? "text-amber-700" : statusColor === "red" ? "text-red-700" : "text-blue-700"}
                 ${animate ? "animate-pulse-slow" : ""}
               `}>
               {status}
-            </span>
-          </div>}
-        <div className="mb-1">
-          <h3 className="font-medium">
-            {title} <span className="font-bold">{customerName}</span>
-          </h3>
+            </span>}
+          </div>
+          <div className="mb-1">
+            <h3 className="font-medium">
+              {title} <span className="font-bold">{customerName}</span>
+            </h3>
+          </div>
+          <p className="text-sm text-gray-500">{description}</p>
         </div>
-        <p className="text-sm text-gray-500">{description}</p>
       </CardContent>
     </Card>;
 };
+
 const CommandSuggestion = ({
   text
 }: {
@@ -88,6 +122,7 @@ const CommandSuggestion = ({
     </Badge>
   );
 };
+
 const EmptyEngagements = () => {
   return <Card className="border border-dashed bg-white/50 p-4 text-center">
       <div className="flex flex-col items-center gap-2">
@@ -98,6 +133,7 @@ const EmptyEngagements = () => {
       </div>
     </Card>;
 };
+
 const CommandCenter = () => {
   const [activeEngagements, setActiveEngagements] = useState([{
     title: "Workmen's Compensation Renewal -",
@@ -105,29 +141,34 @@ const CommandCenter = () => {
     description: "Comprehensive coverage renewal assessment required",
     status: "Awaiting Confirmation",
     statusColor: "yellow" as const,
-    animate: true
+    animate: true,
+    kycStatus: "NO" as const
   }, {
     title: "New Motor Quote -",
     customerName: "Abdullah Ali",
     description: "Comprehensive coverage proposal ready for review",
     status: "Quoted",
     statusColor: "yellow" as const,
-    animate: false
+    animate: false,
+    kycStatus: "YES" as const
   }, {
     title: "Medical Claim -",
     customerName: "Vijay Singh",
     description: "Claim assessment completed and approved",
     status: "Claim Settled",
     statusColor: "green" as const,
-    animate: false
+    animate: false,
+    kycStatus: "PEP" as const
   }, {
     title: "Risk Assessment",
     customerName: "Mohan Lal",
     description: "Complete risk profile for healthcare client",
     status: "In Progress",
     statusColor: "blue" as const,
-    animate: false
+    animate: false,
+    kycStatus: "Request" as const
   }]);
+
   return <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
         {/* Right Panel for Instant Commands and Active Engagements */}
@@ -150,7 +191,16 @@ const CommandCenter = () => {
               <Button variant="ghost" size="sm" className="text-sm">View all</Button>
             </div>
             <div className="space-y-3">
-              {activeEngagements.length > 0 ? activeEngagements.map((engagement, index) => <ProjectCard key={index} title={engagement.title} customerName={engagement.customerName} description={engagement.description} status={engagement.status} statusColor={engagement.statusColor} animate={engagement.animate} />) : <EmptyEngagements />}
+              {activeEngagements.length > 0 ? activeEngagements.map((engagement, index) => <ProjectCard 
+                key={index} 
+                title={engagement.title} 
+                customerName={engagement.customerName} 
+                description={engagement.description} 
+                status={engagement.status} 
+                statusColor={engagement.statusColor} 
+                animate={engagement.animate} 
+                kycStatus={engagement.kycStatus}
+              />) : <EmptyEngagements />}
             </div>
           </div>
         </div>
@@ -284,4 +334,5 @@ const CommandCenter = () => {
       </div>
     </div>;
 };
+
 export default CommandCenter;
