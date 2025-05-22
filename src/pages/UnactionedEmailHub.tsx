@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -55,11 +54,11 @@ import EmailActionPanel from "@/components/email/EmailActionPanel";
 import { mockEmails } from "@/data/emailsData";
 import { useToast } from "@/hooks/use-toast";
 
-// Email types
-type EmailStatus = "Unlinked" | "In Progress" | "Done";
-type EmailType = "Quote Request" | "Renewal" | "Claim" | "Complaint" | "Unknown";
+// Email types - exported to be used in emailsData.ts
+export type EmailStatus = "Unlinked" | "In Progress" | "Done";
+export type EmailType = "Quote Request" | "Renewal" | "Claim" | "Complaint" | "Unknown";
 
-type Email = {
+export type Email = {
   id: string;
   sender: string;
   senderEmail: string;
