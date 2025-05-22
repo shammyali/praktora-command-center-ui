@@ -7,16 +7,17 @@ const Header = () => {
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center">
-          {/* Left side empty to balance the layout */}
-        </div>
-        
-        {/* Centered logo */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          {/* Logo moved to the left */}
           <img 
             src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
             alt="Praktora Práxis Logo" 
-            className="h-12 md:h-14" 
+            className="h-10 md:h-12" 
           />
+        </div>
+        
+        {/* Welcome message in the center */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <h2 className="text-lg md:text-xl font-medium text-praktora-burgundy">Welcome to Praktora Práxis</h2>
         </div>
         
         <div className="flex items-center gap-4">
