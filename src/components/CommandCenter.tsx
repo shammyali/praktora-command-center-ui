@@ -35,13 +35,32 @@ const ActionCard = ({ icon: Icon, title, color }: ActionCardProps) => {
 interface ProjectCardProps {
   title: string;
   description: string;
+  status?: string;
+  statusColor?: "green" | "yellow" | "red" | "blue";
+  animate?: boolean;
 }
 
-const ProjectCard = ({ title, description }: ProjectCardProps) => {
+const ProjectCard = ({ title, description, status, statusColor = "blue", animate = false }: ProjectCardProps) => {
   return (
     <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="p-4">
-        <h3 className="font-medium mb-1">{title}</h3>
+        <div className="flex justify-between items-start mb-1">
+          <h3 className="font-medium">{title}</h3>
+          {status && (
+            <Badge 
+              variant="outline" 
+              className={`
+                ${statusColor === "green" ? "border-green-500 bg-green-50 text-green-700" : 
+                 statusColor === "yellow" ? "border-amber-500 bg-amber-50 text-amber-700" :
+                 statusColor === "red" ? "border-red-500 bg-red-50 text-red-700" :
+                 "border-blue-500 bg-blue-50 text-blue-700"}
+                ${animate ? "animate-pulse-slow" : ""}
+              `}
+            >
+              {status}
+            </Badge>
+          )}
+        </div>
         <p className="text-sm text-gray-500">{description}</p>
       </CardContent>
     </Card>
@@ -74,10 +93,34 @@ const EmptyEngagements = () => {
 
 const CommandCenter = () => {
   const [activeEngagements, setActiveEngagements] = useState([
-    { title: "Commercial Insurance Renewal", description: "ABC Manufacturing renewal due in 30 days" },
-    { title: "New Business Quote", description: "XYZ Corp liability coverage proposal" },
-    { title: "Claims Processing", description: "Follow up on open claims for Johnson account" },
-    { title: "Risk Assessment", description: "Complete risk profile for healthcare client" }
+    { 
+      title: "Workmen's Compensation Renewal - Star Trading LLC", 
+      description: "Comprehensive coverage renewal assessment required", 
+      status: "Awaiting Confirmation",
+      statusColor: "yellow" as const,
+      animate: true
+    },
+    { 
+      title: "New Motor Quote - Abdullah Salman", 
+      description: "Comprehensive coverage proposal ready for review", 
+      status: "Quoted",
+      statusColor: "yellow" as const,
+      animate: false
+    },
+    { 
+      title: "Medical Claim - Robert Andrew", 
+      description: "Claim assessment completed and approved", 
+      status: "Claim Settled",
+      statusColor: "green" as const,
+      animate: false
+    },
+    { 
+      title: "Risk Assessment", 
+      description: "Complete risk profile for healthcare client", 
+      status: "In Progress",
+      statusColor: "blue" as const,
+      animate: false
+    }
   ]);
 
   return (
@@ -118,11 +161,14 @@ const CommandCenter = () => {
             </div>
             <div className="space-y-3">
               {activeEngagements.length > 0 ? (
-                activeEngagements.map((project, index) => (
+                activeEngagements.map((engagement, index) => (
                   <ProjectCard 
                     key={index}
-                    title={project.title} 
-                    description={project.description} 
+                    title={engagement.title}
+                    description={engagement.description}
+                    status={engagement.status}
+                    statusColor={engagement.statusColor}
+                    animate={engagement.animate}
                   />
                 ))
               ) : (
