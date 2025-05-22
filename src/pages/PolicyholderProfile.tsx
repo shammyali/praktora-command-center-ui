@@ -38,6 +38,7 @@ import ComplaintHistory from "@/components/policyholders/ComplaintHistory";
 import LinkedEntities from "@/components/policyholders/LinkedEntities";
 import InternalNotes from "@/components/policyholders/InternalNotes";
 import SmartActionsBar from "@/components/policyholders/SmartActionsBar";
+import PortfolioTracker from "@/components/policyholders/PortfolioTracker";
 
 const PolicyholderProfile = () => {
   // Simulate loading policyholder data
@@ -57,29 +58,32 @@ const PolicyholderProfile = () => {
             {/* Section 1: Policyholder Overview Panel */}
             <PolicyholderOverview />
             
+            {/* Section 2: Portfolio Tracker */}
+            <PortfolioTracker />
+            
             {/* Main content sections */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 grid gap-6">
-                {/* Section 2: KYC & Risk Summary */}
+                {/* Section 3: KYC & Risk Summary */}
                 <KycRiskSummary />
                 
-                {/* Section 3: Document Tracker */}
+                {/* Section 4: Document Tracker */}
                 <DocumentTracker />
                 
-                {/* Section 4: Complaint & Escalation History */}
+                {/* Section 5: Complaint & Escalation History */}
                 <ComplaintHistory />
               </div>
               
               <div className="grid gap-6">
-                {/* Section 5: Linked Entities */}
+                {/* Section 6: Linked Entities */}
                 <LinkedEntities />
                 
-                {/* Section 6: Internal Notes & Flags */}
+                {/* Section 7: Internal Notes & Flags */}
                 <InternalNotes />
               </div>
             </div>
             
-            {/* Section 7: Smart Actions Bar */}
+            {/* Section 8: Smart Actions Bar */}
             <SmartActionsBar />
           </div>
         </main>
