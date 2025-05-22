@@ -12,7 +12,7 @@ const Header = () => {
           <img 
             src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
             alt="Praktora Práxis Logo" 
-            className="h-10 md:h-12 transition-all duration-300 hover:scale-105 hover:shadow-md" 
+            className="h-10 md:h-12 transition-all duration-500 hover:scale-105 hover:shadow-md" 
           />
         </div>
         
