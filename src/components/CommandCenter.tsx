@@ -38,27 +38,35 @@ interface ProjectCardProps {
   status?: string;
   statusColor?: "green" | "yellow" | "red" | "blue";
   animate?: boolean;
+  clientName?: string;
 }
 
-const ProjectCard = ({ title, description, status, statusColor = "blue", animate = false }: ProjectCardProps) => {
+const ProjectCard = ({ title, description, status, statusColor = "blue", animate = false, clientName }: ProjectCardProps) => {
+  // Extract client name from title if provided separately
+  const formattedTitle = clientName 
+    ? title.replace(clientName, `<strong>${clientName}</strong>`) 
+    : title;
+
   return (
     <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-1">
-          <h3 className="font-medium">{title}</h3>
+          <h3 
+            className="font-medium" 
+            dangerouslySetInnerHTML={{ __html: formattedTitle }}
+          />
           {status && (
-            <Badge 
-              variant="outline" 
-              className={`
-                ${statusColor === "green" ? "border-green-500 bg-green-50 text-green-700" : 
-                 statusColor === "yellow" ? "border-amber-500 bg-amber-50 text-amber-700" :
-                 statusColor === "red" ? "border-red-500 bg-red-50 text-red-700" :
-                 "border-blue-500 bg-blue-50 text-blue-700"}
+            <span 
+              className={`text-xs font-medium
+                ${statusColor === "green" ? "text-green-700" : 
+                 statusColor === "yellow" ? "text-amber-700" :
+                 statusColor === "red" ? "text-red-700" :
+                 "text-blue-700"}
                 ${animate ? "animate-pulse-slow" : ""}
               `}
             >
               {status}
-            </Badge>
+            </span>
           )}
         </div>
         <p className="text-sm text-gray-500">{description}</p>
@@ -94,21 +102,24 @@ const EmptyEngagements = () => {
 const CommandCenter = () => {
   const [activeEngagements, setActiveEngagements] = useState([
     { 
-      title: "Workmen's Compensation Renewal - Star Trading LLC", 
+      title: "Workmen's Compensation Renewal - ", 
+      clientName: "Star Trading LLC",
       description: "Comprehensive coverage renewal assessment required", 
       status: "Awaiting Confirmation",
       statusColor: "yellow" as const,
       animate: true
     },
     { 
-      title: "New Motor Quote - Abdullah Salman", 
+      title: "New Motor Quote - ", 
+      clientName: "Abdullah Salman",
       description: "Comprehensive coverage proposal ready for review", 
       status: "Quoted",
       statusColor: "yellow" as const,
       animate: false
     },
     { 
-      title: "Medical Claim - Robert Andrew", 
+      title: "Medical Claim - ", 
+      clientName: "Robert Andrew",
       description: "Claim assessment completed and approved", 
       status: "Claim Settled",
       statusColor: "green" as const,
@@ -165,6 +176,7 @@ const CommandCenter = () => {
                   <ProjectCard 
                     key={index}
                     title={engagement.title}
+                    clientName={engagement.clientName}
                     description={engagement.description}
                     status={engagement.status}
                     statusColor={engagement.statusColor}
