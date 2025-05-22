@@ -7,6 +7,8 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resiz
 import { Badge } from "./ui/badge";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { Command, CommandItem } from "./ui/command";
+
 interface ActionCardProps {
   icon: React.ElementType;
   title: string;
@@ -80,7 +82,11 @@ const CommandSuggestion = ({
 }: {
   text: string;
 }) => {
-  return;
+  return (
+    <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-slate-100">
+      {text}
+    </Badge>
+  );
 };
 const EmptyEngagements = () => {
   return <Card className="border border-dashed bg-white/50 p-4 text-center">
@@ -158,26 +164,26 @@ const CommandCenter = () => {
                 <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
                   <div className="flex flex-col items-center gap-3">
                     <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/60" />
-                      <p className="text-[#5A6B82]/60 italic font-semibold">
+                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                      <p className="text-[#5A6B82]/40 italic font-semibold">
                         Try: 'Compare RSA and AXA for MP2118' or 'Create endorsement for GM123/1'
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/60" />
-                      <p className="text-[#5A6B82]/60 italic font-semibold">
+                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                      <p className="text-[#5A6B82]/40 italic font-semibold">
                         Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice - no premium recived' follow up by mondy..
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/60" />
-                      <p className="text-[#5A6B82]/60 italic font-semibold">
+                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                      <p className="text-[#5A6B82]/40 italic font-semibold">
                         Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expirning today'
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/60" />
-                      <p className="text-[#5A6B82]/60 italic font-semibold">
+                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                      <p className="text-[#5A6B82]/40 italic font-semibold">
                         Try: 'Follow up on pending claims for Al Zahra Trading' or 'List all unpaid customer invoices over 30 days'
                       </p>
                     </div>
