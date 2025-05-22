@@ -95,6 +95,8 @@ const SidebarNav = () => {
       <SidebarItem 
         icon={BarChart4Icon} 
         label="Conversion Funnels" 
+        active={location.pathname === "/funnels"}
+        to="/funnels"
       />
       <SidebarItem 
         icon={FlaskRoundIcon} 

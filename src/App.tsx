@@ -14,6 +14,7 @@ import UnactionedEmailHub from "./pages/UnactionedEmailHub";
 import TelegramHub from "./pages/TelegramHub";
 import IntelligenceHub from "./pages/IntelligenceHub";
 import P2RARadarHub from "./pages/P2RARadarHub";
+import ConversionFunnels from "./pages/ConversionFunnels";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/telegram" element={<TelegramHub />} />
           <Route path="/intelligence" element={<IntelligenceHub />} />
           <Route path="/radar" element={<P2RARadarHub />} />
+          <Route path="/funnels" element={<ConversionFunnels />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
