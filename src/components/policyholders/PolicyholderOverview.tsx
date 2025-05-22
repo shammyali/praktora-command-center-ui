@@ -24,8 +24,8 @@ const PolicyholderOverview = () => {
     whatsApp: "+971 50 123 4567",
     kycCompletionStatus: "completed", // completed, incomplete, expiring
     kycCompletionPercentage: 100,
-    // New field for profile image or company logo
-    profileImage: "/lovable-uploads/66a81866-061b-4545-bd43-d1742f06411f.png" // Sample placeholder
+    // New passport photo URL for a man
+    profileImage: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952"
   };
 
   const handleEmailContact = () => {
@@ -56,25 +56,9 @@ const PolicyholderOverview = () => {
     <Card className="border-t-4 border-t-[#9C2D55]">
       <CardContent className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left column - Client basic info and profile image */}
+          {/* Left column - Client basic info */}
           <div className="flex-1">
             <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-4">
-              {/* Profile Image or Logo */}
-              <div className="flex-shrink-0">
-                <Avatar className="h-32 w-32 border-2 border-[#9C2D55]">
-                  <AvatarImage 
-                    src={policyholder.profileImage} 
-                    alt={`${policyholder.name} ${policyholder.type === "Individual" ? "photo" : "logo"}`} 
-                  />
-                  <AvatarFallback className="text-3xl bg-[#9C2D55] text-white">
-                    {getInitials(policyholder.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="text-xs text-center mt-1 text-muted-foreground">
-                  {policyholder.type === "Individual" ? "Client Photo" : "Company Logo"}
-                </div>
-              </div>
-
               {/* Client Name and VIP Badge */}
               <div>
                 <div className="flex items-center gap-3">
@@ -117,6 +101,22 @@ const PolicyholderOverview = () => {
                     </Badge>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Center column - Profile Image or Logo */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex-shrink-0">
+              <div className="w-32 h-40 overflow-hidden border-2 border-[#9C2D55] rounded">
+                <img
+                  src={policyholder.profileImage}
+                  alt={`${policyholder.name} ${policyholder.type === "Individual" ? "photo" : "logo"}`}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              <div className="text-xs text-center mt-1 text-muted-foreground">
+                {policyholder.type === "Individual" ? "Passport Photo" : "Company Logo"}
               </div>
             </div>
           </div>
