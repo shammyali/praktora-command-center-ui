@@ -29,7 +29,9 @@ const CommandPopover = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
-              <AvatarTrigger isConnected={isNodeConnected} />
+              <div>
+                <AvatarTrigger isConnected={isNodeConnected} />
+              </div>
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">
