@@ -17,6 +17,7 @@ import P2RARadarHub from "./pages/P2RARadarHub";
 import ConversionFunnels from "./pages/ConversionFunnels";
 import AutomationsLab from "./pages/AutomationsLab";
 import HistoryEventCenter from "./pages/HistoryEventCenter";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/funnels" element={<ConversionFunnels />} />
           <Route path="/automations" element={<AutomationsLab />} />
           <Route path="/history" element={<HistoryEventCenter />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

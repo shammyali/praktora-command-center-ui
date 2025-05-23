@@ -12,7 +12,8 @@ import {
   BarChart4Icon,
   FlaskRoundIcon,
   HistoryIcon,
-  SendIcon
+  SendIcon,
+  SettingsIcon
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
@@ -110,6 +111,12 @@ const SidebarNav = () => {
         label="History" 
         active={location.pathname === "/history"}
         to="/history"
+      />
+      <SidebarItem 
+        icon={SettingsIcon} 
+        label="Settings" 
+        active={location.pathname === "/settings"}
+        to="/settings"
       />
     </nav>
   );
