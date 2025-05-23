@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Phone, Mail, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface CustomerContactInfoProps {
   email: string;
@@ -20,6 +21,8 @@ const CustomerContactInfo = ({
   fullName, 
   onVipStatusChange 
 }: CustomerContactInfoProps) => {
+  const navigate = useNavigate();
+
   const handleEmailContact = () => {
     window.open(`mailto:${email}`);
     toast.success(`Opening email to ${email}`);
@@ -31,8 +34,9 @@ const CustomerContactInfo = ({
   };
 
   const handleWhatsAppContact = () => {
-    window.open(`https://wa.me/${mobile.replace(/\s+/g, "")}`);
-    toast.success(`Opening WhatsApp chat with ${mobile}`);
+    // Navigate to internal WhatsApp module instead of opening WhatsApp Web
+    navigate('/whatsapp');
+    toast.success(`Navigating to WhatsApp module for ${fullName}`);
   };
 
   return (
