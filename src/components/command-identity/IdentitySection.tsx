@@ -37,7 +37,7 @@ const IdentitySection = ({
         <div className="flex flex-col">
           <h4 className="font-medium text-sm flex items-center">
             {name}
-            <Badge className="ml-2 bg-praktora-burgundy/80 text-[10px] py-0.5 px-1.5">{role}</Badge>
+            <span className="ml-2 text-[10px] text-praktora-burgundy">Command Node</span>
           </h4>
           
           <div className="flex items-center gap-1.5 text-xs mt-1">
