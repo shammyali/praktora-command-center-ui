@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AISettings from "./AISettings";
 import AutomationSettings from "./AutomationSettings";
@@ -11,7 +12,17 @@ import DataManagementSettings from "./DataManagementSettings";
 import PromptTemplatesSettings from "./PromptTemplatesSettings";
 
 const SettingsLayout = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("ai");
+
+  // Set initial tab based on URL query parameter when component mounts
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tabParam = queryParams.get("tab");
+    if (tabParam && ["ai", "automation", "sla", "communication", "templates", "prompt-templates", "intelligence", "data"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">

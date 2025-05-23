@@ -41,15 +41,8 @@ const TemplateDropdown = ({ templates, onTemplateClick }: TemplateDropdownProps)
   };
 
   const handleManageTemplates = () => {
-    // Navigate to settings with the prompt-templates tab selected
-    navigate("/settings");
-    // Add a slight delay to allow the settings page to load before selecting the tab
-    setTimeout(() => {
-      const settingsTabsElement = document.querySelector('[data-value="prompt-templates"]');
-      if (settingsTabsElement) {
-        (settingsTabsElement as HTMLElement).click();
-      }
-    }, 100);
+    // Navigate directly to the settings page with prompt-templates tab
+    navigate("/settings?tab=prompt-templates");
     
     toast.info("Opening Prompt Templates Settings", {
       description: "Manage your saved command templates"
