@@ -10,7 +10,7 @@ import {
   PaperclipIcon, 
   Settings2Icon
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -19,6 +19,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import DocumentUploadZone from "../documents/DocumentUploadZone";
 
 interface CommandInputProps {
   command: string;
@@ -46,6 +48,8 @@ const CommandInput = ({
   executeCommand
 }: CommandInputProps) => {
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
   
   // Mock templates grouped by category - in a real app these would come from an API
   const [templates, setTemplates] = useState<Record<string, PromptTemplate[]>>({
@@ -84,6 +88,17 @@ const CommandInput = ({
     });
   };
 
+  const handleAttachClick = () => {
+    setShowUploadDialog(true);
+  };
+
+  const handleUploadComplete = () => {
+    setShowUploadDialog(false);
+    toast.success("Documents attached to command", {
+      description: "Your documents will be processed with your query"
+    });
+  };
+
   return (
     <Card className="shadow-md h-[150px] border-[#9C2D55]/20 flex flex-col">
       <CardContent className="p-4 flex flex-col h-full">
@@ -107,7 +122,11 @@ const CommandInput = ({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleAttachClick}
+                  >
                     <PaperclipIcon className="h-4 w-4 mr-1" />
                     Attach
                   </Button>
@@ -185,6 +204,13 @@ const CommandInput = ({
           </TooltipProvider>
         </div>
       </CardContent>
+      
+      {/* File upload dialog */}
+      <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DocumentUploadZone onClose={handleUploadComplete} />
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
