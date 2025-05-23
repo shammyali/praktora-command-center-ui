@@ -74,6 +74,7 @@ const CommandInput = ({
   };
   
   const handleManageTemplates = () => {
+    // Navigate to settings with the prompt-templates tab selected
     navigate("/settings");
     // Add a slight delay to allow the settings page to load before selecting the tab
     setTimeout(() => {
