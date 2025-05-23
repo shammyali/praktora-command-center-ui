@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 import { mistralApi } from "@/services/api/mistralApi";
@@ -58,7 +57,7 @@ const CommandCenter = () => {
     setCharacterCount(value.length);
   };
   
-  // Handle click on a command suggestion
+  // Handle click on a command suggestion - simplified to just set the command
   const handleSuggestionClick = (suggestionText: string) => {
     setCommand(suggestionText);
     setCharacterCount(suggestionText.length);
@@ -115,8 +114,8 @@ const CommandCenter = () => {
         {/* Main Content Area - Using ResizablePanelGroup for flexible sizing */}
         <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
           <ResizablePanelGroup direction="vertical" className="h-full">
-            {/* Display Area - 70% of the available space initially */}
-            <ResizablePanel defaultSize={70} minSize={50}>
+            {/* Display Area - 75% of the available space initially */}
+            <ResizablePanel defaultSize={75} minSize={60}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
                 {messages.length === 0 ? (
                   <SuggestionsDisplay />
@@ -128,8 +127,8 @@ const CommandCenter = () => {
             
             <ResizableHandle withHandle />
             
-            {/* Prompt Area - 30% of the available space initially */}
-            <ResizablePanel defaultSize={30} minSize={15}>
+            {/* Prompt Area - 25% of the available space initially to make it more compact */}
+            <ResizablePanel defaultSize={25} minSize={15}>
               <div className="h-full p-5 bg-white overflow-auto">
                 <CommandInput
                   command={command}
