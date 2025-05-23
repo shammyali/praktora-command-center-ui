@@ -16,15 +16,18 @@ const Header = ({ title, subtitle, showBackButton = false, backButtonFallbackPat
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-2">
-          {showBackButton && (
-            <BackButton fallbackPath={backButtonFallbackPath} />
-          )}
-          {/* Logo with subtle intelligent animation */}
-          <img 
-            src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
-            alt="Praktora Práxis Logo" 
-            className="h-10 md:h-12 transition-all duration-500 hover:scale-105 hover:shadow-md" 
-          />
+          {/* Fixed-width container for logo and back button to prevent "jumping" */}
+          <div className="w-48 flex items-center">
+            {showBackButton && (
+              <BackButton fallbackPath={backButtonFallbackPath} />
+            )}
+            {/* Logo with subtle intelligent animation */}
+            <img 
+              src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
+              alt="Praktora Práxis Logo" 
+              className="h-10 md:h-12 transition-all duration-500 hover:scale-105 hover:shadow-md" 
+            />
+          </div>
         </div>
         
         {/* Command Panel in the center */}

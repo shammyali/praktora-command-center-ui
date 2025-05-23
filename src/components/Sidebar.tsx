@@ -6,7 +6,7 @@ import SidebarProfile from "./sidebar/SidebarProfile";
 
 const Sidebar = () => {
   return (
-    <div className="flex h-full w-60 flex-col border-r border-gray-200 bg-sidebar">
+    <div className="flex h-full w-60 flex-shrink-0 flex-col border-r border-gray-200 bg-sidebar">
       <SidebarSearch />
       
       <div className="flex-1 overflow-auto py-2">
