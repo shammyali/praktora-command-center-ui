@@ -1,8 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Phone, Mail, MessageSquare } from "lucide-react";
+import { Mail, Phone, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -17,9 +15,7 @@ interface CustomerContactInfoProps {
 const CustomerContactInfo = ({ 
   email, 
   mobile, 
-  isVip, 
-  fullName, 
-  onVipStatusChange 
+  fullName
 }: CustomerContactInfoProps) => {
   const navigate = useNavigate();
 
@@ -42,17 +38,7 @@ const CustomerContactInfo = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-1">
-        <h3 className="font-medium text-sm">Contact Info</h3>
-        <div className="flex items-center gap-1">
-          <Switch 
-            id="vip-mode" 
-            checked={isVip} 
-            onCheckedChange={onVipStatusChange}
-          />
-          <Label htmlFor="vip-mode" className="text-xs">VIP</Label>
-        </div>
-      </div>
+      <h3 className="font-medium text-sm mb-1">Contact Info</h3>
       
       <div className="space-y-1">
         <div className="flex items-center gap-1">

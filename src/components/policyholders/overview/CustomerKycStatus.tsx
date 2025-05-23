@@ -24,11 +24,13 @@ const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps)
            kycStatus === "incomplete" ? "Incomplete" : "Expiring"}
         </Badge>
       </div>
-      <Progress 
-        value={kycPercentage} 
-        className="h-1.5" 
-      />
-      <p className="text-xs text-right mt-0.5">{kycPercentage}%</p>
+      <div className="flex items-center gap-2">
+        <Progress 
+          value={kycPercentage} 
+          className="h-1.5 flex-grow" 
+        />
+        <p className="text-xs">{kycPercentage}%</p>
+      </div>
     </div>
   );
 };

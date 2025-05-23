@@ -20,8 +20,8 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
 
   return (
     <Card className="border-t-2 border-t-[#9C2D55]">
-      <CardContent className="p-4">
-        <div className="grid grid-cols-12 gap-4 items-center">
+      <CardContent className="p-3">
+        <div className="grid grid-cols-12 gap-3 items-center">
           {/* Customer basic info - 5 cols on large screens */}
           <div className="col-span-12 md:col-span-5">
             <CustomerBasicInfo customer={customer} />
