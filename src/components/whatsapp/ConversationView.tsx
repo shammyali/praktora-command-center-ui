@@ -12,13 +12,16 @@ import { format } from "date-fns";
 interface ConversationViewProps {
   conversation: WhatsAppConversation | null;
   messages: WhatsAppMessage[];
+  autoFocusInput?: boolean;
 }
 
 export default function ConversationView({
   conversation,
-  messages
+  messages,
+  autoFocusInput = false
 }: ConversationViewProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -29,6 +32,13 @@ export default function ConversationView({
       }
     }
   }, [messages]);
+  
+  // Focus input when conversation changes or autoFocus is true
+  useEffect(() => {
+    if (autoFocusInput && conversation && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [conversation, autoFocusInput]);
   
   if (!conversation) {
     return (
@@ -143,6 +153,7 @@ export default function ConversationView({
           </Button>
           
           <Input 
+            ref={inputRef}
             placeholder="Type a message..."
             className="h-9 text-sm"
           />

@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { Separator } from "@/components/ui/separator";
@@ -10,7 +11,23 @@ import WhatsAppMiniDashboard from "@/components/whatsapp/WhatsAppMiniDashboard";
 import { mockWhatsAppConversations, mockConversationMessages, mockWhatsAppStats } from "@/data/whatsAppData";
 
 export default function WhatsAppHub() {
+  const [searchParams] = useSearchParams();
+  const phoneParam = searchParams.get('phone');
+  
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  
+  // Find conversation by phone number if provided in URL
+  useEffect(() => {
+    if (phoneParam) {
+      const foundConversation = mockWhatsAppConversations.find(c => 
+        c.contact.phoneNumber.replace(/\s+/g, "").includes(phoneParam)
+      );
+      
+      if (foundConversation) {
+        setSelectedConversationId(foundConversation.id);
+      }
+    }
+  }, [phoneParam]);
   
   const selectedConversation = selectedConversationId 
     ? mockWhatsAppConversations.find(c => c.id === selectedConversationId) 
@@ -49,6 +66,7 @@ export default function WhatsAppHub() {
             <ConversationView 
               conversation={selectedConversation} 
               messages={messages}
+              autoFocusInput={!!phoneParam}
             />
           </div>
           

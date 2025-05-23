@@ -34,9 +34,10 @@ const CustomerContactInfo = ({
   };
 
   const handleWhatsAppContact = () => {
-    // Navigate to internal WhatsApp module instead of opening WhatsApp Web
-    navigate('/whatsapp');
-    toast.success(`Navigating to WhatsApp module for ${fullName}`);
+    // Navigate to internal WhatsApp module with the mobile number as a parameter
+    const formattedMobile = mobile.replace(/\s+/g, "");
+    navigate(`/whatsapp?phone=${formattedMobile}`);
+    toast.success(`Opening WhatsApp chat for ${fullName}`);
   };
 
   return (
