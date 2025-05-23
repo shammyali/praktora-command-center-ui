@@ -11,10 +11,10 @@ interface CustomerKycStatusProps {
 const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex flex-col mb-1">
         <h3 className="font-medium text-sm">KYC Status</h3>
         <Badge 
-          className={`text-xs ${
+          className={`text-xs mt-1 w-fit ${
             kycStatus === "completed" ? "bg-green-500" : 
             kycStatus === "incomplete" ? "bg-red-500" : "bg-amber-500"
           }`}
