@@ -41,7 +41,7 @@ const TasksHub = () => {
 
   return (
     <Layout>
-      <div className="px-6 py-6">
+      <div>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Command Tasks</h1>

@@ -28,7 +28,12 @@ const Layout = ({
           showBackButton={showBackButton}
           backButtonFallbackPath={backButtonFallbackPath}
         />
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        {/* Create a consistent scrollable content area with padding for all pages */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="container mx-auto px-6 py-6">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
