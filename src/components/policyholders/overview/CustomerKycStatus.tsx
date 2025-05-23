@@ -11,23 +11,24 @@ interface CustomerKycStatusProps {
 const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="font-medium">KYC Completion Status</h3>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="font-medium text-sm">KYC Status</h3>
         <Badge 
-          className={
+          className={`text-xs ${
             kycStatus === "completed" ? "bg-green-500" : 
             kycStatus === "incomplete" ? "bg-red-500" : "bg-amber-500"
-          }
+          }`}
         >
-          <UserCheck className="h-3 w-3 mr-1" />
-          {kycStatus === "completed" ? "Completed" : 
-           kycStatus === "incomplete" ? "Incomplete" : "Expiring Soon"}
+          <UserCheck className="h-3 w-3 mr-0.5" />
+          {kycStatus === "completed" ? "Complete" : 
+           kycStatus === "incomplete" ? "Incomplete" : "Expiring"}
         </Badge>
       </div>
       <Progress 
         value={kycPercentage} 
-        className="h-2" 
+        className="h-1.5" 
       />
+      <p className="text-xs text-right mt-0.5">{kycPercentage}%</p>
     </div>
   );
 };

@@ -41,61 +41,54 @@ const CustomerContactInfo = ({
   };
 
   return (
-    <div className="flex-1">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="font-medium">Contact Information</h3>
-        <div className="flex items-center gap-2">
+    <div>
+      <div className="flex justify-between items-center mb-1">
+        <h3 className="font-medium text-sm">Contact Info</h3>
+        <div className="flex items-center gap-1">
           <Switch 
             id="vip-mode" 
             checked={isVip} 
             onCheckedChange={onVipStatusChange}
           />
-          <Label htmlFor="vip-mode">VIP Client</Label>
+          <Label htmlFor="vip-mode" className="text-xs">VIP</Label>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-y-2 mb-4">
-        <div>
-          <p className="text-sm text-muted-foreground">Email</p>
-          <div className="flex items-center gap-2">
-            <p>{email}</p>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleEmailContact}
-              className="p-1 h-auto"
-            >
-              <Mail className="h-4 w-4 text-praktora-burgundy" />
-            </Button>
-          </div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-1">
+          <Mail className="h-3.5 w-3.5 text-gray-500" />
+          <p className="text-sm truncate max-w-[150px]">{email}</p>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleEmailContact}
+            className="p-1 h-auto"
+          >
+            <Mail className="h-3 w-3 text-praktora-burgundy" />
+          </Button>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">Mobile</p>
-          <div className="flex items-center gap-2">
-            <p>{mobile}</p>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handlePhoneContact}
-              className="p-1 h-auto"
-            >
-              <Phone className="h-4 w-4 text-praktora-burgundy" />
-            </Button>
-          </div>
+        <div className="flex items-center gap-1">
+          <Phone className="h-3.5 w-3.5 text-gray-500" />
+          <p className="text-sm">{mobile}</p>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handlePhoneContact}
+            className="p-1 h-auto"
+          >
+            <Phone className="h-3 w-3 text-praktora-burgundy" />
+          </Button>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">WhatsApp</p>
-          <div className="flex items-center gap-2">
-            <p>{mobile}</p>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleWhatsAppContact}
-              className="p-1 h-auto"
-            >
-              <MessageSquare className="h-4 w-4 text-praktora-burgundy" />
-            </Button>
-          </div>
+        <div className="flex items-center gap-1">
+          <MessageSquare className="h-3.5 w-3.5 text-gray-500" />
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleWhatsAppContact}
+            className="p-0.5 h-auto text-xs"
+          >
+            WhatsApp
+          </Button>
         </div>
       </div>
     </div>

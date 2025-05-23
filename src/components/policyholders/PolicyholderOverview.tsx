@@ -19,21 +19,25 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
   };
 
   return (
-    <Card className="border-t-4 border-t-[#9C2D55]">
-      <CardContent className="p-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left column - Client basic info */}
-          <CustomerBasicInfo customer={customer} />
+    <Card className="border-t-2 border-t-[#9C2D55]">
+      <CardContent className="p-4">
+        <div className="grid grid-cols-12 gap-4 items-center">
+          {/* Customer basic info - 5 cols on large screens */}
+          <div className="col-span-12 md:col-span-5">
+            <CustomerBasicInfo customer={customer} />
+          </div>
           
-          {/* Center column - Profile Image or Logo */}
-          <CustomerProfileImage 
-            profileImage={customer.profileImage} 
-            fullName={customer.fullName}
-            type={customer.type}
-          />
+          {/* Profile image - 2 cols on large screens */}
+          <div className="col-span-4 md:col-span-2 flex justify-center">
+            <CustomerProfileImage 
+              profileImage={customer.profileImage} 
+              fullName={customer.fullName}
+              type={customer.type}
+            />
+          </div>
           
-          {/* Right column - Contact info and KYC status */}
-          <div className="flex-1">
+          {/* Contact info - 3 cols on large screens */}
+          <div className="col-span-8 md:col-span-3">
             <CustomerContactInfo 
               email={customer.email}
               mobile={customer.mobile}
@@ -41,7 +45,10 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
               fullName={customer.fullName}
               onVipStatusChange={handleVipStatusChange}
             />
-            
+          </div>
+          
+          {/* KYC status - 2 cols on large screens */}
+          <div className="col-span-12 md:col-span-2">
             <CustomerKycStatus 
               kycStatus={customer.kycCompletionStatus}
               kycPercentage={customer.kycCompletionPercentage}
