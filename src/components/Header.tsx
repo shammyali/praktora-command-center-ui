@@ -1,8 +1,8 @@
 
 import { MoonIcon, BellIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import CommandIdentityTrigger from "./CommandIdentityTrigger";
 
 interface HeaderProps {
   title?: string;
@@ -52,9 +52,7 @@ const Header = ({ title, subtitle }: HeaderProps) => {
             />
             <ExternalLinkIcon className="h-4 w-4 text-blue-600 hover:text-blue-800" />
           </a>
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-praktora-burgundy text-white">BP</AvatarFallback>
-          </Avatar>
+          <CommandIdentityTrigger />
         </div>
       </div>
     </header>;
