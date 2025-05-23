@@ -27,8 +27,8 @@ const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: He
           />
         </div>
         
-        {/* Center section with fixed positioning */}
-        <div className="flex-1 flex justify-center">
+        {/* Center section - absolute positioning to ensure it stays centered */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
           <div className="flex flex-col items-center">
             <h1 className="text-lg font-semibold text-praktora-burgundy relative">
               P²RA: Intelligence in Motion
@@ -40,7 +40,8 @@ const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: He
           </div>
         </div>
         
-        <div className="flex items-center gap-4 w-48 flex-shrink-0 justify-end">
+        {/* Right side controls with fixed width */}
+        <div className="flex items-center gap-4 w-48 flex-shrink-0 justify-end ml-auto">
           <div className="flex items-center mr-2">
             <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5 animate-pulse-slow"></span>
             <span className="text-xs text-gray-600">P²RA Status: Online</span>

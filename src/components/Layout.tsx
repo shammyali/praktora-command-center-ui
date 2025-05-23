@@ -24,7 +24,7 @@ const Layout = ({
       <Sidebar />
       
       {/* Main content area with fixed header and scrollable content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col relative">
         <Header 
           title={title}
           subtitle={subtitle}
