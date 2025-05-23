@@ -13,7 +13,8 @@ import {
   FlaskRoundIcon,
   HistoryIcon,
   SendIcon,
-  SettingsIcon
+  SettingsIcon,
+  CheckSquareIcon
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
@@ -41,6 +42,14 @@ const SidebarNav = () => {
         greenDot={true} 
         active={location.pathname === "/workflows"}
         to="/workflows"
+      />
+      <SidebarItem 
+        icon={CheckSquareIcon} 
+        label="Tasks" 
+        badge={4} 
+        greenDot={true}
+        active={location.pathname === "/tasks"}
+        to="/tasks" 
       />
       <SidebarItem 
         icon={MessageCircleIcon} 

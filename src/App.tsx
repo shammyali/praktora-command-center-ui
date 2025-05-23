@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import LiveWorkflows from "./pages/LiveWorkflows";
+import TasksHub from "./pages/TasksHub";
 import WhatsAppHub from "./pages/WhatsAppHub";
 import ActiveEnquiries from "./pages/ActiveEnquiries";
 import PolicyholderProfile from "./pages/PolicyholderProfile";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workflows" element={<LiveWorkflows />} />
+          <Route path="/tasks" element={<TasksHub />} />
           <Route path="/whatsapp" element={<WhatsAppHub />} />
           <Route path="/enquiries" element={<ActiveEnquiries />} />
           <Route path="/policyholders" element={<PolicyholderProfile />} />
