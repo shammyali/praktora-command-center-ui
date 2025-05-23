@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Briefcase, ChevronDown, ChevronUp } from "lucide-react";
-import { TaskType } from "@/data/tasksData";
+import { TaskType } from "@/types/taskTypes";
 import TaskTypeIcon from "./TaskTypeIcon";
 import TaskSourceIcon from "./TaskSourceIcon";
 

@@ -6,7 +6,7 @@ import {
   CardHeader, 
   CardFooter
 } from "@/components/ui/card";
-import { TaskType } from "@/data/tasksData";
+import { TaskType } from "@/types/taskTypes";
 import TaskPriorityIndicator from "./TaskPriorityIndicator";
 import TaskHeader from "./TaskHeader";
 import TaskDetails from "./TaskDetails";

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckSquare } from "lucide-react";
-import { TaskType } from "@/data/tasksData";
+import { TaskType } from "@/types/taskTypes";
 import { useToast } from "@/components/ui/use-toast";
 
 interface TaskStatusProps {

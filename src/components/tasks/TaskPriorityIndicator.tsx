@@ -1,5 +1,5 @@
 
-import { TaskType } from "@/data/tasksData";
+import { TaskType } from "@/types/taskTypes";
 
 interface TaskPriorityIndicatorProps {
   priority: TaskType["priority"];
