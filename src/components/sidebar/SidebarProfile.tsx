@@ -34,7 +34,7 @@ const SidebarProfile = () => {
             <div className="flex flex-col items-start text-left">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-sm">Shammy Ali</span>
-                <Badge variant="outline" className="text-[10px] py-0.5 px-2 h-4 bg-praktora-burgundy/10 text-praktora-burgundy rounded-sm flex items-center justify-center">Command Node</Badge>
+                <span className="text-[10px] py-0.5 px-0 text-praktora-burgundy font-medium">Command Node</span>
               </div>
               <span className="text-[10px] text-gray-500">Executing within Command Layer</span>
               <span className="text-[10px] text-muted-foreground mt-0.5">P²RA Node: You</span>
@@ -68,7 +68,7 @@ const SidebarProfile = () => {
                   <div>
                     <h4 className="font-medium">Shammy Ali</h4>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs py-0.5 px-2 bg-praktora-burgundy/10 text-praktora-burgundy rounded-sm flex items-center justify-center">Command Node</Badge>
+                      <span className="text-xs text-praktora-burgundy font-medium">Command Node</span>
                       <span className="text-xs text-muted-foreground">ID: AG-2025-114</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">shammy.ali@praktora.com</p>
