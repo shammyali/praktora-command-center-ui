@@ -9,10 +9,11 @@ import Dashboard from "./pages/Dashboard";
 import LiveWorkflows from "./pages/LiveWorkflows";
 import TasksHub from "./pages/TasksHub";
 import WhatsAppHub from "./pages/WhatsAppHub";
+import TelegramHub from "./pages/TelegramHub";
 import ActiveEnquiries from "./pages/ActiveEnquiries";
 import PolicyholderProfile from "./pages/PolicyholderProfile";
 import UnactionedEmailHub from "./pages/UnactionedEmailHub";
-import TelegramHub from "./pages/TelegramHub";
+import DocumentsHub from "./pages/DocumentsHub";
 import IntelligenceHub from "./pages/IntelligenceHub";
 import P2RARadarHub from "./pages/P2RARadarHub";
 import ConversionFunnels from "./pages/ConversionFunnels";
@@ -35,10 +36,11 @@ const App = () => (
           <Route path="/workflows" element={<LiveWorkflows />} />
           <Route path="/tasks" element={<TasksHub />} />
           <Route path="/whatsapp" element={<WhatsAppHub />} />
+          <Route path="/telegram" element={<TelegramHub />} />
           <Route path="/enquiries" element={<ActiveEnquiries />} />
           <Route path="/policyholders" element={<PolicyholderProfile />} />
           <Route path="/emails" element={<UnactionedEmailHub />} />
-          <Route path="/telegram" element={<TelegramHub />} />
+          <Route path="/documents" element={<DocumentsHub />} />
           <Route path="/intelligence" element={<IntelligenceHub />} />
           <Route path="/radar" element={<P2RARadarHub />} />
           <Route path="/funnels" element={<ConversionFunnels />} />

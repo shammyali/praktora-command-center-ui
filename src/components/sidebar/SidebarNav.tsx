@@ -14,7 +14,8 @@ import {
   HistoryIcon,
   SendIcon,
   SettingsIcon,
-  CheckSquareIcon
+  CheckSquareIcon,
+  FileIcon
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
@@ -60,6 +61,14 @@ const SidebarNav = () => {
         to="/whatsapp" 
       />
       <SidebarItem 
+        icon={SendIcon} 
+        label="Telegram" 
+        badge={2}
+        greenDot={true}
+        active={location.pathname === "/telegram"}
+        to="/telegram"
+      />
+      <SidebarItem 
         icon={FileTextIcon} 
         label="Active Enquiries" 
         dots={3}
@@ -82,12 +91,11 @@ const SidebarNav = () => {
         to="/emails"
       />
       <SidebarItem 
-        icon={SendIcon} 
-        label="Telegram" 
-        badge={2}
-        greenDot={true}
-        active={location.pathname === "/telegram"}
-        to="/telegram"
+        icon={FileIcon} 
+        label="Documents" 
+        badge={8}
+        active={location.pathname === "/documents"}
+        to="/documents" 
       />
       <SidebarItem 
         icon={BrainCircuitIcon} 
