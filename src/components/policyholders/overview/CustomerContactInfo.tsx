@@ -38,42 +38,40 @@ const CustomerContactInfo = ({
 
   return (
     <div>
-      <h3 className="font-medium text-sm mr-4 inline-block">Contact Info</h3>
+      <h3 className="font-medium text-sm mb-2">Contact Info</h3>
       
-      <div className="flex items-center gap-4 mt-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <div className="flex items-center gap-1">
           <Mail className="h-3.5 w-3.5 text-gray-500" />
-          <span className="text-xs truncate max-w-[120px]">{email}</span>
+          <p className="text-xs truncate max-w-[120px]">{email}</p>
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={handleEmailContact}
-            className="p-0.5 h-auto"
+            className="p-1 h-auto"
           >
             <Mail className="h-3 w-3 text-praktora-burgundy" />
           </Button>
         </div>
-        
         <div className="flex items-center gap-1">
           <Phone className="h-3.5 w-3.5 text-gray-500" />
-          <span className="text-xs">{mobile}</span>
+          <p className="text-xs">{mobile}</p>
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={handlePhoneContact}
-            className="p-0.5 h-auto"
+            className="p-1 h-auto"
           >
             <Phone className="h-3 w-3 text-praktora-burgundy" />
           </Button>
         </div>
-        
         <div className="flex items-center gap-1">
           <MessageSquare className="h-3.5 w-3.5 text-gray-500" />
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={handleWhatsAppContact}
-            className="p-0 h-auto text-xs"
+            className="p-0.5 h-auto text-xs"
           >
             WhatsApp
           </Button>
