@@ -11,7 +11,7 @@ interface CustomerKycStatusProps {
 const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center gap-2">
         <h3 className="font-medium text-sm">KYC Status</h3>
         <Badge 
           className={`text-xs ${
@@ -23,13 +23,14 @@ const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps)
           {kycStatus === "completed" ? "Complete" : 
            kycStatus === "incomplete" ? "Incomplete" : "Expiring"}
         </Badge>
-      </div>
-      <div className="flex items-center gap-2">
-        <Progress 
-          value={kycPercentage} 
-          className="h-1.5 w-20 md:w-auto" 
-        />
-        <p className="text-xs whitespace-nowrap">{kycPercentage}%</p>
+        
+        <div className="flex items-center gap-1 ml-1">
+          <Progress 
+            value={kycPercentage} 
+            className="h-1.5 w-16" 
+          />
+          <p className="text-xs whitespace-nowrap">{kycPercentage}%</p>
+        </div>
       </div>
     </div>
   );

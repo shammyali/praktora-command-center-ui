@@ -35,27 +35,25 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
           <div className="flex-grow">
             <CustomerBasicInfo customer={customer} />
           </div>
-          
-          {/* Right side content */}
-          <div className="flex flex-wrap md:flex-nowrap gap-6 w-full md:w-auto mt-2 md:mt-0">
+        </div>
+        
+        {/* Contact and KYC info in a single row */}
+        <div className="flex flex-wrap items-center justify-between mt-2">
+          <div className="flex items-center gap-10">
             {/* Contact info */}
-            <div className="w-full md:w-auto">
-              <CustomerContactInfo 
-                email={customer.email}
-                mobile={customer.mobile}
-                isVip={customer.isVip}
-                fullName={customer.fullName}
-                onVipStatusChange={handleVipStatusChange}
-              />
-            </div>
+            <CustomerContactInfo 
+              email={customer.email}
+              mobile={customer.mobile}
+              isVip={customer.isVip}
+              fullName={customer.fullName}
+              onVipStatusChange={handleVipStatusChange}
+            />
             
             {/* KYC status */}
-            <div className="w-full md:w-auto">
-              <CustomerKycStatus 
-                kycStatus={customer.kycCompletionStatus}
-                kycPercentage={customer.kycCompletionPercentage}
-              />
-            </div>
+            <CustomerKycStatus 
+              kycStatus={customer.kycCompletionStatus}
+              kycPercentage={customer.kycCompletionPercentage}
+            />
           </div>
         </div>
       </CardContent>
