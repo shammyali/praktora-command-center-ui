@@ -62,10 +62,10 @@ const IntelligenceSettings = () => {
                 <SelectValue placeholder="Select VIP trigger" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="claim">Claim Count > 2</SelectItem>
-                <SelectItem value="premium">Premium > 50K</SelectItem>
-                <SelectItem value="policies">Active Policies > 3</SelectItem>
-                <SelectItem value="years">Client > 5 Years</SelectItem>
+                <SelectItem value="claim">Claim Count &gt; 2</SelectItem>
+                <SelectItem value="premium">Premium &gt; 50K</SelectItem>
+                <SelectItem value="policies">Active Policies &gt; 3</SelectItem>
+                <SelectItem value="years">Client &gt; 5 Years</SelectItem>
               </SelectContent>
             </Select>
           </div>
