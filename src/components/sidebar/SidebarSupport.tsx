@@ -4,9 +4,15 @@ import { MessageSquareIcon, SettingsIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import SidebarItem from "./SidebarItem";
 import AISupportChat from "./AISupportChat";
+import { useNavigate } from "react-router-dom";
 
 const SidebarSupport = () => {
   const [showAIChat, setShowAIChat] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSettingsClick = () => {
+    navigate("/settings");
+  };
 
   return (
     <>
@@ -32,7 +38,12 @@ const SidebarSupport = () => {
       
       {/* Settings item moved below the AI chat */}
       <nav className="grid gap-1 px-2 mt-2">
-        <SidebarItem icon={SettingsIcon} label="Settings" />
+        <SidebarItem 
+          icon={SettingsIcon} 
+          label="Settings"
+          to="/settings"
+          onClick={handleSettingsClick}
+        />
       </nav>
     </>
   );

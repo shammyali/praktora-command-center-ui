@@ -4,7 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileTextIcon, PaperclipIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface CommandInputProps {
   command: string;
@@ -23,8 +26,25 @@ const CommandInput = ({
   onSuggestionClick,
   executeCommand
 }: CommandInputProps) => {
+  const navigate = useNavigate();
+  
+  const handleTemplatesClick = () => {
+    navigate("/settings");
+    // Add a slight delay to allow the settings page to load before selecting the tab
+    setTimeout(() => {
+      const settingsTabsElement = document.querySelector('[data-value="prompt-templates"]');
+      if (settingsTabsElement) {
+        (settingsTabsElement as HTMLElement).click();
+      }
+    }, 100);
+    
+    toast.info("Opening Prompt Templates", {
+      description: "Access and manage your saved command templates"
+    });
+  };
+
   return (
-    <Card className="shadow-md h-[180px] border-[#9C2D55]/20 flex flex-col">
+    <Card className="shadow-md h-[150px] border-[#9C2D55]/20 flex flex-col">
       <CardContent className="p-4 flex flex-col h-full">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-medium text-lg">P²RA Command Console</h3>
@@ -43,46 +63,62 @@ const CommandInput = ({
         />
         <div className="flex items-center justify-between mt-2">
           <div className="flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm">Attach</Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Upload documents or images to include with your query</p>
-              </TooltipContent>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <PaperclipIcon className="h-4 w-4 mr-1" />
+                    Attach
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Upload documents or images to include with your query</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleTemplatesClick}
+                  >
+                    <FileTextIcon className="h-4 w-4 mr-1" />
+                    Templates
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Access saved command templates for common tasks</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="sm">Templates</Button>
+                <Button 
+                  size="sm" 
+                  className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
+                  onClick={executeCommand}
+                  disabled={isLoading || !command.trim()}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Execute Command"
+                  )}
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Access saved command templates for common tasks</p>
+                <p>Process your query and provide intelligent assistance</p>
               </TooltipContent>
             </Tooltip>
-          </div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                size="sm" 
-                className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
-                onClick={executeCommand}
-                disabled={isLoading || !command.trim()}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  "Execute Command"
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Process your query and provide intelligent assistance</p>
-            </TooltipContent>
-          </Tooltip>
+          </TooltipProvider>
         </div>
       </CardContent>
     </Card>
