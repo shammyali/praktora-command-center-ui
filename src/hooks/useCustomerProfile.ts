@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Customer, praktoraWebApi } from "@/services/api/praktoraWebApi";
+import { Customer } from "@/services/api/types/customerTypes";
+import { praktoraWebApi } from "@/services/api/praktoraWebApi";
 
 export const useCustomerProfile = () => {
   // Customer search and selection state
