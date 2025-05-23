@@ -40,7 +40,7 @@ const TasksHub = () => {
   };
 
   return (
-    <Layout>
+    <Layout subtitle="Command Tasks">
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>

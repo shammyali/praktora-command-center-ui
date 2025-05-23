@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import ActivityTimeline from "@/components/dashboard/ActivityTimeline";
@@ -57,7 +58,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Layout>
+    <Layout subtitle="Control Center Dashboard">
       <div className={`${wallMode ? 'overflow-hidden' : ''}`}>
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-praktora-burgundy">P²RA Control Center — Intelligence in Motion</h1>

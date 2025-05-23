@@ -1,3 +1,4 @@
+
 import { MoonIcon, BellIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import CommandIdentityTrigger from "./CommandIdentityTrigger";
@@ -13,8 +14,8 @@ interface HeaderProps {
 const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: HeaderProps) => {
   return (
     <header className="border-b border-gray-200 bg-white shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
-        {/* Fixed-width container with absolute positioning to keep logo position consistent */}
+      <div className="flex h-16 items-center px-4 sm:px-6">
+        {/* Fixed-width container for logo that stays in place */}
         <div className="flex items-center gap-2 w-48 flex-shrink-0">
           {showBackButton && (
             <BackButton fallbackPath={backButtonFallbackPath} />
@@ -26,18 +27,20 @@ const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: He
           />
         </div>
         
-        {/* Command Panel in the center with absolute positioning */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <h1 className="text-lg font-semibold text-praktora-burgundy relative">
-            P²RA: Intelligence in Motion
-            <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
-              <span className="absolute h-full w-[20%] bg-white/30 animate-shine"></span>
-            </span>
-          </h1>
-          <p className="text-xs text-[#9C2D55]">{subtitle || "Connected. Listening. Ready for Execution..."}</p>
+        {/* Center section with fixed positioning */}
+        <div className="flex-1 flex justify-center">
+          <div className="flex flex-col items-center">
+            <h1 className="text-lg font-semibold text-praktora-burgundy relative">
+              P²RA: Intelligence in Motion
+              <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
+                <span className="absolute h-full w-[20%] bg-white/30 animate-shine"></span>
+              </span>
+            </h1>
+            <p className="text-xs text-[#9C2D55]">{subtitle || "Connected. Listening. Ready for Execution..."}</p>
+          </div>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-48 flex-shrink-0 justify-end">
           <div className="flex items-center mr-2">
             <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5 animate-pulse-slow"></span>
             <span className="text-xs text-gray-600">P²RA Status: Online</span>

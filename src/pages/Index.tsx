@@ -7,7 +7,7 @@ import { ArrowRight, MousePointerClick, SparklesIcon } from "lucide-react";
 
 const Index = () => {
   return (
-    <Layout>
+    <Layout subtitle="Command Console">
       <div className="flex flex-col items-center">
         <div className="max-w-md w-full bg-white p-6 rounded-xl shadow-lg border border-praktora-burgundy/20 mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
