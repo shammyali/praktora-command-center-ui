@@ -44,20 +44,31 @@ class MistralApi {
 
       console.log("Sending request to Mistral LLM:", requestBody);
       
-      // Make the API call
+      // Make the API call with additional options for HTTPS
       const response = await fetch(this.baseUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
+        // Add HTTPS specific options
+        cache: "no-cache",
+        credentials: "same-origin",
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
       });
 
       // Handle potential errors
       if (!response.ok) {
         const errorData = await response.text();
+        console.error(`HTTP Error: ${response.status} ${response.statusText}`, errorData);
+        
+        // Check for HTTPS specific errors
+        if (response.status === 0) {
+          throw new Error("Network error: HTTPS connection failed. Please check your SSL/TLS configuration.");
+        }
+        
         const errorMessage = this.getErrorMessage(response.status);
-        console.error("Mistral API error:", errorData);
         throw new Error(errorMessage);
       }
       
@@ -72,8 +83,21 @@ class MistralApi {
         throw new Error("No response generated from the LLM");
       }
     } catch (error) {
+      // Enhanced error handling
       console.error("Error calling Mistral LLM:", error);
-      toast.error("Failed to process your command. Please try again.");
+      
+      // Detect HTTPS/TLS related errors
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      if (errorMessage.includes("SSL") || 
+          errorMessage.includes("certificate") || 
+          errorMessage.includes("TLS")) {
+        toast.error("Secure connection error. Please check SSL/TLS configuration.");
+      } else if (errorMessage.includes("NetworkError") || errorMessage.includes("Network error")) {
+        toast.error("Network error connecting to Mistral LLM. Please check your connection.");
+      } else {
+        toast.error("Failed to process your command. Please try again.");
+      }
+      
       throw error;
     }
   }
@@ -81,16 +105,44 @@ class MistralApi {
   // Get appropriate error messages based on status codes
   private getErrorMessage(statusCode: number): string {
     switch (statusCode) {
+      case 0:
+        return "Network error: Failed to establish a secure connection to the LLM service.";
       case 400:
         return "Bad request: The command format is invalid.";
       case 401:
         return "Authorization failed: Unable to access the LLM.";
+      case 403:
+        return "Forbidden: The request was rejected by the LLM service.";
       case 429:
         return "Too many requests: The LLM service is currently overloaded.";
       case 500:
         return "Server error: The LLM service is currently unavailable.";
+      case 502:
+        return "Bad gateway: The LLM service is temporarily unreachable.";
+      case 503:
+        return "Service unavailable: The LLM service is down for maintenance.";
+      case 504:
+        return "Gateway timeout: The LLM service took too long to respond.";
       default:
-        return "An unknown error occurred while processing your command.";
+        return `An error (${statusCode}) occurred while processing your command.`;
+    }
+  }
+  
+  // Test connection to the Mistral LLM
+  async testConnection(): Promise<boolean> {
+    try {
+      const response = await fetch(this.baseUrl, {
+        method: "HEAD",
+        cache: "no-cache",
+        credentials: "same-origin",
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+      });
+      
+      return response.ok;
+    } catch (error) {
+      console.error("Connection test to Mistral LLM failed:", error);
+      return false;
     }
   }
 }
