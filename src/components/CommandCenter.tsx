@@ -1,162 +1,16 @@
-import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
-import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react";
-import { Separator } from "./ui/separator";
-import { Textarea } from "./ui/textarea";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
-import { Badge } from "./ui/badge";
+
 import { useState } from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { Command, CommandItem } from "./ui/command";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 import { mistralApi } from "@/services/api/mistralApi";
 import { toast } from "sonner";
-
-interface ActionCardProps {
-  icon: React.ElementType;
-  title: string;
-  color: string;
-  tooltip: string;
-}
-
-const ActionCard = ({
-  icon: Icon,
-  title,
-  color,
-  tooltip
-}: ActionCardProps) => {
-  return <Tooltip>
-      <TooltipTrigger asChild>
-        <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`h-10 w-10 rounded-lg ${color} flex items-center justify-center`}>
-                <Icon className="h-5 w-5 text-white" />
-              </div>
-              <span className="font-medium">{title}</span>
-            </div>
-            <Button variant="ghost" size="icon">
-              <PlusIcon className="h-5 w-5" />
-            </Button>
-          </CardContent>
-        </Card>
-      </TooltipTrigger>
-      <TooltipContent side="right" align="start" className="max-w-xs">
-        <p>{tooltip}</p>
-      </TooltipContent>
-    </Tooltip>;
-};
-
-// KYC Status Badge component
-const KycStatusBadge = ({ status }: { status: "YES" | "NO" | "PEP" | "Request" }) => {
-  const getStatusColor = () => {
-    switch (status) {
-      case "YES":
-        return "text-green-600 font-bold";
-      case "NO":
-        return "text-red-600 font-bold";
-      case "PEP":
-        return "text-red-600 font-bold animate-pulse";
-      case "Request":
-        return "text-blue-600 font-bold";
-      default:
-        return "text-gray-600 font-bold";
-    }
-  };
-
-  return (
-    <div className="inline-flex items-center">
-      <span className="text-sm font-medium text-black">KYC - </span>
-      {status === "PEP" ? (
-        <span className={`text-sm ml-1 text-red-600 font-bold relative`}>
-          <span className="animate-pulse">PEP</span>
-          <span className="absolute -inset-1 rounded-full bg-red-100 animate-ping opacity-75"></span>
-        </span>
-      ) : (
-        <span className={`text-sm ml-1 ${getStatusColor()}`}>{status}</span>
-      )}
-    </div>
-  );
-};
-
-interface ProjectCardProps {
-  title: string;
-  description: string;
-  status?: string;
-  statusColor?: "green" | "yellow" | "red" | "blue";
-  animate?: boolean;
-  customerName: string;
-  kycStatus: "YES" | "NO" | "PEP" | "Request";
-}
-
-const ProjectCard = ({
-  title,
-  description,
-  status,
-  statusColor = "blue",
-  animate = false,
-  customerName,
-  kycStatus
-}: ProjectCardProps) => {
-  return <Card className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-      <CardContent className="p-4">
-        <div className="flex flex-col space-y-2">
-          <div className="flex justify-between items-center">
-            <KycStatusBadge status={kycStatus} />
-            {status && <span className={`text-xs font-medium
-                ${statusColor === "green" ? "text-green-700" : statusColor === "yellow" ? "text-amber-700" : statusColor === "red" ? "text-red-700" : "text-blue-700"}
-                ${animate ? "animate-pulse-slow" : ""}
-              `}>
-              {status}
-            </span>}
-          </div>
-          <div className="mb-1">
-            <h3 className="font-medium">
-              {title} <span className="font-bold">{customerName}</span>
-            </h3>
-          </div>
-          <p className="text-sm text-gray-500">{description}</p>
-        </div>
-      </CardContent>
-    </Card>;
-};
-
-const CommandSuggestion = ({
-  text,
-  onClick,
-}: {
-  text: string;
-  onClick?: () => void;
-}) => {
-  return (
-    <Badge 
-      variant="outline" 
-      className="px-3 py-1 cursor-pointer hover:bg-slate-100"
-      onClick={onClick}
-    >
-      {text}
-    </Badge>
-  );
-};
-
-const EmptyEngagements = () => {
-  return <Card className="border border-dashed bg-white/50 p-4 text-center">
-      <div className="flex flex-col items-center gap-2">
-        <PenIcon className="h-5 w-5 text-gray-400" />
-        <p className="text-sm text-gray-600">
-          No active engagements at the moment. Use Instant Commands to get started.
-        </p>
-      </div>
-    </Card>;
-};
-
-// Response MessageType
-type MessageType = {
-  role: "user" | "assistant";
-  content: string;
-};
+import SidePanel from "./command-center/SidePanel";
+import SuggestionsDisplay from "./command-center/SuggestionsDisplay";
+import MessageList from "./command-center/MessageList";
+import CommandInput from "./command-center/CommandInput";
+import { MessageType, ActiveEngagement } from "./command-center/types";
 
 const CommandCenter = () => {
-  const [activeEngagements, setActiveEngagements] = useState([
+  const [activeEngagements, setActiveEngagements] = useState<ActiveEngagement[]>([
     {
       title: "Workmen's Compensation Renewal -",
       customerName: "Tom Robers",
@@ -252,41 +106,11 @@ const CommandCenter = () => {
     }
   };
 
-  return <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
+  return (
+    <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
         {/* Right Panel for Instant Commands and Active Engagements */}
-        <div className="fixed top-16 right-0 bottom-0 w-80 border-l border-gray-200 bg-white p-5 overflow-auto z-10">
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-4">Instant Commands</h2>
-            <TooltipProvider>
-              <div className="space-y-3">
-                <ActionCard icon={PenIcon} title="Quote Launch" color="bg-amber-400" tooltip="Launch a new insurance quote process with smart form pre-filling based on customer history." />
-                <ActionCard icon={ImageIcon} title="Initiate Policy Services" color="bg-blue-400" tooltip="Access policy amendment tools including endorsements, cancellations and renewals with one click." />
-                <ActionCard icon={UserIcon} title="Log Claim FNOL" color="bg-green-400" tooltip="First Notice of Loss form with automated severity assessment and claim handler assignment." />
-                <ActionCard icon={CodeIcon} title="What's Pending" color="bg-purple-400" tooltip="2 quotes, 1 endorsement, and 2 claims have no response in the last 24 hours." />
-              </div>
-            </TooltipProvider>
-          </div>
-
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Active Engagements</h2>
-              <Button variant="ghost" size="sm" className="text-sm">View all</Button>
-            </div>
-            <div className="space-y-3">
-              {activeEngagements.length > 0 ? activeEngagements.map((engagement, index) => <ProjectCard 
-                key={index} 
-                title={engagement.title} 
-                customerName={engagement.customerName} 
-                description={engagement.description} 
-                status={engagement.status} 
-                statusColor={engagement.statusColor} 
-                animate={engagement.animate} 
-                kycStatus={engagement.kycStatus}
-              />) : <EmptyEngagements />}
-            </div>
-          </div>
-        </div>
+        <SidePanel activeEngagements={activeEngagements} />
         
         {/* Main Content Area - Using ResizablePanelGroup for flexible sizing */}
         <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
@@ -295,53 +119,9 @@ const CommandCenter = () => {
             <ResizablePanel defaultSize={70} minSize={50}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
                 {messages.length === 0 ? (
-                  <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                        <p className="text-[#5A6B82]/40 italic font-semibold">
-                          Try: 'Compare RSA and AXA for MP2118' or 'Create endorsement for GM123/1'
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                        <p className="text-[#5A6B82]/40 italic font-semibold">
-                          Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice'
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                        <p className="text-[#5A6B82]/40 italic font-semibold">
-                          Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expiring today'
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                        <p className="text-[#5A6B82]/40 italic font-semibold">
-                          Try: 'Follow up on pending claims for Al Zahra Trading' or 'List all unpaid customer invoices over 30 days'
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <SuggestionsDisplay />
                 ) : (
-                  <div className="h-full w-full overflow-y-auto p-4 space-y-4">
-                    {messages.map((message, index) => (
-                      <div 
-                        key={index} 
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div 
-                          className={`max-w-[80%] p-4 rounded-lg ${
-                            message.role === 'user' 
-                              ? 'bg-[#9C2D55] text-white' 
-                              : 'bg-white border border-gray-200 shadow-sm'
-                          }`}
-                        >
-                          <p className="whitespace-pre-wrap">{message.content}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <MessageList messages={messages} />
                 )}
               </div>
             </ResizablePanel>
@@ -351,134 +131,21 @@ const CommandCenter = () => {
             {/* Prompt Area - 30% of the available space initially */}
             <ResizablePanel defaultSize={30} minSize={15}>
               <div className="h-full p-5 bg-white overflow-auto">
-                <Card className="shadow-md h-[250px] border-[#9C2D55]/20 flex flex-col">
-                  <CardContent className="p-5 flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-lg">P²RA Command Console</h3>
-                      <span className={`text-xs ${characterCount > 1900 ? 'text-red-500' : 'text-gray-500'}`}>
-                        {characterCount}/2000
-                      </span>
-                    </div>
-                    <Separator className="my-3" />
-                    
-                    <div className="flex gap-2 mb-3 flex-wrap">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <CommandSuggestion 
-                                text="Upload Emirates ID and generate new enquiry" 
-                                onClick={() => handleSuggestionClick("Upload Emirates ID and generate new enquiry")}
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Scan and auto-extract customer details from Emirates ID</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <CommandSuggestion 
-                                text="Convert quote MP2396 to policy and issue invoice" 
-                                onClick={() => handleSuggestionClick("Convert quote MP2396 to policy and issue invoice")}
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Automatically convert an existing quote to policy and generate invoice</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <CommandSuggestion 
-                                text="Send WhatsApp quote to Ali Qamar" 
-                                onClick={() => handleSuggestionClick("Send WhatsApp quote to Ali Qamar")}
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Send quote details via WhatsApp to the customer</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <CommandSuggestion 
-                                text="List all unpaid invoices over 30 days" 
-                                onClick={() => handleSuggestionClick("List all unpaid invoices over 30 days")}
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View all outstanding invoices that are overdue by 30+ days</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    
-                    <Textarea 
-                      placeholder="Ask any question about clients, policies, or market trends..." 
-                      className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent"
-                      value={command}
-                      onChange={handleCommandChange}
-                      maxLength={2000}
-                    />
-                    <div className="flex items-center justify-between mt-4 pt-2">
-                      <div className="flex gap-2">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="outline" size="sm">Attach</Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Upload documents or images to include with your query</p>
-                          </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="outline" size="sm">Templates</Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Access saved command templates for common tasks</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </div>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button 
-                            size="sm" 
-                            className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
-                            onClick={executeCommand}
-                            disabled={isLoading || !command.trim()}
-                          >
-                            {isLoading ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Processing...
-                              </>
-                            ) : (
-                              "Execute Command"
-                            )}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Process your query and provide intelligent assistance</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </CardContent>
-                </Card>
+                <CommandInput
+                  command={command}
+                  characterCount={characterCount}
+                  isLoading={isLoading}
+                  onCommandChange={handleCommandChange}
+                  onSuggestionClick={handleSuggestionClick}
+                  executeCommand={executeCommand}
+                />
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default CommandCenter;
