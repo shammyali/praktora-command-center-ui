@@ -1,16 +1,14 @@
-
 import { Customer } from "@/services/api/praktoraWebApi";
 import CustomerStatusBadge from "./CustomerStatusBadge";
 import CustomerVipBadge from "./CustomerVipBadge";
 import { User, Building2, Users, GitBranch } from "lucide-react";
-
 interface CustomerBasicInfoProps {
   customer: Customer;
 }
-
-const CustomerBasicInfo = ({ customer }: CustomerBasicInfoProps) => {
-  return (
-    <div>
+const CustomerBasicInfo = ({
+  customer
+}: CustomerBasicInfoProps) => {
+  return <div>
       <div className="flex items-center gap-2 mb-2">
         <h2 className="text-lg font-semibold">{customer.fullName}</h2>
         <CustomerVipBadge isVip={customer.isVip} />
@@ -29,7 +27,7 @@ const CustomerBasicInfo = ({ customer }: CustomerBasicInfoProps) => {
         </div>
         <div className="flex items-center gap-1">
           <GitBranch className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">Source:</span>
+          <span className="text-xs text-muted-foreground">CRM:</span>
           <span className="text-xs font-medium">{customer.source || "Direct"}</span>
         </div>
         <div className="flex items-center gap-1">
@@ -41,8 +39,6 @@ const CustomerBasicInfo = ({ customer }: CustomerBasicInfoProps) => {
       <div className="mt-1">
         <CustomerStatusBadge status={customer.status} />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default CustomerBasicInfo;
