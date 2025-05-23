@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import { Separator } from "@/components/ui/separator";
 import WhatsAppInbox from "@/components/whatsapp/WhatsAppInbox";
 import ConversationView from "@/components/whatsapp/ConversationView";
@@ -150,48 +149,44 @@ export default function WhatsAppHub() {
   };
   
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header 
-          title="WhatsApp Intelligence Hub"
-          showBackButton={shouldShowBackButton}
-          backButtonFallbackPath="/policyholders"
-        />
-        
-        <div className="p-4">
-          <h1 className="text-2xl font-bold text-praktora-burgundy">WhatsApp Intelligence Hub</h1>
-          <div className="mt-4">
-            <WhatsAppMiniDashboard stats={mockWhatsAppStats} />
-          </div>
-        </div>
-        
-        <Separator />
-        
-        <div className="flex-1 flex overflow-hidden">
-          <div className="w-[320px] border-r flex flex-col overflow-hidden">
-            <WhatsAppInbox 
-              conversations={localConversations} 
-              selectedConversationId={selectedConversationId}
-              onSelectConversation={setSelectedConversationId}
-              onStartNewChat={handleStartNewChat}
-            />
-          </div>
-          
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <ConversationView 
-              conversation={selectedConversation} 
-              messages={messages}
-              autoFocusInput={!!phoneParam}
-              onSendMessage={sendMessage}
-            />
-          </div>
-          
-          <div className="w-[280px] border-l flex flex-col overflow-hidden">
-            <SmartActionSidebar conversation={selectedConversation} />
-          </div>
+    <Layout 
+      title="WhatsApp Intelligence Hub"
+      subtitle="Connected Messaging & Customer Intelligence"
+      showBackButton={shouldShowBackButton}
+      backButtonFallbackPath="/policyholders"
+    >
+      <div className="p-4">
+        <h1 className="text-2xl font-bold text-praktora-burgundy">WhatsApp Intelligence Hub</h1>
+        <div className="mt-4">
+          <WhatsAppMiniDashboard stats={mockWhatsAppStats} />
         </div>
       </div>
-    </div>
+      
+      <Separator />
+      
+      <div className="flex-1 flex overflow-hidden">
+        <div className="w-[320px] border-r flex flex-col overflow-hidden">
+          <WhatsAppInbox 
+            conversations={localConversations} 
+            selectedConversationId={selectedConversationId}
+            onSelectConversation={setSelectedConversationId}
+            onStartNewChat={handleStartNewChat}
+          />
+        </div>
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <ConversationView 
+            conversation={selectedConversation} 
+            messages={messages}
+            autoFocusInput={!!phoneParam}
+            onSendMessage={sendMessage}
+          />
+        </div>
+        
+        <div className="w-[280px] border-l flex flex-col overflow-hidden">
+          <SmartActionSidebar conversation={selectedConversation} />
+        </div>
+      </div>
+    </Layout>
   );
 }

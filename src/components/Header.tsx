@@ -12,7 +12,7 @@ interface HeaderProps {
   backButtonFallbackPath?: string;
 }
 
-const Header = ({ title, subtitle, showBackButton = false, backButtonFallbackPath }: HeaderProps) => {
+const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: HeaderProps) => {
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ const Header = ({ title, subtitle, showBackButton = false, backButtonFallbackPat
         {/* Command Panel in the center */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <h1 className="text-lg font-semibold text-praktora-burgundy relative">
-            {title || "P²RA: Intelligence in Motion"}
+            P²RA: Intelligence in Motion
             <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
               <span className="absolute h-full w-[20%] bg-white/30 animate-shine"></span>
             </span>
