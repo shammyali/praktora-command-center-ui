@@ -1,3 +1,4 @@
+
 import { Customer } from "@/services/api/praktoraWebApi";
 import CustomerStatusBadge from "./CustomerStatusBadge";
 import CustomerVipBadge from "./CustomerVipBadge";
@@ -28,7 +29,7 @@ const CustomerBasicInfo = ({
         <div className="flex items-center gap-1">
           <GitBranch className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">CRM:</span>
-          <span className="text-xs font-medium">{customer.source || "Direct"}</span>
+          <span className="text-xs font-medium">{customer.assignedAgent || "Not Assigned"}</span>
         </div>
         <div className="flex items-center gap-1">
           <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
