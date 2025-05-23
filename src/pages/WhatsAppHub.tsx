@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { WhatsAppMessage, WhatsAppConversation } from "@/data/whatsapp/types";
+import { praktoraWebApi } from "@/services/api/praktoraWebApi";
 
 export default function WhatsAppHub() {
   const [searchParams] = useSearchParams();
@@ -47,7 +48,7 @@ export default function WhatsAppHub() {
     : [];
   
   // Start a new chat with a phone number
-  const handleStartNewChat = (phoneNumber: string, name?: string) => {
+  const handleStartNewChat = async (phoneNumber: string, name?: string) => {
     // Generate a new conversation ID
     const newConversationId = uuidv4();
     
@@ -91,14 +92,19 @@ export default function WhatsAppHub() {
     
     toast.success(`Started new conversation with ${name || phoneNumber}`);
     
-    // Here you would typically make an API call to your backend
-    // which would then call the Twilio API to initiate the conversation
-    console.log(`API call would be made to initiate chat with ${phoneNumber} via Twilio`);
+    try {
+      // Call to PraktoraWeb API to initiate the WhatsApp conversation
+      await praktoraWebApi.initiateWhatsAppConversation(phoneNumber, welcomeMessage.content);
+      console.log(`API call made to PraktoraWeb to initiate WhatsApp chat with ${phoneNumber}`);
+    } catch (error) {
+      console.error('Failed to initiate WhatsApp conversation:', error);
+      toast.error('Failed to initiate WhatsApp conversation. Please try again.');
+    }
   };
   
   // Function to send a message in the current conversation
-  const sendMessage = (content: string) => {
-    if (!selectedConversationId || !content.trim()) return;
+  const sendMessage = async (content: string) => {
+    if (!selectedConversationId || !content.trim() || !selectedConversation) return;
     
     // Create new message
     const newMessage: WhatsAppMessage = {
@@ -125,9 +131,17 @@ export default function WhatsAppHub() {
       )
     );
     
-    // Here you would typically make an API call to your backend
-    // which would then call the Twilio API to send the message
-    console.log(`API call would be made to send message "${content}" via Twilio`);
+    try {
+      // Call to PraktoraWeb API to send the WhatsApp message
+      await praktoraWebApi.sendWhatsAppMessage(
+        selectedConversation.contact.phoneNumber, 
+        content
+      );
+      console.log(`API call made to PraktoraWeb to send WhatsApp message to ${selectedConversation.contact.phoneNumber}`);
+    } catch (error) {
+      console.error('Failed to send WhatsApp message:', error);
+      toast.error('Failed to send message. Please try again.');
+    }
   };
   
   return (
@@ -138,7 +152,6 @@ export default function WhatsAppHub() {
         
         <div className="p-4">
           <h1 className="text-2xl font-bold text-praktora-burgundy">WhatsApp Intelligence Hub</h1>
-          <p className="text-sm text-gray-500">Powered by P²RA</p>
           <div className="mt-4">
             <WhatsAppMiniDashboard stats={mockWhatsAppStats} />
           </div>
