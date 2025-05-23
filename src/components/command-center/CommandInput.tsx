@@ -4,10 +4,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Loader2, FileTextIcon, PaperclipIcon } from "lucide-react";
+import { 
+  Loader2, 
+  FileTextIcon, 
+  PaperclipIcon, 
+  Settings2Icon
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 interface CommandInputProps {
   command: string;
@@ -17,6 +28,14 @@ interface CommandInputProps {
   onSuggestionClick: (suggestion: string) => void;
   executeCommand: () => void;
 }
+
+// Define template types for use in the component
+type PromptTemplate = {
+  id: number;
+  name: string;
+  content: string;
+  category: string;
+};
 
 const CommandInput = ({
   command,
@@ -28,7 +47,29 @@ const CommandInput = ({
 }: CommandInputProps) => {
   const navigate = useNavigate();
   
-  const handleTemplatesClick = () => {
+  // Mock templates grouped by category - in a real app these would come from an API
+  const [templates, setTemplates] = useState<Record<string, PromptTemplate[]>>({
+    "general": [
+      { id: 1, name: "Policy Inquiry", content: "Show me the policy details for client [CLIENT_NAME]", category: "general" },
+      { id: 2, name: "Risk Assessment", content: "Generate a risk assessment for [CLIENT_NAME]", category: "general" },
+    ],
+    "claims": [
+      { id: 3, name: "Claims Status Update", content: "What's the status of claim #[CLAIM_NUMBER] for [CLIENT_NAME]?", category: "claims" },
+      { id: 4, name: "Claims History", content: "Show claims history for [CLIENT_NAME] over the last [TIME_PERIOD]", category: "claims" },
+    ],
+    "quotes": [
+      { id: 5, name: "Premium Calculation", content: "Calculate premium for a [VEHICLE_TYPE] with value of [VEHICLE_VALUE] for a [CLIENT_TYPE] client", category: "quotes" },
+    ],
+  });
+  
+  const handleTemplateClick = (templateContent: string) => {
+    onSuggestionClick(templateContent);
+    toast.info("Template applied", {
+      description: "You can customize the placeholders before executing"
+    });
+  };
+  
+  const handleManageTemplates = () => {
     navigate("/settings");
     // Add a slight delay to allow the settings page to load before selecting the tab
     setTimeout(() => {
@@ -38,8 +79,8 @@ const CommandInput = ({
       }
     }, 100);
     
-    toast.info("Opening Prompt Templates", {
-      description: "Access and manage your saved command templates"
+    toast.info("Opening Prompt Templates Settings", {
+      description: "Manage your saved command templates"
     });
   };
 
@@ -80,14 +121,37 @@ const CommandInput = ({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleTemplatesClick}
-                  >
-                    <FileTextIcon className="h-4 w-4 mr-1" />
-                    Templates
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <FileTextIcon className="h-4 w-4 mr-1" />
+                        Templates
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-72">
+                      {Object.entries(templates).map(([category, categoryTemplates]) => (
+                        <div key={category}>
+                          <div className="px-2 py-1.5 text-xs font-medium text-gray-500 uppercase">
+                            {category}
+                          </div>
+                          {categoryTemplates.map((template) => (
+                            <DropdownMenuItem 
+                              key={template.id}
+                              onClick={() => handleTemplateClick(template.content)}
+                              className="cursor-pointer"
+                            >
+                              <span className="font-medium">{template.name}</span>
+                            </DropdownMenuItem>
+                          ))}
+                        </div>
+                      ))}
+                      <Separator className="my-1" />
+                      <DropdownMenuItem onClick={handleManageTemplates}>
+                        <Settings2Icon className="h-4 w-4 mr-2" />
+                        <span>Manage Templates</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Access saved command templates for common tasks</p>
