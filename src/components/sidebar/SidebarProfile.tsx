@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Sheet, 
@@ -23,7 +22,7 @@ const SidebarProfile = () => {
           <div className="flex items-start gap-3 hover:bg-gray-100 p-2 rounded-md transition-colors">
             <div className="relative">
               <Avatar className="h-10 w-10 bg-praktora-burgundy text-white border-2 border-white shadow-sm">
-                <AvatarImage src="/lovable-uploads/8631928b-0cb8-4709-ae6b-3b209802c5a2.png" alt="Shammy Ali" />
+                <AvatarImage src="/lovable-uploads/ebc38715-372d-4cc1-b293-cb0855312520.png" alt="Shammy Ali" />
                 <AvatarFallback className="font-medium">SA</AvatarFallback>
               </Avatar>
               <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white ${aiConnected ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -61,7 +60,7 @@ const SidebarProfile = () => {
               <div className="bg-gray-50 p-4 rounded-lg space-y-3">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-14 w-14 bg-praktora-burgundy text-white border-2 border-white shadow">
-                    <AvatarImage src="/lovable-uploads/8631928b-0cb8-4709-ae6b-3b209802c5a2.png" alt="Shammy Ali" />
+                    <AvatarImage src="/lovable-uploads/ebc38715-372d-4cc1-b293-cb0855312520.png" alt="Shammy Ali" />
                     <AvatarFallback className="font-medium text-lg">SA</AvatarFallback>
                   </Avatar>
                   
