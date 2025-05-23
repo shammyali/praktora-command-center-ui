@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
@@ -12,17 +13,22 @@ import {
   mockConversationMessages, 
   mockWhatsAppStats 
 } from "@/data/whatsapp";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { WhatsAppMessage, WhatsAppConversation } from "@/data/whatsapp/types";
 
 export default function WhatsAppHub() {
   const [searchParams] = useSearchParams();
   const phoneParam = searchParams.get('phone');
   
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const [localConversations, setLocalConversations] = useState(mockWhatsAppConversations);
+  const [localMessages, setLocalMessages] = useState({...mockConversationMessages});
   
   // Find conversation by phone number if provided in URL
   useEffect(() => {
     if (phoneParam) {
-      const foundConversation = mockWhatsAppConversations.find(c => 
+      const foundConversation = localConversations.find(c => 
         c.contact.phoneNumber.replace(/\s+/g, "").includes(phoneParam)
       );
       
@@ -30,15 +36,99 @@ export default function WhatsAppHub() {
         setSelectedConversationId(foundConversation.id);
       }
     }
-  }, [phoneParam]);
+  }, [phoneParam, localConversations]);
   
   const selectedConversation = selectedConversationId 
-    ? mockWhatsAppConversations.find(c => c.id === selectedConversationId) 
+    ? localConversations.find(c => c.id === selectedConversationId) 
     : null;
   
   const messages = selectedConversationId 
-    ? mockConversationMessages[selectedConversationId] || []
+    ? localMessages[selectedConversationId] || []
     : [];
+  
+  // Start a new chat with a phone number
+  const handleStartNewChat = (phoneNumber: string, name?: string) => {
+    // Generate a new conversation ID
+    const newConversationId = uuidv4();
+    
+    // Create a welcome message
+    const welcomeMessage: WhatsAppMessage = {
+      id: uuidv4(),
+      content: "Hello! How can I help you today?",
+      timestamp: new Date().toISOString(),
+      isIncoming: false,
+      type: "text",
+      status: "sent"
+    };
+    
+    // Create new conversation
+    const newConversation: WhatsAppConversation = {
+      id: newConversationId,
+      contact: {
+        name: name || phoneNumber,
+        phoneNumber: phoneNumber,
+      },
+      lastMessage: welcomeMessage,
+      unreadCount: 0,
+      type: "Unknown",
+      status: "Unlinked",
+      hasAttachments: false,
+      hasWorkflowLinks: false,
+      ageInDays: 0,
+    };
+    
+    // Add new conversation to state
+    setLocalConversations(prev => [newConversation, ...prev]);
+    
+    // Add initial message to conversation
+    setLocalMessages(prev => ({
+      ...prev,
+      [newConversationId]: [welcomeMessage]
+    }));
+    
+    // Select the new conversation
+    setSelectedConversationId(newConversationId);
+    
+    toast.success(`Started new conversation with ${name || phoneNumber}`);
+    
+    // Here you would typically make an API call to your backend
+    // which would then call the Twilio API to initiate the conversation
+    console.log(`API call would be made to initiate chat with ${phoneNumber} via Twilio`);
+  };
+  
+  // Function to send a message in the current conversation
+  const sendMessage = (content: string) => {
+    if (!selectedConversationId || !content.trim()) return;
+    
+    // Create new message
+    const newMessage: WhatsAppMessage = {
+      id: uuidv4(),
+      content: content,
+      timestamp: new Date().toISOString(),
+      isIncoming: false,
+      type: "text",
+      status: "sent"
+    };
+    
+    // Add message to conversation
+    setLocalMessages(prev => ({
+      ...prev,
+      [selectedConversationId]: [...(prev[selectedConversationId] || []), newMessage]
+    }));
+    
+    // Update last message in conversation list
+    setLocalConversations(prev => 
+      prev.map(conv => 
+        conv.id === selectedConversationId 
+          ? { ...conv, lastMessage: newMessage } 
+          : conv
+      )
+    );
+    
+    // Here you would typically make an API call to your backend
+    // which would then call the Twilio API to send the message
+    console.log(`API call would be made to send message "${content}" via Twilio`);
+  };
   
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -59,9 +149,10 @@ export default function WhatsAppHub() {
         <div className="flex-1 flex overflow-hidden">
           <div className="w-[320px] border-r flex flex-col overflow-hidden">
             <WhatsAppInbox 
-              conversations={mockWhatsAppConversations} 
+              conversations={localConversations} 
               selectedConversationId={selectedConversationId}
               onSelectConversation={setSelectedConversationId}
+              onStartNewChat={handleStartNewChat}
             />
           </div>
           
@@ -70,6 +161,7 @@ export default function WhatsAppHub() {
               conversation={selectedConversation} 
               messages={messages}
               autoFocusInput={!!phoneParam}
+              onSendMessage={sendMessage}
             />
           </div>
           

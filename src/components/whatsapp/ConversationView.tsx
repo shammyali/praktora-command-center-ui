@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { WhatsAppMessage, WhatsAppConversation } from "@/data/whatsapp/types";
 import ConversationHeader from "./conversation/ConversationHeader";
@@ -9,12 +10,14 @@ interface ConversationViewProps {
   conversation: WhatsAppConversation | null;
   messages: WhatsAppMessage[];
   autoFocusInput?: boolean;
+  onSendMessage?: (content: string) => void;
 }
 
 export default function ConversationView({
   conversation,
   messages,
-  autoFocusInput = false
+  autoFocusInput = false,
+  onSendMessage
 }: ConversationViewProps) {
   // Focus input when conversation changes or autoFocus is true
   useEffect(() => {
@@ -30,7 +33,7 @@ export default function ConversationView({
     <div className="flex flex-col h-full">
       <ConversationHeader conversation={conversation} />
       <MessageList messages={messages} />
-      <MessageInput autoFocus={autoFocusInput} />
+      <MessageInput autoFocus={autoFocusInput} onSendMessage={onSendMessage} />
     </div>
   );
 }
