@@ -1,6 +1,6 @@
 
 import { cn } from "@/lib/utils";
-import { TelegramMessage } from "@/data/telegramData";
+import { TelegramMessage } from "@/data/telegram";
 import { Paperclip, Bot } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 

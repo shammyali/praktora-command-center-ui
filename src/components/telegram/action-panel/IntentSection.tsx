@@ -1,6 +1,5 @@
-
 import { Badge } from "@/components/ui/badge";
-import { TelegramChat } from "@/data/telegramData";
+import { TelegramChat } from "@/data/telegram";
 
 interface IntentSectionProps {
   chat: TelegramChat;

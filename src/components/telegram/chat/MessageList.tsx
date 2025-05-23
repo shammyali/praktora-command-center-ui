@@ -1,6 +1,6 @@
 
 import { useRef, useEffect } from "react";
-import { TelegramMessage } from "@/data/telegramData";
+import { TelegramMessage } from "@/data/telegram";
 import { MessageGroup } from "./MessageGroup";
 
 interface MessageListProps {

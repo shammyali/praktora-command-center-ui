@@ -9,7 +9,7 @@ import TelegramHeader from "@/components/telegram/TelegramHeader";
 import TelegramSearchBar from "@/components/telegram/TelegramSearchBar";
 import TelegramLayout from "@/components/telegram/TelegramLayout";
 import { useTelegramHub } from "@/hooks/useTelegramHub";
-import { mockTelegramStats } from "@/data/telegramData";
+import { mockTelegramStats } from "@/data/telegram";
 
 export default function TelegramHub() {
   const {

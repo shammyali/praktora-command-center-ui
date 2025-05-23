@@ -1,6 +1,5 @@
-
 import { cn } from "@/lib/utils";
-import { TelegramChat } from "@/data/telegramData";
+import { TelegramChat } from "@/data/telegram";
 
 interface ClientMatchSectionProps {
   chat: TelegramChat;

@@ -7,7 +7,7 @@ import {
   TelegramChat,
   TelegramSourceType,
   TelegramChatType 
-} from "@/data/telegramData";
+} from "@/data/telegram";
 
 export function useTelegramHub() {
   const [chats, setChats] = useState<TelegramChat[]>(mockTelegramChats);

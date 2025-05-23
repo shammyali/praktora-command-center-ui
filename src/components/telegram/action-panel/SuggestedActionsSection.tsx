@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { TelegramChat } from "@/data/telegramData";
+import { TelegramChat } from "@/data/telegram";
 import {
   PlusCircleIcon,
   ClipboardCheckIcon,

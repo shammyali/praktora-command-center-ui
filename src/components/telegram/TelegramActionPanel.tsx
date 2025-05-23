@@ -1,5 +1,5 @@
 
-import { TelegramChat } from "@/data/telegramData";
+import { TelegramChat } from "@/data/telegram";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { EmptyActionPanel } from "./action-panel/EmptyActionPanel";

@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { TelegramChat, TelegramMessage } from "@/data/telegramData";
+import { TelegramChat, TelegramMessage } from "@/data/telegram";
 import { ChatHeader } from "./chat/ChatHeader";
 import { MessageList } from "./chat/MessageList";
 import { MessageInput } from "./chat/MessageInput";

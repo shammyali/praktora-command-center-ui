@@ -1,6 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
-import { TelegramMessage } from "@/data/telegramData";
+import { TelegramMessage } from "@/data/telegram";
 import { MessageBubble } from "./MessageBubble";
 
 interface MessageGroupProps {
