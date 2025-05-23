@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ClientPortfolioSummary } from "@/services/api/types/portfolioTypes";
+import type { ClientPortfolioSummary as ClientPortfolioSummaryType } from "@/services/api/types/portfolioTypes";
 import { 
   FilePen, Bell, ClipboardCheck, AlertTriangle, 
   CreditCard, RefreshCw, Clock, PieChart, 
@@ -11,7 +11,7 @@ import SummaryCard from "./SummaryCard";
 import PRAIntelligenceCard from "./PRAIntelligenceCard";
 
 interface ClientPortfolioSummaryProps {
-  portfolioSummary: ClientPortfolioSummary;
+  portfolioSummary: ClientPortfolioSummaryType;
   isLoading?: boolean;
 }
 
