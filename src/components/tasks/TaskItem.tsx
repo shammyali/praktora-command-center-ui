@@ -36,10 +36,10 @@ interface TaskItemProps {
 
 const TaskItem = ({ task }: TaskItemProps) => {
   const [expanded, setExpanded] = useState(false);
-  const [status, setStatus] = useState(task.status);
+  const [status, setStatus] = useState<TaskType["status"]>(task.status);
   const { toast } = useToast();
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: TaskType["status"]) => {
     setStatus(newStatus);
     toast({
       title: "Status updated",
