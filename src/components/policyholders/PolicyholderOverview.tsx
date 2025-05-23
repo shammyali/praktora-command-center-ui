@@ -21,14 +21,9 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
   return (
     <Card className="border-t-2 border-t-[#9C2D55]">
       <CardContent className="p-3">
-        <div className="grid grid-cols-12 gap-3 items-center">
-          {/* Customer basic info - 5 cols on large screens */}
-          <div className="col-span-12 md:col-span-5">
-            <CustomerBasicInfo customer={customer} />
-          </div>
-          
-          {/* Profile image - 2 cols on large screens */}
-          <div className="col-span-4 md:col-span-2 flex justify-center">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Profile image */}
+          <div className="flex-shrink-0">
             <CustomerProfileImage 
               profileImage={customer.profileImage} 
               fullName={customer.fullName}
@@ -36,23 +31,31 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
             />
           </div>
           
-          {/* Contact info - 3 cols on large screens */}
-          <div className="col-span-8 md:col-span-3">
-            <CustomerContactInfo 
-              email={customer.email}
-              mobile={customer.mobile}
-              isVip={customer.isVip}
-              fullName={customer.fullName}
-              onVipStatusChange={handleVipStatusChange}
-            />
+          {/* Customer info */}
+          <div className="flex-grow">
+            <CustomerBasicInfo customer={customer} />
           </div>
           
-          {/* KYC status - 2 cols on large screens */}
-          <div className="col-span-12 md:col-span-2">
-            <CustomerKycStatus 
-              kycStatus={customer.kycCompletionStatus}
-              kycPercentage={customer.kycCompletionPercentage}
-            />
+          {/* Right side content */}
+          <div className="flex flex-wrap md:flex-nowrap gap-6 w-full md:w-auto mt-2 md:mt-0">
+            {/* Contact info */}
+            <div className="w-full md:w-auto">
+              <CustomerContactInfo 
+                email={customer.email}
+                mobile={customer.mobile}
+                isVip={customer.isVip}
+                fullName={customer.fullName}
+                onVipStatusChange={handleVipStatusChange}
+              />
+            </div>
+            
+            {/* KYC status */}
+            <div className="w-full md:w-auto">
+              <CustomerKycStatus 
+                kycStatus={customer.kycCompletionStatus}
+                kycPercentage={customer.kycCompletionPercentage}
+              />
+            </div>
           </div>
         </div>
       </CardContent>

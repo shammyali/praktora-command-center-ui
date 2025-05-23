@@ -38,12 +38,12 @@ const CustomerContactInfo = ({
 
   return (
     <div>
-      <h3 className="font-medium text-sm mb-1">Contact Info</h3>
+      <h3 className="font-medium text-sm mb-2">Contact Info</h3>
       
-      <div className="space-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <div className="flex items-center gap-1">
           <Mail className="h-3.5 w-3.5 text-gray-500" />
-          <p className="text-sm truncate max-w-[150px]">{email}</p>
+          <p className="text-xs truncate max-w-[120px]">{email}</p>
           <Button 
             variant="ghost" 
             size="sm" 
@@ -55,7 +55,7 @@ const CustomerContactInfo = ({
         </div>
         <div className="flex items-center gap-1">
           <Phone className="h-3.5 w-3.5 text-gray-500" />
-          <p className="text-sm">{mobile}</p>
+          <p className="text-xs">{mobile}</p>
           <Button 
             variant="ghost" 
             size="sm" 

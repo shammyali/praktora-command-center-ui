@@ -16,23 +16,23 @@ const CustomerBasicInfo = ({ customer }: CustomerBasicInfoProps) => {
         <CustomerVipBadge isVip={customer.isVip} />
       </div>
       
-      <div className="space-y-1">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <div className="flex items-center gap-1">
           <User className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Type:</span>
           <span className="text-xs font-medium">{customer.type}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Users className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Agent:</span>
           <span className="text-xs font-medium">{customer.assignedAgent || "Not Assigned"}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <GitBranch className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Source:</span>
           <span className="text-xs font-medium">{customer.source || "Direct"}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Group:</span>
           <span className="text-xs font-medium">{customer.category || "None"}</span>

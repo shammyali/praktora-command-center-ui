@@ -27,9 +27,9 @@ const CustomerKycStatus = ({ kycStatus, kycPercentage }: CustomerKycStatusProps)
       <div className="flex items-center gap-2">
         <Progress 
           value={kycPercentage} 
-          className="h-1.5 flex-grow" 
+          className="h-1.5 w-20 md:w-auto" 
         />
-        <p className="text-xs">{kycPercentage}%</p>
+        <p className="text-xs whitespace-nowrap">{kycPercentage}%</p>
       </div>
     </div>
   );
