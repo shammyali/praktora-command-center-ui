@@ -18,3 +18,12 @@ export interface TaskType {
   createdAt: string;
   updatedAt?: string;
 }
+
+export interface TaskStatsType {
+  total: number;
+  completed: number;
+  overdue: number;
+  highPriority: number;
+  dueToday: number;
+  completionRate: number;
+}
