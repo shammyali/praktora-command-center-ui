@@ -1,16 +1,6 @@
 
-import { useState } from "react";
-import TaskSearch from "@/components/tasks/TaskSearch";
-import TaskTabs from "@/components/tasks/TaskTabs";
-import TaskFilters from "@/components/tasks/TaskFilters";
-import { 
-  Card, 
-  CardHeader, 
-  CardContent, 
-  CardTitle 
-} from "@/components/ui/card";
-import TaskTypeStats from "@/components/tasks/TaskTypeStats";
-import TaskPriorityMatrix from "@/components/tasks/TaskPriorityMatrix";
+import TasksLeftPanel from "@/components/tasks/TasksLeftPanel";
+import TasksRightPanel from "@/components/tasks/TasksRightPanel";
 
 interface TasksMainContentProps {
   activeTab: string;
@@ -36,47 +26,20 @@ const TasksMainContent = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
       <div className="lg:col-span-3">
-        <div className="mb-4">
-          <TaskSearch 
-            searchQuery={searchQuery} 
-            onSearchChange={onSearchQueryChange}
-          />
-        </div>
-        
-        <div className="flex gap-4 mb-4">
-          <TaskFilters 
-            onPriorityChange={onFilterPriorityChange} 
-            onSourceChange={onFilterSourceChange} 
-          />
-        </div>
-        
-        <TaskTabs
+        <TasksLeftPanel
           activeTab={activeTab}
-          onTabChange={onActiveTabChange}
+          onActiveTabChange={onActiveTabChange}
           searchQuery={searchQuery}
-          priorityFilter={filterPriority}
-          sourceFilter={filterSource}
+          onSearchQueryChange={onSearchQueryChange}
+          filterPriority={filterPriority}
+          onFilterPriorityChange={onFilterPriorityChange}
+          filterSource={filterSource}
+          onFilterSourceChange={onFilterSourceChange}
         />
       </div>
       
       <div className="space-y-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Task Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TaskTypeStats />
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Priority Matrix</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-2">
-            <TaskPriorityMatrix />
-          </CardContent>
-        </Card>
+        <TasksRightPanel />
       </div>
     </div>
   );
