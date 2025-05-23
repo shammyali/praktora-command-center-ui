@@ -41,46 +41,48 @@ const TasksHub = () => {
 
   return (
     <Layout>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Command Tasks</h1>
-          <p className="text-muted-foreground text-sm">
-            Execute, track, and manage critical actions across your workflows
-          </p>
+      <div className="px-6 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Command Tasks</h1>
+            <p className="text-muted-foreground text-sm">
+              Execute, track, and manage critical actions across your workflows
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Filter className="h-4 w-4" />
+              Filter
+            </Button>
+            <Button 
+              className="gap-2 bg-praktora-burgundy hover:bg-praktora-burgundy/90"
+              onClick={handleCreateTask}
+            >
+              <Plus className="h-4 w-4" />
+              New Task
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Filter className="h-4 w-4" />
-            Filter
-          </Button>
-          <Button 
-            className="gap-2 bg-praktora-burgundy hover:bg-praktora-burgundy/90"
-            onClick={handleCreateTask}
-          >
-            <Plus className="h-4 w-4" />
-            New Task
-          </Button>
-        </div>
+
+        <TaskStats stats={taskStats} />
+
+        <TasksMainContent
+          activeTab={activeTab}
+          onActiveTabChange={setActiveTab}
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          filterPriority={filterPriority}
+          onFilterPriorityChange={setFilterPriority}
+          filterSource={filterSource}
+          onFilterSourceChange={setFilterSource}
+        />
+
+        <TaskCreateModal 
+          open={showCreateModal} 
+          onOpenChange={setShowCreateModal} 
+          onTaskCreated={handleTaskCreated}
+        />
       </div>
-
-      <TaskStats stats={taskStats} />
-
-      <TasksMainContent
-        activeTab={activeTab}
-        onActiveTabChange={setActiveTab}
-        searchQuery={searchQuery}
-        onSearchQueryChange={setSearchQuery}
-        filterPriority={filterPriority}
-        onFilterPriorityChange={setFilterPriority}
-        filterSource={filterSource}
-        onFilterSourceChange={setFilterSource}
-      />
-
-      <TaskCreateModal 
-        open={showCreateModal} 
-        onOpenChange={setShowCreateModal} 
-        onTaskCreated={handleTaskCreated}
-      />
     </Layout>
   );
 };

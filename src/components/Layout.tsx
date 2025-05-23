@@ -1,6 +1,5 @@
 
 import { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
@@ -29,7 +28,7 @@ const Layout = ({
           showBackButton={showBackButton}
           backButtonFallbackPath={backButtonFallbackPath}
         />
-        <main className="flex-1 overflow-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
