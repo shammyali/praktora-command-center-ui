@@ -1,7 +1,7 @@
 
 import { useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { WhatsAppMessage, WhatsAppConversation } from "@/data/whatsAppData";
+import { WhatsAppMessage, WhatsAppConversation } from "@/data/whatsapp/types";
 import { Badge } from "@/components/ui/badge";
 import { Paperclip, Send, Smile, AlertTriangle, Clock, MessageCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";

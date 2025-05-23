@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
@@ -8,7 +7,11 @@ import WhatsAppInbox from "@/components/whatsapp/WhatsAppInbox";
 import ConversationView from "@/components/whatsapp/ConversationView";
 import SmartActionSidebar from "@/components/whatsapp/SmartActionSidebar";
 import WhatsAppMiniDashboard from "@/components/whatsapp/WhatsAppMiniDashboard";
-import { mockWhatsAppConversations, mockConversationMessages, mockWhatsAppStats } from "@/data/whatsAppData";
+import { 
+  mockWhatsAppConversations, 
+  mockConversationMessages, 
+  mockWhatsAppStats 
+} from "@/data/whatsapp";
 
 export default function WhatsAppHub() {
   const [searchParams] = useSearchParams();
