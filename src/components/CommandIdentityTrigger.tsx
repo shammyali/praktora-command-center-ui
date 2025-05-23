@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -21,8 +20,8 @@ import {
   Clock, 
   LogOut, 
   Settings, 
-  Flask, 
-  FileExport, 
+  Beaker, 
+  FileText, 
   TrendingUp, 
   History
 } from "lucide-react";
@@ -210,11 +209,11 @@ const CommandIdentityTrigger = () => {
                   Global Settings
                 </Button>
                 <Button variant="ghost" size="sm" className="h-8 justify-start text-xs">
-                  <Flask className="h-3.5 w-3.5 mr-1.5" />
+                  <Beaker className="h-3.5 w-3.5 mr-1.5" />
                   Automations Lab
                 </Button>
                 <Button variant="ghost" size="sm" className="h-8 justify-start text-xs">
-                  <FileExport className="h-3.5 w-3.5 mr-1.5" />
+                  <FileText className="h-3.5 w-3.5 mr-1.5" />
                   Export My AI Log
                 </Button>
                 <Button variant="ghost" size="sm" className="h-8 justify-start text-xs">
