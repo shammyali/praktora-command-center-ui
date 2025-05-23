@@ -1,7 +1,6 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
@@ -9,6 +8,8 @@ import { Badge } from "./ui/badge";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Command, CommandItem } from "./ui/command";
+import { mistralApi } from "@/services/api/mistralApi";
+import { toast } from "sonner";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -120,12 +121,18 @@ const ProjectCard = ({
 };
 
 const CommandSuggestion = ({
-  text
+  text,
+  onClick,
 }: {
   text: string;
+  onClick?: () => void;
 }) => {
   return (
-    <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-slate-100">
+    <Badge 
+      variant="outline" 
+      className="px-3 py-1 cursor-pointer hover:bg-slate-100"
+      onClick={onClick}
+    >
       {text}
     </Badge>
   );
@@ -142,40 +149,108 @@ const EmptyEngagements = () => {
     </Card>;
 };
 
+// Response MessageType
+type MessageType = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 const CommandCenter = () => {
-  const [activeEngagements, setActiveEngagements] = useState([{
-    title: "Workmen's Compensation Renewal -",
-    customerName: "Tom Robers",
-    description: "Comprehensive coverage renewal assessment required",
-    status: "Awaiting Confirmation",
-    statusColor: "yellow" as const,
-    animate: true,
-    kycStatus: "NO" as const
-  }, {
-    title: "New Motor Quote -",
-    customerName: "Abdullah Ali",
-    description: "Comprehensive coverage proposal ready for review",
-    status: "Quoted",
-    statusColor: "yellow" as const,
-    animate: false,
-    kycStatus: "YES" as const
-  }, {
-    title: "Medical Claim -",
-    customerName: "Vijay Singh",
-    description: "Claim assessment completed and approved",
-    status: "Claim Settled",
-    statusColor: "green" as const,
-    animate: false,
-    kycStatus: "PEP" as const
-  }, {
-    title: "Risk Assessment",
-    customerName: "Mohan Lal",
-    description: "Complete risk profile for healthcare client",
-    status: "In Progress",
-    statusColor: "blue" as const,
-    animate: false,
-    kycStatus: "Request" as const
-  }]);
+  const [activeEngagements, setActiveEngagements] = useState([
+    {
+      title: "Workmen's Compensation Renewal -",
+      customerName: "Tom Robers",
+      description: "Comprehensive coverage renewal assessment required",
+      status: "Awaiting Confirmation",
+      statusColor: "yellow" as const,
+      animate: true,
+      kycStatus: "NO" as const
+    }, {
+      title: "New Motor Quote -",
+      customerName: "Abdullah Ali",
+      description: "Comprehensive coverage proposal ready for review",
+      status: "Quoted",
+      statusColor: "yellow" as const,
+      animate: false,
+      kycStatus: "YES" as const
+    }, {
+      title: "Medical Claim -",
+      customerName: "Vijay Singh",
+      description: "Claim assessment completed and approved",
+      status: "Claim Settled",
+      statusColor: "green" as const,
+      animate: false,
+      kycStatus: "PEP" as const
+    }, {
+      title: "Risk Assessment",
+      customerName: "Mohan Lal",
+      description: "Complete risk profile for healthcare client",
+      status: "In Progress",
+      statusColor: "blue" as const,
+      animate: false,
+      kycStatus: "Request" as const
+    }
+  ]);
+
+  const [command, setCommand] = useState("");
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+  
+  // Handle change in the command textarea
+  const handleCommandChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setCommand(value);
+    setCharacterCount(value.length);
+  };
+  
+  // Handle click on a command suggestion
+  const handleSuggestionClick = (suggestionText: string) => {
+    setCommand(suggestionText);
+    setCharacterCount(suggestionText.length);
+  };
+  
+  // Execute the command by sending it to the Mistral LLM
+  const executeCommand = async () => {
+    if (!command.trim()) {
+      toast.warning("Please enter a command to execute");
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      // Add user message to the conversation
+      const userMessage: MessageType = {
+        role: "user",
+        content: command
+      };
+      setMessages(prev => [...prev, userMessage]);
+      
+      // Get conversation history (just the messages content) for context
+      const contextHistory = messages.map(msg => `${msg.role}: ${msg.content}`);
+      
+      // Send command to Mistral API
+      const response = await mistralApi.sendCommand(command, contextHistory);
+      
+      // Add assistant message to the conversation
+      const assistantMessage: MessageType = {
+        role: "assistant",
+        content: response
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      
+      // Clear the command input
+      setCommand("");
+      setCharacterCount(0);
+      
+    } catch (error) {
+      console.error("Error executing command:", error);
+      // Error already toasted in the API service
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
@@ -219,34 +294,55 @@ const CommandCenter = () => {
             {/* Display Area - 70% of the available space initially */}
             <ResizablePanel defaultSize={70} minSize={50}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
-                <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                      <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Compare RSA and AXA for MP2118' or 'Create endorsement for GM123/1'
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                      <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice - no premium recived' follow up by mondy..
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                      <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expirning today'
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                      <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Follow up on pending claims for Al Zahra Trading' or 'List all unpaid customer invoices over 30 days'
-                      </p>
+                {messages.length === 0 ? (
+                  <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                        <p className="text-[#5A6B82]/40 italic font-semibold">
+                          Try: 'Compare RSA and AXA for MP2118' or 'Create endorsement for GM123/1'
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                        <p className="text-[#5A6B82]/40 italic font-semibold">
+                          Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice'
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                        <p className="text-[#5A6B82]/40 italic font-semibold">
+                          Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expiring today'
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
+                        <p className="text-[#5A6B82]/40 italic font-semibold">
+                          Try: 'Follow up on pending claims for Al Zahra Trading' or 'List all unpaid customer invoices over 30 days'
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="h-full w-full overflow-y-auto p-4 space-y-4">
+                    {messages.map((message, index) => (
+                      <div 
+                        key={index} 
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div 
+                          className={`max-w-[80%] p-4 rounded-lg ${
+                            message.role === 'user' 
+                              ? 'bg-[#9C2D55] text-white' 
+                              : 'bg-white border border-gray-200 shadow-sm'
+                          }`}
+                        >
+                          <p className="whitespace-pre-wrap">{message.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </ResizablePanel>
             
@@ -259,49 +355,79 @@ const CommandCenter = () => {
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-medium text-lg">P²RA Command Console</h3>
-                      <span className="text-xs text-gray-500">20/2000</span>
+                      <span className={`text-xs ${characterCount > 1900 ? 'text-red-500' : 'text-gray-500'}`}>
+                        {characterCount}/2000
+                      </span>
                     </div>
                     <Separator className="my-3" />
                     
                     <div className="flex gap-2 mb-3 flex-wrap">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion text="Upload Emirates ID and generate new enquiry" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Scan and auto-extract customer details from Emirates ID</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <CommandSuggestion 
+                                text="Upload Emirates ID and generate new enquiry" 
+                                onClick={() => handleSuggestionClick("Upload Emirates ID and generate new enquiry")}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Scan and auto-extract customer details from Emirates ID</p>
+                          </TooltipContent>
+                        </Tooltip>
 
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion text="Convert quote MP2396 to policy and issue invoice" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Automatically convert an existing quote to policy and generate invoice</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion text="Send WhatsApp quote to Ali Qamar" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Send quote details via WhatsApp to the customer</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion text="List all unpaid invoices over 30 days" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>View all outstanding invoices that are overdue by 30+ days</p>
-                        </TooltipContent>
-                      </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <CommandSuggestion 
+                                text="Convert quote MP2396 to policy and issue invoice" 
+                                onClick={() => handleSuggestionClick("Convert quote MP2396 to policy and issue invoice")}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Automatically convert an existing quote to policy and generate invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <CommandSuggestion 
+                                text="Send WhatsApp quote to Ali Qamar" 
+                                onClick={() => handleSuggestionClick("Send WhatsApp quote to Ali Qamar")}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Send quote details via WhatsApp to the customer</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <CommandSuggestion 
+                                text="List all unpaid invoices over 30 days" 
+                                onClick={() => handleSuggestionClick("List all unpaid invoices over 30 days")}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View all outstanding invoices that are overdue by 30+ days</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                     
-                    <Textarea placeholder="Ask any question about clients, policies, or market trends..." className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" />
+                    <Textarea 
+                      placeholder="Ask any question about clients, policies, or market trends..." 
+                      className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent"
+                      value={command}
+                      onChange={handleCommandChange}
+                      maxLength={2000}
+                    />
                     <div className="flex items-center justify-between mt-4 pt-2">
                       <div className="flex gap-2">
                         <Tooltip>
@@ -324,8 +450,20 @@ const CommandCenter = () => {
                       </div>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="sm" className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap">
-                            Execute Command
+                          <Button 
+                            size="sm" 
+                            className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
+                            onClick={executeCommand}
+                            disabled={isLoading || !command.trim()}
+                          >
+                            {isLoading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              "Execute Command"
+                            )}
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>

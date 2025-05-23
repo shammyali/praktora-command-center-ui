@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import CommandCenter from "@/components/CommandCenter";
 import { Link } from "react-router-dom";
-import { ArrowRight, MousePointerClick } from "lucide-react";
+import { ArrowRight, MousePointerClick, SparklesIcon } from "lucide-react";
 
 const Index = () => {
   return (
@@ -13,11 +13,16 @@ const Index = () => {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <div className="flex-1 overflow-auto">
-          <div className="p-8 flex flex-col items-center justify-center">
+          <div className="p-8 flex flex-col items-center">
             <div className="max-w-md w-full bg-white p-6 rounded-xl shadow-lg border border-praktora-burgundy/20 mb-8">
-              <h2 className="text-xl font-bold text-praktora-burgundy mb-4 text-center">Dashboard Navigation</h2>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <SparklesIcon className="h-6 w-6 text-praktora-burgundy" />
+                <h2 className="text-xl font-bold text-praktora-burgundy text-center">
+                  P²RA Command Console
+                </h2>
+              </div>
               <p className="text-gray-600 mb-4 text-center">
-                Click the button below to access the P²RA Control Center Dashboard
+                Powered by Mistral LLM, the P²RA Command Console provides intelligent assistance for all your insurance operations.
               </p>
               <Link to="/dashboard" className="block w-full">
                 <Button className="w-full bg-praktora-burgundy hover:bg-praktora-burgundy/90 mb-2 text-lg flex items-center justify-center py-6 gap-3">
@@ -29,7 +34,7 @@ const Index = () => {
               <div className="flex items-center justify-center mt-2">
                 <span className="text-sm text-gray-500 flex items-center gap-2">
                   <span className="inline-block w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                  Dashboard is ready
+                  Mistral LLM Connected
                 </span>
               </div>
             </div>
