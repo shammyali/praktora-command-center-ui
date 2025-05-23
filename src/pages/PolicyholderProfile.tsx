@@ -16,6 +16,7 @@ const PolicyholderProfile = () => {
         <Header
           title="Policyholder Profile" 
           subtitle="Customer Intelligence Hub"
+          showBackButton={false}
         />
         
         <main className="flex-1 overflow-auto p-4 md:p-6">

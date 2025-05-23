@@ -3,16 +3,22 @@ import { MoonIcon, BellIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import CommandIdentityTrigger from "./CommandIdentityTrigger";
+import BackButton from "./navigation/BackButton";
 
 interface HeaderProps {
   title?: string;
   subtitle?: string;
+  showBackButton?: boolean;
+  backButtonFallbackPath?: string;
 }
 
-const Header = ({ title, subtitle }: HeaderProps) => {
+const Header = ({ title, subtitle, showBackButton = false, backButtonFallbackPath }: HeaderProps) => {
   return <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          {showBackButton && (
+            <BackButton fallbackPath={backButtonFallbackPath} />
+          )}
           {/* Logo with subtle intelligent animation */}
           <img 
             src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 

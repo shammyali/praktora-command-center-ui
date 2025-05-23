@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface CustomerContactInfoProps {
   email: string;
@@ -18,6 +18,7 @@ const CustomerContactInfo = ({
   fullName
 }: CustomerContactInfoProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleEmailContact = () => {
     window.open(`mailto:${email}`);
@@ -30,6 +31,9 @@ const CustomerContactInfo = ({
   };
 
   const handleWhatsAppContact = () => {
+    // Store current location path in session storage before navigating
+    sessionStorage.setItem('previousLocation', location.pathname);
+    
     // Navigate to internal WhatsApp module with the mobile number as a parameter
     const formattedMobile = mobile.replace(/\s+/g, "");
     navigate(`/whatsapp?phone=${formattedMobile}`);

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { Separator } from "@/components/ui/separator";
@@ -21,6 +21,11 @@ import { praktoraWebApi } from "@/services/api/praktoraWebApi";
 export default function WhatsAppHub() {
   const [searchParams] = useSearchParams();
   const phoneParam = searchParams.get('phone');
+  const navigate = useNavigate();
+  
+  // Determine if we should show back button - we should if there's a phone parameter
+  // This indicates that the user arrived here from another page via a direct link
+  const shouldShowBackButton = !!phoneParam;
   
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [localConversations, setLocalConversations] = useState(mockWhatsAppConversations);
@@ -148,7 +153,11 @@ export default function WhatsAppHub() {
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
+        <Header 
+          title="WhatsApp Intelligence Hub"
+          showBackButton={shouldShowBackButton}
+          backButtonFallbackPath="/policyholders"
+        />
         
         <div className="p-4">
           <h1 className="text-2xl font-bold text-praktora-burgundy">WhatsApp Intelligence Hub</h1>
