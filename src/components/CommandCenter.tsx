@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle, Upload } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 import { Command, CommandItem } from "./ui/command";
 import { praktoraWebApi } from "@/services/api/praktoraWebApi";
 import { toast } from "sonner";
+import DocumentUploadZone from "./documents/DocumentUploadZone";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -154,6 +155,7 @@ const CommandCenter = () => {
   const [commandText, setCommandText] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showDocumentUpload, setShowDocumentUpload] = useState(false);
 
   // Load active engagements on component mount
   useEffect(() => {
@@ -198,6 +200,17 @@ const CommandCenter = () => {
 
   const handleSuggestionClick = (suggestion: string) => {
     setCommandText(suggestion);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      executeCommand();
+    }
+  };
+
+  const handleDocumentUploadClose = () => {
+    setShowDocumentUpload(false);
   };
 
   return <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
@@ -246,11 +259,11 @@ const CommandCenter = () => {
           </div>
         </div>
         
-        {/* Main Content Area - Using ResizablePanelGroup for flexible sizing */}
+        {/* Main Content Area */}
         <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
           <ResizablePanelGroup direction="vertical" className="h-full">
-            {/* Display Area - 70% of the available space initially */}
-            <ResizablePanel defaultSize={70} minSize={50}>
+            {/* Display Area - 75% of the available space initially */}
+            <ResizablePanel defaultSize={75} minSize={60}>
               <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
                 <div className="h-full w-full flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
                   <div className="flex flex-col items-center gap-3">
@@ -263,19 +276,13 @@ const CommandCenter = () => {
                     <div className="flex items-center gap-2">
                       <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
                       <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice - no premium received' follow up by monday..
+                        Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy'
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
                       <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expiring today'
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
-                      <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Follow up on pending claims for Al Zahra Trading' or 'List all unpaid customer invoices over 30 days'
+                        Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policies expiring today'
                       </p>
                     </div>
                   </div>
@@ -285,10 +292,18 @@ const CommandCenter = () => {
             
             <ResizableHandle withHandle />
             
-            {/* Prompt Area - 30% of the available space initially */}
-            <ResizablePanel defaultSize={30} minSize={15}>
-              <div className="h-full p-5 bg-white overflow-auto">
-                <Card className="shadow-md h-[250px] border-[#9C2D55]/20 flex flex-col">
+            {/* Prompt Area - 25% of the available space initially (reduced from 30%) */}
+            <ResizablePanel defaultSize={25} minSize={15}>
+              <div className="h-full p-5 bg-white">
+                {showDocumentUpload && (
+                  <div className="absolute inset-0 z-20 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                    <div className="max-w-md w-full">
+                      <DocumentUploadZone onClose={handleDocumentUploadClose} />
+                    </div>
+                  </div>
+                )}
+                
+                <Card className="shadow-md h-full border-[#9C2D55]/20 flex flex-col">
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-medium text-lg">P²RA Command Console</h3>
@@ -297,67 +312,40 @@ const CommandCenter = () => {
                     <Separator className="my-3" />
                     
                     <div className="flex gap-2 mb-3 flex-wrap">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion 
-                            text="Upload Emirates ID and generate new enquiry" 
-                            onClick={() => handleSuggestionClick("Upload Emirates ID and generate new enquiry")}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Scan and auto-extract customer details from Emirates ID</p>
-                        </TooltipContent>
-                      </Tooltip>
-
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion 
-                            text="Convert quote MP2396 to policy and issue invoice" 
-                            onClick={() => handleSuggestionClick("Convert quote MP2396 to policy and issue invoice")}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Automatically convert an existing quote to policy and generate invoice</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion 
-                            text="Send WhatsApp quote to Ali Qamar" 
-                            onClick={() => handleSuggestionClick("Send WhatsApp quote to Ali Qamar")}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Send quote details via WhatsApp to the customer</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <CommandSuggestion 
-                            text="List all unpaid invoices over 30 days" 
-                            onClick={() => handleSuggestionClick("List all unpaid invoices over 30 days")}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>View all outstanding invoices that are overdue by 30+ days</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <CommandSuggestion 
+                        text="Upload Emirates ID" 
+                        onClick={() => handleSuggestionClick("Upload Emirates ID and generate new enquiry")}
+                      />
+                      <CommandSuggestion 
+                        text="Convert quote MP2396" 
+                        onClick={() => handleSuggestionClick("Convert quote MP2396 to policy and issue invoice")}
+                      />
+                      <CommandSuggestion 
+                        text="Send WhatsApp quote" 
+                        onClick={() => handleSuggestionClick("Send WhatsApp quote to Ali Qamar")}
+                      />
                     </div>
                     
                     <Textarea 
-                      placeholder="Ask any question about clients, policies, or market trends..." 
-                      className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
+                      placeholder="Ask any question about clients, policies, or market trends... (Press Enter to execute)" 
+                      className="min-h-16 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
                       value={commandText}
                       onChange={(e) => setCommandText(e.target.value)}
+                      onKeyDown={handleKeyDown}
                       maxLength={2000}
                     />
                     <div className="flex items-center justify-between mt-4 pt-2">
                       <div className="flex gap-2">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="outline" size="sm">Attach</Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => setShowDocumentUpload(true)}
+                            >
+                              <Upload className="h-4 w-4 mr-1" />
+                              Upload
+                            </Button>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>Upload documents or images to include with your query</p>
@@ -385,7 +373,7 @@ const CommandCenter = () => {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Process your query and provide intelligent assistance</p>
+                          <p>Process your query and provide intelligent assistance (or press Enter)</p>
                         </TooltipContent>
                       </Tooltip>
                     </div>
