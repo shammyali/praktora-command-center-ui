@@ -15,16 +15,11 @@ const Header = ({ subtitle, showBackButton = false, backButtonFallbackPath }: He
   return (
     <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="flex h-16 items-center px-4 sm:px-6">
-        {/* Fixed-width container for logo that stays in place */}
+        {/* Fixed-width container for back button that stays in place */}
         <div className="flex items-center gap-2 w-48 flex-shrink-0">
           {showBackButton && (
             <BackButton fallbackPath={backButtonFallbackPath} />
           )}
-          <img 
-            src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
-            alt="Praktora Práxis Logo" 
-            className="h-10 md:h-12 transition-all duration-500 hover:scale-105 hover:shadow-md" 
-          />
         </div>
         
         {/* Center section - absolute positioning to ensure it stays centered */}
