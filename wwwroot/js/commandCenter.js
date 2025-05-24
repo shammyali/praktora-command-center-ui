@@ -1,119 +1,123 @@
 
-// Command Center functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const apiProviderSelect = document.getElementById('apiProviderSelect');
     const apiKeyButton = document.getElementById('apiKeyButton');
-    const apiKeyModal = document.getElementById('apiKeyModal');
+    const apiKeyModal = new bootstrap.Modal(document.getElementById('apiKeyModal'), {});
+    const saveApiKeyButton = document.getElementById('saveApiKeyButton');
     const apiKeyInput = document.getElementById('apiKeyInput');
     const rememberKeyCheck = document.getElementById('rememberKeyCheck');
-    const saveApiKeyButton = document.getElementById('saveApiKeyButton');
+    const statusIndicator = document.querySelector('.status-indicator');
+    const statusText = document.querySelector('.status-text');
+
+    // Command elements
     const commandTextarea = document.getElementById('commandTextarea');
+    const executeButton = document.getElementById('executeButton');
+    const attachButton = document.getElementById('attachButton');
     const characterCount = document.querySelector('.character-count');
     const messagesContainer = document.getElementById('messagesContainer');
     const suggestionsDisplay = document.getElementById('suggestionsDisplay');
-    const executeButton = document.getElementById('executeButton');
-    const apiStatus = document.querySelector('.api-status .status-text');
-    const attachButton = document.getElementById('attachButton');
-    const documentUploadModal = document.getElementById('documentUploadModal');
+    const suggestionButtons = document.querySelectorAll('.suggestion-button');
+    
+    // Document upload elements
+    const documentUploadModal = new bootstrap.Modal(document.getElementById('documentUploadModal'), {});
     const uploadZone = document.getElementById('uploadZone');
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     const uploadFilesButton = document.getElementById('uploadFilesButton');
-    const documentAttachments = document.getElementById('documentAttachments');
     
-    // Initialize resizable panels
+    // Messages array
+    let messages = [];
+    let uploadedDocuments = [];
+    
+    // Set up event listeners
+    apiProviderSelect.addEventListener('change', updateApiProvider);
+    apiKeyButton.addEventListener('click', () => apiKeyModal.show());
+    saveApiKeyButton.addEventListener('click', saveApiKey);
+    
+    commandTextarea.addEventListener('input', updateCharacterCount);
+    executeButton.addEventListener('click', executeCommand);
+    attachButton.addEventListener('click', () => documentUploadModal.show());
+    
+    suggestionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const suggestion = this.closest('.suggestion-card').querySelector('p').textContent.replace(/^"(.+)"$/, '$1');
+            commandTextarea.value = suggestion;
+            updateCharacterCount();
+        });
+    });
+    
+    // Initialize character count
+    updateCharacterCount();
+    
+    // Setup file upload
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', handleDragOver);
+    uploadZone.addEventListener('drop', handleFileDrop);
+    fileInput.addEventListener('change', handleFileSelect);
+    uploadFilesButton.addEventListener('click', uploadFiles);
+    
+    // Setup resizable panels
     const messagesPanel = document.getElementById('messagesPanel');
     const commandPanel = document.getElementById('commandPanel');
     const resizerHandle = document.getElementById('resizerHandle');
     
-    let isResizing = false;
+    resizerHandle.addEventListener('mousedown', initResize);
     
-    resizerHandle.addEventListener('mousedown', function(e) {
-        isResizing = true;
-        document.body.style.cursor = 'row-resize';
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', stopResize);
-        e.preventDefault();
-    });
-    
-    function handleMouseMove(e) {
-        if (!isResizing) return;
+    // Functions
+    function updateApiProvider() {
+        const provider = apiProviderSelect.value;
+        statusText.textContent = `Using ${provider === 'mistral' ? 'Mistral LLM' : 'OpenAI'}`;
+        statusIndicator.className = `status-indicator ${provider}-status`;
         
-        const containerRect = messagesPanel.parentElement.getBoundingClientRect();
-        const containerHeight = containerRect.height;
-        const y = e.clientY - containerRect.top;
-        
-        // Calculate percentages
-        const messagesPanelPercentage = (y / containerHeight) * 100;
-        const commandPanelPercentage = 100 - messagesPanelPercentage;
-        
-        // Set min heights
-        if (messagesPanelPercentage < 30 || commandPanelPercentage < 20) return;
-        
-        messagesPanel.style.flex = `${messagesPanelPercentage}`;
-        commandPanel.style.flex = `${commandPanelPercentage}`;
-    }
-    
-    function stopResize() {
-        isResizing = false;
-        document.body.style.cursor = '';
-        document.removeEventListener('mousemove', handleMouseMove);
-    }
-    
-    // API Provider selection
-    apiProviderSelect.addEventListener('change', function() {
-        const provider = this.value;
-        apiStatus.textContent = `Using ${provider === 'mistral' ? 'Mistral LLM' : 'OpenAI'}`;
-        
-        // Show API key button for OpenAI
+        // Show API key button only for OpenAI
         if (provider === 'openai') {
             apiKeyButton.style.display = 'block';
-            
-            // Check if API key is already set
-            const apiKey = getOpenAiApiKey();
-            if (!apiKey) {
-                // Show API key modal if not set
-                const apiKeyModalInstance = new bootstrap.Modal(apiKeyModal);
-                apiKeyModalInstance.show();
-            }
         } else {
             apiKeyButton.style.display = 'none';
         }
-    });
+    }
     
-    // API Key button
-    apiKeyButton.addEventListener('click', function() {
-        const apiKeyModalInstance = new bootstrap.Modal(apiKeyModal);
-        apiKeyModalInstance.show();
-    });
-    
-    // Save API Key
-    saveApiKeyButton.addEventListener('click', function() {
+    function saveApiKey() {
         const apiKey = apiKeyInput.value.trim();
-        
         if (!apiKey) {
-            showToast('Please enter a valid API key', 'warning');
+            alert('Please enter a valid API key');
             return;
         }
         
         // Save API key
         if (rememberKeyCheck.checked) {
-            localStorage.setItem('p2ra_openai_api_key', apiKey);
+            localStorage.setItem('openai_api_key', apiKey);
         } else {
             sessionStorage.setItem('openai_temp_key', apiKey);
         }
         
-        // Close modal
-        const apiKeyModalInstance = bootstrap.Modal.getInstance(apiKeyModal);
-        apiKeyModalInstance.hide();
-        
-        showToast('API key saved successfully', 'success');
-    });
+        // Send to server
+        fetch('/CommandCenter/SaveApiKey', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                apiKey: apiKey,
+                provider: 'openai'
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                apiKeyModal.hide();
+                alert('API key saved successfully');
+            }
+        })
+        .catch(error => {
+            console.error('Error saving API key:', error);
+            alert('Error saving API key');
+        });
+    }
     
-    // Character count
-    commandTextarea.addEventListener('input', function() {
-        const count = this.value.length;
+    function updateCharacterCount() {
+        const count = commandTextarea.value.length;
         characterCount.textContent = `${count}/2000`;
         
         if (count > 1900) {
@@ -121,356 +125,268 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             characterCount.classList.remove('text-danger');
         }
-    });
-    
-    // Command execution
-    executeButton.addEventListener('click', function() {
-        executeCommand();
-    });
-    
-    // Suggestion buttons
-    document.querySelectorAll('.suggestion-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const suggestionText = this.previousElementSibling.textContent;
-            commandTextarea.value = suggestionText.replace(/"/g, '');
-            commandTextarea.dispatchEvent(new Event('input'));
-            commandTextarea.focus();
-        });
-    });
-    
-    // Attach button
-    attachButton.addEventListener('click', function() {
-        const documentUploadModalInstance = new bootstrap.Modal(documentUploadModal);
-        documentUploadModalInstance.show();
-    });
-    
-    // Upload zone drag and drop
-    uploadZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('drag-over');
-    });
-    
-    uploadZone.addEventListener('dragleave', function() {
-        this.classList.remove('drag-over');
-    });
-    
-    uploadZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('drag-over');
-        
-        if (e.dataTransfer.files.length > 0) {
-            handleFiles(e.dataTransfer.files);
-        }
-    });
-    
-    uploadZone.addEventListener('click', function() {
-        fileInput.click();
-    });
-    
-    fileInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-            handleFiles(this.files);
-        }
-    });
-    
-    // Helper Functions
-    function handleFiles(files) {
-        // Clear existing file list
-        fileList.innerHTML = '';
-        
-        // Create file items
-        Array.from(files).forEach((file, index) => {
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
-            
-            const fileIcon = document.createElement('div');
-            fileIcon.className = 'file-item-icon';
-            
-            // Set icon based on file type
-            let iconClass = 'bi-file-earmark';
-            if (file.type.startsWith('image/')) {
-                iconClass = 'bi-file-earmark-image';
-            } else if (file.type === 'application/pdf') {
-                iconClass = 'bi-file-earmark-pdf';
-            } else if (file.type.includes('word') || file.type.includes('document')) {
-                iconClass = 'bi-file-earmark-word';
-            } else if (file.type.includes('excel') || file.type.includes('sheet')) {
-                iconClass = 'bi-file-earmark-excel';
-            } else if (file.type.includes('text')) {
-                iconClass = 'bi-file-earmark-text';
-            }
-            
-            fileIcon.innerHTML = `<i class="bi ${iconClass}"></i>`;
-            
-            const fileInfo = document.createElement('div');
-            fileInfo.className = 'file-item-info';
-            
-            const fileName = document.createElement('p');
-            fileName.className = 'file-item-name';
-            fileName.textContent = file.name;
-            
-            const fileSize = document.createElement('p');
-            fileSize.className = 'file-item-size';
-            fileSize.textContent = formatFileSize(file.size);
-            
-            fileInfo.appendChild(fileName);
-            fileInfo.appendChild(fileSize);
-            
-            const fileActions = document.createElement('div');
-            fileActions.className = 'file-item-actions';
-            
-            const removeButton = document.createElement('button');
-            removeButton.className = 'btn btn-sm btn-link text-danger';
-            removeButton.innerHTML = '<i class="bi bi-x"></i>';
-            removeButton.addEventListener('click', function() {
-                fileItem.remove();
-                checkFilesExist();
-            });
-            
-            fileActions.appendChild(removeButton);
-            
-            fileItem.appendChild(fileIcon);
-            fileItem.appendChild(fileInfo);
-            fileItem.appendChild(fileActions);
-            
-            fileList.appendChild(fileItem);
-        });
-        
-        // Enable upload button if files exist
-        checkFilesExist();
     }
     
-    function checkFilesExist() {
-        uploadFilesButton.disabled = fileList.children.length === 0;
-    }
-    
-    function formatFileSize(size) {
-        if (size < 1024) {
-            return size + ' B';
-        } else if (size < 1024 * 1024) {
-            return (size / 1024).toFixed(1) + ' KB';
-        } else {
-            return (size / (1024 * 1024)).toFixed(1) + ' MB';
-        }
-    }
-    
-    // Upload files
-    uploadFilesButton.addEventListener('click', function() {
-        // Simulate upload progress
-        const fileItems = fileList.querySelectorAll('.file-item');
-        
-        fileItems.forEach((fileItem, index) => {
-            // Create progress element
-            const progressContainer = document.createElement('div');
-            progressContainer.className = 'file-item-progress';
-            
-            const progressBar = document.createElement('div');
-            progressBar.className = 'progress';
-            progressBar.style.height = '4px';
-            
-            const progressIndicator = document.createElement('div');
-            progressIndicator.className = 'progress-bar';
-            progressIndicator.style.width = '0%';
-            progressIndicator.setAttribute('role', 'progressbar');
-            
-            progressBar.appendChild(progressIndicator);
-            progressContainer.appendChild(progressBar);
-            
-            const fileInfo = fileItem.querySelector('.file-item-info');
-            fileInfo.appendChild(progressContainer);
-            
-            // Simulate progress
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 10) + 5;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Show complete status
-                    const completeStatus = document.createElement('div');
-                    completeStatus.className = 'text-success d-flex align-items-center mt-1';
-                    completeStatus.style.fontSize = '0.75rem';
-                    completeStatus.innerHTML = '<i class="bi bi-check2 me-1"></i> Upload complete';
-                    progressContainer.appendChild(completeStatus);
-                    
-                    // Add to document attachments
-                    const fileOriginal = fileInput.files[index];
-                    if (fileOriginal) {
-                        addDocumentAttachment(fileOriginal);
-                    }
-                    
-                    // Close modal if all uploads complete
-                    if (Array.from(fileItems).every(item => {
-                        const progressBar = item.querySelector('.progress-bar');
-                        return progressBar && progressBar.style.width === '100%';
-                    })) {
-                        setTimeout(() => {
-                            const documentUploadModalInstance = bootstrap.Modal.getInstance(documentUploadModal);
-                            documentUploadModalInstance.hide();
-                            showToast('Documents attached successfully', 'success');
-                        }, 1000);
-                    }
-                }
-                progressIndicator.style.width = progress + '%';
-            }, 200);
-        });
-    });
-    
-    function addDocumentAttachment(file) {
-        const attachment = document.createElement('div');
-        attachment.className = 'd-flex align-items-center bg-light rounded p-1 pe-2';
-        attachment.style.fontSize = '0.8rem';
-        
-        let iconClass = 'bi-file-earmark-text';
-        if (file.type.startsWith('image/')) {
-            iconClass = 'bi-file-earmark-image';
-        } else if (file.type === 'application/pdf') {
-            iconClass = 'bi-file-earmark-pdf';
-        }
-        
-        attachment.innerHTML = `
-            <i class="bi ${iconClass} me-1 text-secondary"></i>
-            <span class="text-truncate" style="max-width: 100px;">${file.name}</span>
-            <button class="btn btn-sm p-0 ms-1 remove-attachment">
-                <i class="bi bi-x"></i>
-            </button>
-        `;
-        
-        attachment.querySelector('.remove-attachment').addEventListener('click', function() {
-            attachment.remove();
-        });
-        
-        documentAttachments.appendChild(attachment);
-    }
-    
-    // Get API key helper function
-    function getOpenAiApiKey() {
-        // First check session storage (temporary key)
-        const tempKey = sessionStorage.getItem('openai_temp_key');
-        if (tempKey) {
-            return tempKey;
-        }
-        
-        // Then check localStorage
-        return localStorage.getItem('p2ra_openai_api_key');
-    }
-    
-    // Execute command
     function executeCommand() {
         const command = commandTextarea.value.trim();
-        
         if (!command) {
-            showToast('Please enter a command to execute', 'warning');
+            alert('Please enter a command');
             return;
         }
         
-        // Hide suggestions
-        suggestionsDisplay.style.display = 'none';
+        // Check if API key is required but not provided
+        const provider = apiProviderSelect.value;
+        if (provider === 'openai' && 
+            !localStorage.getItem('openai_api_key') && 
+            !sessionStorage.getItem('openai_temp_key')) {
+            alert('Please set your OpenAI API key first');
+            apiKeyModal.show();
+            return;
+        }
         
-        // Get attached documents
-        const attachedDocs = Array.from(documentAttachments.children).map(attachment => {
-            return {
-                name: attachment.querySelector('span').textContent
-            };
-        });
-        
-        // Create user message
-        addUserMessage(command, attachedDocs);
-        
-        // Disable execute button and show loading state
+        // Show loading state
         executeButton.disabled = true;
-        executeButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+        executeButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
         
-        // Get API provider
-        const apiProvider = apiProviderSelect.value;
+        // Add user message to UI
+        addMessageToUI('user', command);
         
-        // Simulate API call
-        setTimeout(() => {
-            // Create assistant message
-            const response = generateMockResponse(command, apiProvider);
-            addAssistantMessage(response);
+        // Get document attachments if any
+        const attachments = uploadedDocuments.map(doc => ({
+            id: doc.id,
+            name: doc.name
+        }));
+        
+        // Execute command
+        fetch('/CommandCenter/ExecuteCommand', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                command: command,
+                apiProvider: provider,
+                attachments: attachments
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Add assistant message to UI
+            addMessageToUI('assistant', data.response);
             
-            // Clear command and attachments
+            // Update messages array
+            messages = data.messages;
+            
+            // Clear command
             commandTextarea.value = '';
-            commandTextarea.dispatchEvent(new Event('input'));
-            documentAttachments.innerHTML = '';
-            
-            // Re-enable execute button
+            updateCharacterCount();
+        })
+        .catch(error => {
+            console.error('Error executing command:', error);
+            addMessageToUI('system', 'Error executing command. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
             executeButton.disabled = false;
             executeButton.innerHTML = 'Execute Command';
-        }, 2000);
+        });
     }
     
-    function addUserMessage(content, attachments = []) {
-        const messageElem = document.createElement('div');
-        messageElem.className = 'message user-message';
-        
-        // If there are attachments, show them
-        if (attachments.length > 0) {
-            const attachmentsElem = document.createElement('div');
-            attachmentsElem.className = 'd-flex gap-2 mb-2 bg-white/80 p-2 rounded align-items-center';
-            attachmentsElem.style.fontSize = '0.8rem';
-            
-            const icon = document.createElement('i');
-            icon.className = 'bi bi-paperclip text-secondary';
-            
-            const text = document.createElement('span');
-            text.className = 'text-secondary';
-            text.textContent = `${attachments.length} ${attachments.length === 1 ? 'document' : 'documents'} attached`;
-            
-            attachmentsElem.appendChild(icon);
-            attachmentsElem.appendChild(text);
-            messageElem.appendChild(attachmentsElem);
+    function addMessageToUI(role, content) {
+        // Hide suggestions if this is the first message
+        if (suggestionsDisplay && suggestionsDisplay.style.display !== 'none') {
+            suggestionsDisplay.style.display = 'none';
         }
         
-        const contentElem = document.createElement('p');
-        contentElem.textContent = content;
-        messageElem.appendChild(contentElem);
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${role}-message`;
         
-        messagesContainer.appendChild(messageElem);
+        const contentParagraph = document.createElement('p');
+        contentParagraph.textContent = content;
+        messageDiv.appendChild(contentParagraph);
+        
+        // Add to container
+        messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
     
-    function addAssistantMessage(content) {
-        const messageElem = document.createElement('div');
-        messageElem.className = 'message assistant-message';
-        
-        const contentElem = document.createElement('p');
-        contentElem.textContent = content;
-        messageElem.appendChild(contentElem);
-        
-        messagesContainer.appendChild(messageElem);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // File handling functions
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadZone.classList.add('dragover');
     }
     
-    function generateMockResponse(command, provider) {
-        const responses = {
-            'analyze risk profile for client xyz corp': 'Based on the data available for XYZ Corp, I\'ve analyzed their risk profile and found several areas of concern:\n\n1. Industry risk: Medium-high due to volatile market conditions\n2. Financial stability: Strong with consistent growth over 3 years\n3. Claim history: 3 minor claims in the past 24 months\n4. Compliance status: All requirements up to date\n\nOverall risk assessment: MEDIUM\n\nRecommendation: Consider adjusting premium by +5-8% and require quarterly compliance reviews.',
-            'summarize policy #12345 coverage details': 'Policy #12345 - Commercial Property Insurance\n\nCoverage summary:\n- Building coverage: $2,500,000 (Replacement cost)\n- Business personal property: $750,000\n- Business interruption: $500,000 (12-month period)\n- Deductible: $10,000 per occurrence\n\nKey exclusions:\n- Flood damage (separate policy recommended)\n- Earthquake damage\n- Wear and tear/gradual deterioration\n\nPolicy is active until December 31, 2025. Premium payments are current.',
-            'start claim process for customer john doe': 'I\'ve initiated the claims process for John Doe.\n\nClaim reference number: CL-2023-4872\n\nRequired documentation:\n1. Completed claim form (sent to customer\'s email)\n2. Photos of damage/incident\n3. Police report (if applicable)\n4. Repair estimates\n\nJohn\'s agent (Sarah Johnson) has been notified and will contact him within 24 hours. The customer can upload documents directly through the client portal using the claim reference number.',
-        };
+    function handleFileDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadZone.classList.remove('dragover');
         
-        const lowercaseCommand = command.toLowerCase();
-        
-        for (const [key, value] of Object.entries(responses)) {
-            if (lowercaseCommand.includes(key)) {
-                return value;
-            }
-        }
-        
-        // Default response
-        if (provider === 'mistral') {
-            return `I've processed your request regarding "${command}". Based on the available data, I can provide assistance with this query. Please let me know if you need more specific information or if there's anything else I can help with.`;
-        } else {
-            return `Thank you for your query about "${command}". I've analyzed the information in our database and can help you with this request. What additional details would you like me to explore?`;
-        }
+        const files = e.dataTransfer.files;
+        processFiles(files);
     }
     
-    // Initialize API provider button visibility
-    if (apiProviderSelect.value === 'openai') {
-        apiKeyButton.style.display = 'block';
-    } else {
-        apiKeyButton.style.display = 'none';
+    function handleFileSelect(e) {
+        const files = e.target.files;
+        processFiles(files);
+    }
+    
+    function processFiles(files) {
+        if (files.length === 0) return;
+        
+        // Clear previous file list
+        fileList.innerHTML = '';
+        
+        // Create file items
+        Array.from(files).forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <div class="file-icon"><i class="bi bi-file-earmark"></i></div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${formatFileSize(file.size)}</div>
+                </div>
+                <div class="file-status">Ready</div>
+            `;
+            fileList.appendChild(fileItem);
+        });
+        
+        // Enable upload button
+        uploadFilesButton.disabled = false;
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+    
+    function uploadFiles() {
+        const files = fileInput.files;
+        if (files.length === 0) return;
+        
+        // Create FormData
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+        
+        // Update UI to show uploading
+        const fileItems = fileList.querySelectorAll('.file-item');
+        fileItems.forEach(item => {
+            const statusDiv = item.querySelector('.file-status');
+            statusDiv.textContent = 'Uploading...';
+            statusDiv.className = 'file-status uploading';
+        });
+        
+        // Disable upload button
+        uploadFilesButton.disabled = true;
+        
+        // Upload files
+        fetch('/Documents/UploadMultiple', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Add documents to uploaded documents array
+            uploadedDocuments = uploadedDocuments.concat(data);
+            
+            // Update UI to show success
+            fileItems.forEach((item, index) => {
+                const statusDiv = item.querySelector('.file-status');
+                statusDiv.textContent = 'Uploaded';
+                statusDiv.className = 'file-status success';
+            });
+            
+            // Update document attachments UI
+            updateDocumentAttachments();
+            
+            // Close modal after a delay
+            setTimeout(() => {
+                documentUploadModal.hide();
+                // Clear file input
+                fileInput.value = '';
+            }, 1000);
+        })
+        .catch(error => {
+            console.error('Error uploading files:', error);
+            
+            // Update UI to show error
+            fileItems.forEach(item => {
+                const statusDiv = item.querySelector('.file-status');
+                statusDiv.textContent = 'Error';
+                statusDiv.className = 'file-status error';
+            });
+            
+            // Enable upload button again
+            uploadFilesButton.disabled = false;
+        });
+    }
+    
+    function updateDocumentAttachments() {
+        const attachmentsContainer = document.getElementById('documentAttachments');
+        attachmentsContainer.innerHTML = '';
+        
+        if (uploadedDocuments.length === 0) {
+            attachmentsContainer.style.display = 'none';
+            return;
+        }
+        
+        attachmentsContainer.style.display = 'block';
+        
+        uploadedDocuments.forEach(doc => {
+            const docItem = document.createElement('div');
+            docItem.className = 'document-item';
+            docItem.innerHTML = `
+                <div class="document-icon"><i class="bi bi-file-earmark"></i></div>
+                <div class="document-name">${doc.name}</div>
+                <button class="document-remove" data-id="${doc.id}">
+                    <i class="bi bi-x"></i>
+                </button>
+            `;
+            attachmentsContainer.appendChild(docItem);
+            
+            // Add remove event listener
+            docItem.querySelector('.document-remove').addEventListener('click', function() {
+                const docId = this.getAttribute('data-id');
+                uploadedDocuments = uploadedDocuments.filter(d => d.id !== docId);
+                updateDocumentAttachments();
+            });
+        });
+    }
+    
+    // Resizable panels
+    function initResize(e) {
+        e.preventDefault();
+        window.addEventListener('mousemove', resize);
+        window.addEventListener('mouseup', stopResize);
+    }
+    
+    function resize(e) {
+        const container = document.querySelector('.resizable-container');
+        const containerHeight = container.offsetHeight;
+        const y = e.clientY;
+        const containerRect = container.getBoundingClientRect();
+        const containerTop = containerRect.top;
+        
+        // Calculate position as percentage
+        const percentage = ((y - containerTop) / containerHeight) * 100;
+        
+        // Set min/max
+        const clampedPercentage = Math.max(30, Math.min(70, percentage));
+        
+        // Apply sizes
+        messagesPanel.style.height = `${clampedPercentage}%`;
+        commandPanel.style.height = `${100 - clampedPercentage}%`;
+    }
+    
+    function stopResize() {
+        window.removeEventListener('mousemove', resize);
+        window.removeEventListener('mouseup', stopResize);
     }
 });
