@@ -13,13 +13,16 @@ namespace P2RA.Controllers
     {
         private readonly ILogger<CommandCenterController> _logger;
         private readonly IOpenAiService _openAiService;
+        private readonly IMistralService _mistralService;
 
         public CommandCenterController(
             ILogger<CommandCenterController> logger,
-            IOpenAiService openAiService)
+            IOpenAiService openAiService,
+            IMistralService mistralService)
         {
             _logger = logger;
             _openAiService = openAiService;
+            _mistralService = mistralService;
         }
 
         public IActionResult Index()
@@ -28,7 +31,7 @@ namespace P2RA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ExecuteCommand(string command, string apiProvider)
+        public async Task<IActionResult> ExecuteCommand(string command, string apiProvider, [FromBody] List<DocumentAttachment> attachments = null)
         {
             try
             {
@@ -46,19 +49,24 @@ namespace P2RA.Controllers
                 var userMessage = new MessageModel
                 {
                     Role = "user",
-                    Content = command
+                    Content = command,
+                    Attachments = attachments
                 };
                 messages.Add(userMessage);
 
                 // Execute command based on selected provider
-                if (apiProvider == "openai")
+                if (apiProvider.ToLower() == "openai")
                 {
                     response = await _openAiService.SendCommandAsync(command, messages);
                 }
+                else if (apiProvider.ToLower() == "mistral")
+                {
+                    response = await _mistralService.SendCommandAsync(command, messages);
+                }
                 else
                 {
-                    // Fallback to OpenAI if Mistral is not implemented yet
-                    response = await _openAiService.SendCommandAsync(command, messages);
+                    // Default to Mistral if provider is not specified or invalid
+                    response = await _mistralService.SendCommandAsync(command, messages);
                 }
                 
                 // Add assistant response to messages
@@ -91,9 +99,13 @@ namespace P2RA.Controllers
                     return BadRequest("API key cannot be empty");
                 }
 
-                if (provider == "openai")
+                if (provider.ToLower() == "openai")
                 {
                     _openAiService.SetApiKey(apiKey);
+                }
+                else if (provider.ToLower() == "mistral")
+                {
+                    _mistralService.SetApiKey(apiKey);
                 }
                 
                 return Json(new { success = true });

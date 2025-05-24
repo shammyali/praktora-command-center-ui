@@ -1,4 +1,3 @@
-
 :root {
     --praktora-primary: #9C2D55;
     --praktora-secondary: #1A2A50;
@@ -241,6 +240,10 @@ html, body {
 
 .openai-status {
     background-color: #007bff;
+}
+
+.claude-status {
+    background-color: #6f42c1;
 }
 
 .status-text {

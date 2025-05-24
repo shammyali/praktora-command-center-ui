@@ -21,7 +21,7 @@
                 </button>
             </div>
             <div class="api-status">
-                <span class="status-indicator"></span>
+                <span class="status-indicator mistral-status"></span>
                 <span class="status-text">Using Mistral LLM</span>
             </div>
         </div>
@@ -137,14 +137,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">OpenAI API Key</h5>
+                <h5 class="modal-title" id="apiProviderLabel">API Key</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="text-muted">Enter your OpenAI API key to enable OpenAI integration.</p>
+                <p class="text-muted">Enter your API key to enable integration.</p>
                 <div class="mb-3">
                     <label for="apiKeyInput" class="form-label">API Key</label>
-                    <input type="password" class="form-control" id="apiKeyInput" placeholder="sk-...">
+                    <input type="password" class="form-control" id="apiKeyInput" placeholder="Enter your API key">
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="rememberKeyCheck" checked>

@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const apiProviderSelect = document.getElementById('apiProviderSelect');
@@ -9,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const rememberKeyCheck = document.getElementById('rememberKeyCheck');
     const statusIndicator = document.querySelector('.status-indicator');
     const statusText = document.querySelector('.status-text');
+    const providerLabel = document.getElementById('apiProviderLabel');
 
     // Command elements
     const commandTextarea = document.getElementById('commandTextarea');
@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Set up event listeners
     apiProviderSelect.addEventListener('change', updateApiProvider);
-    apiKeyButton.addEventListener('click', () => apiKeyModal.show());
+    apiKeyButton.addEventListener('click', () => {
+        providerLabel.textContent = apiProviderSelect.value === 'mistral' ? 'Mistral API Key' : 'OpenAI API Key';
+        apiKeyModal.show();
+    });
     saveApiKeyButton.addEventListener('click', saveApiKey);
     
     commandTextarea.addEventListener('input', updateCharacterCount);
@@ -64,17 +67,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     resizerHandle.addEventListener('mousedown', initResize);
     
+    // Initialize API provider
+    updateApiProvider();
+    
     // Functions
     function updateApiProvider() {
         const provider = apiProviderSelect.value;
-        statusText.textContent = `Using ${provider === 'mistral' ? 'Mistral LLM' : 'OpenAI'}`;
-        statusIndicator.className = `status-indicator ${provider}-status`;
         
-        // Show API key button only for OpenAI
-        if (provider === 'openai') {
-            apiKeyButton.style.display = 'block';
+        if (provider === 'mistral') {
+            statusText.textContent = 'Using Mistral LLM';
+            statusIndicator.className = 'status-indicator mistral-status';
+            apiKeyButton.style.display = 'block'; // We want to configure API keys for both providers
         } else {
-            apiKeyButton.style.display = 'none';
+            statusText.textContent = 'Using OpenAI';
+            statusIndicator.className = 'status-indicator openai-status';
+            apiKeyButton.style.display = 'block';
         }
     }
     
@@ -85,11 +92,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        const provider = apiProviderSelect.value;
+        
         // Save API key
         if (rememberKeyCheck.checked) {
-            localStorage.setItem('openai_api_key', apiKey);
+            localStorage.setItem(`${provider}_api_key`, apiKey);
         } else {
-            sessionStorage.setItem('openai_temp_key', apiKey);
+            sessionStorage.setItem(`${provider}_temp_key`, apiKey);
         }
         
         // Send to server
@@ -100,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({ 
                 apiKey: apiKey,
-                provider: 'openai'
+                provider: provider
             }),
         })
         .then(response => response.json())
@@ -111,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('Error saving API key:', error);
-            alert('Error saving API key');
+            console.error(`Error saving ${provider} API key:`, error);
+            alert(`Error saving ${provider} API key`);
         });
     }
     
@@ -136,10 +145,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Check if API key is required but not provided
         const provider = apiProviderSelect.value;
-        if (provider === 'openai' && 
+        if ((provider === 'openai' && 
             !localStorage.getItem('openai_api_key') && 
-            !sessionStorage.getItem('openai_temp_key')) {
-            alert('Please set your OpenAI API key first');
+            !sessionStorage.getItem('openai_temp_key')) ||
+            (provider === 'mistral' &&
+            !localStorage.getItem('mistral_api_key') &&
+            !sessionStorage.getItem('mistral_temp_key'))) {
+            alert(`Please set your ${provider === 'openai' ? 'OpenAI' : 'Mistral'} API key first`);
             apiKeyModal.show();
             return;
         }
