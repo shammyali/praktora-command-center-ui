@@ -1,6 +1,5 @@
 
 import SidePanel from "./command-center/SidePanel";
-import ApiProviderSelector from "./command-center/ApiProviderSelector";
 import CommandCenterContent from "./command-center/CommandCenterContent";
 import ApiKeyModal from "./command-center/ApiKeyModal";
 import { useCommandCenter } from "./command-center/useCommandCenter";
@@ -30,25 +29,18 @@ const CommandCenter = () => {
         
         {/* Main Content Area */}
         <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
-          {/* API Provider Selector */}
-          <ApiProviderSelector 
+          <CommandCenterContent
+            messages={messages}
+            command={command}
+            characterCount={characterCount}
+            isLoading={isLoading}
             apiProvider={apiProvider}
+            onCommandChange={handleCommandChange}
+            onSuggestionClick={handleSuggestionClick}
             onApiProviderChange={handleApiProviderChange}
             onOpenApiKeyModal={() => setShowApiKeyModal(true)}
+            executeCommand={executeCommand}
           />
-          
-          {/* Command Center Content */}
-          <div className="h-[calc(100%-40px)]">
-            <CommandCenterContent
-              messages={messages}
-              command={command}
-              characterCount={characterCount}
-              isLoading={isLoading}
-              onCommandChange={handleCommandChange}
-              onSuggestionClick={handleSuggestionClick}
-              executeCommand={executeCommand}
-            />
-          </div>
         </div>
         
         {/* API Key Modal */}
