@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, X, FileText, Check } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
-import { v4 as uuidv4 } from 'uuid';
-import { useDocuments, UploadedDocument } from '../command-center/DocumentContext';
+import { X } from 'lucide-react';
+import { useDocuments } from '../command-center/DocumentContext';
+import DropZone from './upload/DropZone';
+import FileList from './upload/FileList';
+import { readFileContent, createDocumentFromFile } from './upload/fileUtils';
 
 interface DocumentUploadZoneProps {
   onClose: () => void;
@@ -49,10 +50,8 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
     setFiles(newFiles);
   };
 
-  const getFileSize = (size: number) => {
-    if (size < 1024) return `${size} B`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  const clearAllFiles = () => {
+    setFiles([]);
   };
 
   const uploadFiles = async () => {
@@ -84,34 +83,11 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
       
       progressIntervals.push(interval);
       
-      // Read file content
-      const reader = new FileReader();
-      
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          // Add document to context
-          const docId = uuidv4();
-          const docContent = typeof event.target.result === 'string' 
-            ? event.target.result 
-            : URL.createObjectURL(new Blob([event.target.result]));
-            
-          const newDoc: UploadedDocument = {
-            id: docId,
-            name: file.name,
-            size: getFileSize(file.size),
-            type: file.type,
-            content: docContent
-          };
-          
-          addDocument(newDoc);
-        }
-      };
-      
-      if (file.type.match('text/*') || file.type === 'application/json') {
-        reader.readAsText(file);
-      } else {
-        reader.readAsDataURL(file);
-      }
+      // Process file content
+      readFileContent(file, (docContent, docId) => {
+        const newDoc = createDocumentFromFile(file, docId, docContent);
+        addDocument(newDoc);
+      });
     });
     
     // Simulate completion
@@ -139,85 +115,22 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
       </div>
 
       {files.length === 0 ? (
-        <div
-          className={`h-40 flex flex-col items-center justify-center rounded-md transition-colors ${
-            isDragging ? 'bg-blue-50 border-2 border-blue-400' : 'bg-gray-50'
-          }`}
+        <DropZone 
+          isDragging={isDragging}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-        >
-          <Upload className="h-10 w-10 text-gray-400 mb-2" />
-          <p className="text-sm text-gray-500 mb-2">Drag and drop files here</p>
-          <p className="text-xs text-gray-400 mb-4">PDF, Word, Images, or any other document</p>
-          
-          <div>
-            <label htmlFor="file-upload">
-              <div className="bg-praktora-burgundy hover:bg-praktora-burgundy/90 text-white px-4 py-2 rounded-md text-sm cursor-pointer">
-                Browse Files
-              </div>
-              <input
-                id="file-upload"
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleFileInput}
-              />
-            </label>
-          </div>
-        </div>
+          onFileInputChange={handleFileInput}
+        />
       ) : (
-        <div className="space-y-3">
-          {files.map((file, index) => (
-            <div key={index} className="flex items-center p-2 bg-gray-50 rounded-md">
-              <FileText className="h-8 w-8 text-gray-400 mr-3" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate" title={file.name}>{file.name}</p>
-                <p className="text-xs text-gray-500">{getFileSize(file.size)}</p>
-                {uploading && (
-                  <div className="mt-1">
-                    <Progress 
-                      value={uploadProgress[index] || 0} 
-                      className="h-1"
-                    />
-                    {uploadProgress[index] === 100 && (
-                      <div className="flex items-center text-green-600 mt-1 text-xs">
-                        <Check className="h-3 w-3 mr-1" /> Upload complete
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              {!uploading && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => removeFile(index)}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-          ))}
-          
-          <div className="flex justify-end space-x-2 mt-4">
-            {!uploading && (
-              <>
-                <Button variant="outline" size="sm" onClick={() => setFiles([])}>
-                  Clear All
-                </Button>
-                <Button 
-                  size="sm" 
-                  className="bg-praktora-burgundy hover:bg-praktora-burgundy/90" 
-                  onClick={uploadFiles}
-                >
-                  Upload {files.length} {files.length === 1 ? 'file' : 'files'}
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
+        <FileList 
+          files={files}
+          uploading={uploading}
+          uploadProgress={uploadProgress}
+          onRemoveFile={removeFile}
+          onClearAll={clearAllFiles}
+          onUpload={uploadFiles}
+        />
       )}
     </Card>
   );
