@@ -24,10 +24,13 @@ const CommandCenter = () => {
 
   return (
     <DocumentProvider>
-      <div className="min-h-screen bg-gradient-to-br from-white to-blue-50">
-        <div className="flex h-screen">
+      <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
+        <div className="flex flex-col h-full">
+          {/* Right Panel for Instant Commands and Active Engagements */}
+          <SidePanel activeEngagements={activeEngagements} />
+          
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
             <CommandCenterContent
               messages={messages}
               command={command}
@@ -40,11 +43,6 @@ const CommandCenter = () => {
               onOpenApiKeyModal={() => setShowApiKeyModal(true)}
               executeCommand={executeCommand}
             />
-          </div>
-          
-          {/* Right Panel for Instant Commands and Active Engagements */}
-          <div className="w-80 border-l border-gray-200 bg-white">
-            <SidePanel activeEngagements={activeEngagements} />
           </div>
           
           {/* API Key Modal */}
