@@ -11,7 +11,7 @@ const Sidebar = () => {
         <img 
           src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
           alt="Praktora Práxis Logo" 
-          className="h-8 md:h-10 transition-all duration-500 hover:scale-105" 
+          className="h-12 md:h-14 transition-all duration-500 hover:scale-105" 
         />
       </div>
       
