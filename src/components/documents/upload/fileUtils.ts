@@ -45,3 +45,43 @@ export const createDocumentFromFile = (
     content: content
   };
 };
+
+export const getFilePreview = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    // Handle image files
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target?.result as string || '');
+      };
+      reader.readAsDataURL(file);
+      return;
+    }
+    
+    // Handle PDF files
+    if (file.type === 'application/pdf') {
+      return resolve('/lovable-uploads/8631928b-0cb8-4709-ae6b-3b209802c5a2.png'); // PDF icon
+    }
+    
+    // Handle text files
+    if (file.type.match('text/*') || 
+        file.type === 'application/json' ||
+        file.type === 'application/xml') {
+      return resolve('/lovable-uploads/697ccaf3-c184-41b8-9126-e6f758cc6368.png'); // Text icon
+    }
+    
+    // Handle MS Office documents
+    if (file.type.includes('word') || 
+        file.type.includes('officedocument.wordprocessing')) {
+      return resolve('/lovable-uploads/66a81866-061b-4545-bd43-d1742f06411f.png'); // Word icon
+    }
+    
+    if (file.type.includes('excel') || 
+        file.type.includes('officedocument.spreadsheet')) {
+      return resolve('/lovable-uploads/ebc38715-372d-4cc1-b293-cb0855312520.png'); // Excel icon
+    }
+    
+    // Default file icon
+    resolve('/lovable-uploads/0c589e91-71e8-46aa-89f8-e0b62156ee97.png');
+  });
+};
