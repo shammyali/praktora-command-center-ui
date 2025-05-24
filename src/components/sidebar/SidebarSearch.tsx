@@ -7,7 +7,7 @@ const SidebarSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="flex items-center gap-2 px-4 py-2 h-16 border-b border-gray-200">
+    <div className="flex items-center gap-2 px-4 py-2">
       <SearchIcon className="h-4 w-4 text-gray-400" />
       <Input
         type="search"

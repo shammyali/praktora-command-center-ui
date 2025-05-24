@@ -1,6 +1,5 @@
 
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AISettings from "./AISettings";
 import AutomationSettings from "./AutomationSettings";
@@ -9,20 +8,9 @@ import CommunicationSettings from "./CommunicationSettings";
 import TemplateSettings from "./TemplateSettings";
 import IntelligenceSettings from "./IntelligenceSettings";
 import DataManagementSettings from "./DataManagementSettings";
-import PromptTemplatesSettings from "./PromptTemplatesSettings";
 
 const SettingsLayout = () => {
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState("ai");
-
-  // Set initial tab based on URL query parameter when component mounts
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const tabParam = queryParams.get("tab");
-    if (tabParam && ["ai", "automation", "sla", "communication", "templates", "prompt-templates", "intelligence", "data"].includes(tabParam)) {
-      setActiveTab(tabParam);
-    }
-  }, [location.search]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -32,13 +20,12 @@ const SettingsLayout = () => {
       </div>
       
       <Tabs defaultValue="ai" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-8 mb-6">
+        <TabsList className="grid grid-cols-7 mb-6">
           <TabsTrigger value="ai">P²RA AI</TabsTrigger>
           <TabsTrigger value="automation">Automation</TabsTrigger>
           <TabsTrigger value="sla">SLA & Workflow</TabsTrigger>
           <TabsTrigger value="communication">Communication</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
-          <TabsTrigger value="prompt-templates">Prompt Templates</TabsTrigger>
           <TabsTrigger value="intelligence">Intelligence</TabsTrigger>
           <TabsTrigger value="data">Data Management</TabsTrigger>
         </TabsList>
@@ -61,10 +48,6 @@ const SettingsLayout = () => {
         
         <TabsContent value="templates">
           <TemplateSettings />
-        </TabsContent>
-        
-        <TabsContent value="prompt-templates">
-          <PromptTemplatesSettings />
         </TabsContent>
         
         <TabsContent value="intelligence">

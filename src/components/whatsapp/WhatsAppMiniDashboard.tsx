@@ -1,6 +1,7 @@
+
 import { Clock, MessageCircle, FileText, RefreshCw, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { WhatsAppStats } from "@/data/whatsapp/types";
+import { WhatsAppStats } from "@/data/whatsAppData";
 
 interface WhatsAppMiniDashboardProps {
   stats: WhatsAppStats;

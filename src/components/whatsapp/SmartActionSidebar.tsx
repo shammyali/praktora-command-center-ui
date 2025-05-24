@@ -3,7 +3,7 @@ import { Check, ChevronDown, ExternalLink, MessageSquare, PlusCircle } from "luc
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { WhatsAppConversation, ConversationStatus } from "@/data/whatsapp/types";
+import { WhatsAppConversation, ConversationStatus } from "@/data/whatsAppData";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,

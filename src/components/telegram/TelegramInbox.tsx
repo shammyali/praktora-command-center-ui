@@ -1,7 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { TelegramChat } from "@/data/telegram";
+import { TelegramChat } from "@/data/telegramData";
 import { Bot, User } from "lucide-react";
 
 interface TelegramInboxProps {
