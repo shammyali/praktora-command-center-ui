@@ -1,4 +1,3 @@
-
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PenIcon, ImageIcon, UserIcon, CodeIcon, PlusIcon, SparklesIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
@@ -6,9 +5,11 @@ import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 import { Badge } from "./ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Command, CommandItem } from "./ui/command";
+import { praktoraWebApi } from "@/services/api/praktoraWebApi";
+import { toast } from "sonner";
 
 interface ActionCardProps {
   icon: React.ElementType;
@@ -120,12 +121,18 @@ const ProjectCard = ({
 };
 
 const CommandSuggestion = ({
-  text
+  text,
+  onClick
 }: {
   text: string;
+  onClick?: () => void;
 }) => {
   return (
-    <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-slate-100">
+    <Badge 
+      variant="outline" 
+      className="px-3 py-1 cursor-pointer hover:bg-slate-100"
+      onClick={onClick}
+    >
       {text}
     </Badge>
   );
@@ -143,39 +150,55 @@ const EmptyEngagements = () => {
 };
 
 const CommandCenter = () => {
-  const [activeEngagements, setActiveEngagements] = useState([{
-    title: "Workmen's Compensation Renewal -",
-    customerName: "Tom Robers",
-    description: "Comprehensive coverage renewal assessment required",
-    status: "Awaiting Confirmation",
-    statusColor: "yellow" as const,
-    animate: true,
-    kycStatus: "NO" as const
-  }, {
-    title: "New Motor Quote -",
-    customerName: "Abdullah Ali",
-    description: "Comprehensive coverage proposal ready for review",
-    status: "Quoted",
-    statusColor: "yellow" as const,
-    animate: false,
-    kycStatus: "YES" as const
-  }, {
-    title: "Medical Claim -",
-    customerName: "Vijay Singh",
-    description: "Claim assessment completed and approved",
-    status: "Claim Settled",
-    statusColor: "green" as const,
-    animate: false,
-    kycStatus: "PEP" as const
-  }, {
-    title: "Risk Assessment",
-    customerName: "Mohan Lal",
-    description: "Complete risk profile for healthcare client",
-    status: "In Progress",
-    statusColor: "blue" as const,
-    animate: false,
-    kycStatus: "Request" as const
-  }]);
+  const [activeEngagements, setActiveEngagements] = useState<any[]>([]);
+  const [commandText, setCommandText] = useState("");
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load active engagements on component mount
+  useEffect(() => {
+    loadActiveEngagements();
+  }, []);
+
+  const loadActiveEngagements = async () => {
+    try {
+      setIsLoading(true);
+      const engagements = await praktoraWebApi.getActiveEngagements();
+      setActiveEngagements(engagements);
+    } catch (error) {
+      console.error("Failed to load active engagements:", error);
+      // Fallback to empty array if API fails
+      setActiveEngagements([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const executeCommand = async () => {
+    if (!commandText.trim()) {
+      toast.error("Please enter a command");
+      return;
+    }
+
+    try {
+      setIsExecuting(true);
+      const result = await praktoraWebApi.executeCommand(commandText);
+      
+      toast.success(`Command executed successfully: ${result.result}`);
+      setCommandText("");
+      
+      // Refresh engagements after command execution
+      await loadActiveEngagements();
+    } catch (error) {
+      console.error("Command execution failed:", error);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setCommandText(suggestion);
+  };
 
   return <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-blue-50">
       <div className="flex flex-col h-full">
@@ -196,19 +219,29 @@ const CommandCenter = () => {
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Active Engagements</h2>
-              <Button variant="ghost" size="sm" className="text-sm">View all</Button>
+              <Button variant="ghost" size="sm" className="text-sm" onClick={loadActiveEngagements}>
+                {isLoading ? "Loading..." : "Refresh"}
+              </Button>
             </div>
             <div className="space-y-3">
-              {activeEngagements.length > 0 ? activeEngagements.map((engagement, index) => <ProjectCard 
-                key={index} 
-                title={engagement.title} 
-                customerName={engagement.customerName} 
-                description={engagement.description} 
-                status={engagement.status} 
-                statusColor={engagement.statusColor} 
-                animate={engagement.animate} 
-                kycStatus={engagement.kycStatus}
-              />) : <EmptyEngagements />}
+              {isLoading ? (
+                <div className="text-center text-gray-500">Loading engagements...</div>
+              ) : activeEngagements.length > 0 ? (
+                activeEngagements.map((engagement, index) => (
+                  <ProjectCard 
+                    key={index} 
+                    title={engagement.title} 
+                    customerName={engagement.customerName} 
+                    description={engagement.description} 
+                    status={engagement.status} 
+                    statusColor={engagement.statusColor} 
+                    animate={engagement.animate} 
+                    kycStatus={engagement.kycStatus}
+                  />
+                ))
+              ) : (
+                <EmptyEngagements />
+              )}
             </div>
           </div>
         </div>
@@ -230,13 +263,13 @@ const CommandCenter = () => {
                     <div className="flex items-center gap-2">
                       <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
                       <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice - no premium recived' follow up by mondy..
+                        Try: 'Upload Emirates ID and generate new enquiry' or 'Convert quote MP2396 to policy and issue invoice - no premium received' follow up by monday..
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <SparklesIcon className="h-5 w-5 text-[#5A6B82]/40" />
                       <p className="text-[#5A6B82]/40 italic font-semibold">
-                        Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expirning today'
+                        Try: 'Send WhatsApp quote to Ali Qamar' or 'Download AXA motor policy's expiring today'
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -259,14 +292,17 @@ const CommandCenter = () => {
                   <CardContent className="p-5 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-medium text-lg">P²RA Command Console</h3>
-                      <span className="text-xs text-gray-500">20/2000</span>
+                      <span className="text-xs text-gray-500">{commandText.length}/2000</span>
                     </div>
                     <Separator className="my-3" />
                     
                     <div className="flex gap-2 mb-3 flex-wrap">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="Upload Emirates ID and generate new enquiry" />
+                          <CommandSuggestion 
+                            text="Upload Emirates ID and generate new enquiry" 
+                            onClick={() => handleSuggestionClick("Upload Emirates ID and generate new enquiry")}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Scan and auto-extract customer details from Emirates ID</p>
@@ -275,7 +311,10 @@ const CommandCenter = () => {
 
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="Convert quote MP2396 to policy and issue invoice" />
+                          <CommandSuggestion 
+                            text="Convert quote MP2396 to policy and issue invoice" 
+                            onClick={() => handleSuggestionClick("Convert quote MP2396 to policy and issue invoice")}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Automatically convert an existing quote to policy and generate invoice</p>
@@ -284,7 +323,10 @@ const CommandCenter = () => {
                       
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="Send WhatsApp quote to Ali Qamar" />
+                          <CommandSuggestion 
+                            text="Send WhatsApp quote to Ali Qamar" 
+                            onClick={() => handleSuggestionClick("Send WhatsApp quote to Ali Qamar")}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Send quote details via WhatsApp to the customer</p>
@@ -293,7 +335,10 @@ const CommandCenter = () => {
                       
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <CommandSuggestion text="List all unpaid invoices over 30 days" />
+                          <CommandSuggestion 
+                            text="List all unpaid invoices over 30 days" 
+                            onClick={() => handleSuggestionClick("List all unpaid invoices over 30 days")}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>View all outstanding invoices that are overdue by 30+ days</p>
@@ -301,7 +346,13 @@ const CommandCenter = () => {
                       </Tooltip>
                     </div>
                     
-                    <Textarea placeholder="Ask any question about clients, policies, or market trends..." className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" />
+                    <Textarea 
+                      placeholder="Ask any question about clients, policies, or market trends..." 
+                      className="min-h-24 flex-grow resize-none focus-visible:ring-0 border-none bg-transparent" 
+                      value={commandText}
+                      onChange={(e) => setCommandText(e.target.value)}
+                      maxLength={2000}
+                    />
                     <div className="flex items-center justify-between mt-4 pt-2">
                       <div className="flex gap-2">
                         <Tooltip>
@@ -324,8 +375,13 @@ const CommandCenter = () => {
                       </div>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="sm" className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap">
-                            Execute Command
+                          <Button 
+                            size="sm" 
+                            className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
+                            onClick={executeCommand}
+                            disabled={isExecuting || !commandText.trim()}
+                          >
+                            {isExecuting ? "Processing..." : "Execute Command"}
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>

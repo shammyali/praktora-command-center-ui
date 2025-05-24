@@ -1,7 +1,7 @@
 
 import { toast } from "sonner";
 
-// Customer interface based on the data columns mentioned
+// Customer interface matching the backend C# model
 interface Customer {
   id: string;
   code: string;
@@ -19,13 +19,13 @@ interface Customer {
   category?: string;
   status: "Active" | "Inactive" | "Dormant" | "Suspended";
   profileImage?: string;
-  kycCompletionStatus: "completed" | "incomplete" | "expiring";
+  kycCompletionStatus: "Completed" | "Incomplete" | "Expiring";
   kycCompletionPercentage: number;
 }
 
 interface SearchParams {
   query: string;
-  searchType: "name" | "email" | "mobile" | "code" | "emiratesId" | "passportNo";
+  searchType: "Name" | "Email" | "Mobile" | "Code" | "EmiratesId" | "PassportNo";
   page: number;
   limit: number;
 }
@@ -38,126 +38,70 @@ interface SearchResponse {
   hasMore: boolean;
 }
 
-// Mock data for development - will be replaced with actual API calls
-const mockCustomers: Customer[] = [
-  {
-    id: "1",
-    code: "CS181",
-    fullName: "Ahmed Al Maktoum",
-    email: "ahmed@titangroup.ae",
-    mobile: "+971 50 123 4567",
-    nationality: "UAE",
-    emiratesId: "784-1234-5678901-2",
-    passportNo: "P12345678",
-    dob: "1978-05-15",
-    type: "Individual",
-    isVip: true,
-    assignedAgent: "Sarah Johnson",
-    source: "Agent",
-    category: "TITAN GROUP",
-    status: "Active",
-    profileImage: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
-    kycCompletionStatus: "completed",
-    kycCompletionPercentage: 100
-  },
-  {
-    id: "2",
-    code: "CS182",
-    fullName: "Mohammed Al Maktoum",
-    email: "mohammed@titangroup.ae",
-    mobile: "+971 50 987 6543",
-    nationality: "UAE",
-    emiratesId: "784-9876-5432109-8",
-    passportNo: "P87654321",
-    type: "Individual",
-    isVip: false,
-    status: "Active",
-    kycCompletionStatus: "incomplete",
-    kycCompletionPercentage: 65
-  },
-  {
-    id: "3",
-    code: "CS183",
-    fullName: "Fatima Al Qasimi",
-    email: "fatima@alqasimi.ae",
-    mobile: "+971 55 456 7890",
-    nationality: "UAE",
-    type: "Individual",
-    isVip: false,
-    status: "Active",
-    kycCompletionStatus: "expiring",
-    kycCompletionPercentage: 90
-  },
-  {
-    id: "4",
-    code: "CS184",
-    fullName: "TITAN GROUP LLC",
-    email: "info@titangroup.ae",
-    mobile: "+971 4 123 4567",
-    type: "Company",
-    isVip: true,
-    status: "Active",
-    kycCompletionStatus: "completed",
-    kycCompletionPercentage: 100
-  }
-];
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  errors?: string[];
+}
+
+interface CommandRequest {
+  command: string;
+  parameters?: Record<string, any>;
+}
+
+interface CommandResponse {
+  id: string;
+  status: string;
+  result?: string;
+  timestamp: string;
+}
+
+// Configuration
+const API_BASE_URL = "https://localhost:7001/api"; // Update this to match your ASP.NET Core port
 
 // Class for API operations
 class PraktoraWebApi {
-  private baseUrl: string = "https://api.praktoraweb.com"; // Replace with actual API URL
-  private apiKey: string | null = null;
+  private baseUrl: string = API_BASE_URL;
+  
+  // Helper method for making API calls
+  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    
+    const defaultOptions: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...options,
+    };
+
+    try {
+      const response = await fetch(url, defaultOptions);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data: ApiResponse<T> = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.message || 'API request failed');
+      }
+      
+      return data.data!;
+    } catch (error) {
+      console.error(`API request failed: ${url}`, error);
+      throw error;
+    }
+  }
   
   // Search customers with pagination and filtering
   async searchCustomers(params: SearchParams): Promise<SearchResponse> {
     try {
-      // For development, use mock data
-      // In production, this would be an actual API call
-      // const response = await fetch(`${this.baseUrl}/customers/search`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${this.apiKey}`
-      //   },
-      //   body: JSON.stringify(params)
-      // });
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Filter mock data based on search parameters
-      const filteredCustomers = mockCustomers.filter(customer => {
-        const query = params.query.toLowerCase();
-        
-        switch (params.searchType) {
-          case "name":
-            return customer.fullName.toLowerCase().includes(query);
-          case "email":
-            return customer.email.toLowerCase().includes(query);
-          case "mobile":
-            return customer.mobile.toLowerCase().includes(query);
-          case "code":
-            return customer.code.toLowerCase().includes(query);
-          case "emiratesId":
-            return customer.emiratesId?.toLowerCase().includes(query);
-          case "passportNo":
-            return customer.passportNo?.toLowerCase().includes(query);
-          default:
-            return false;
-        }
+      return await this.makeRequest<SearchResponse>('/commandcenter/search', {
+        method: 'POST',
+        body: JSON.stringify(params),
       });
-      
-      // Calculate pagination
-      const start = (params.page - 1) * params.limit;
-      const end = start + params.limit;
-      const paginatedCustomers = filteredCustomers.slice(start, end);
-      
-      return {
-        customers: paginatedCustomers,
-        total: filteredCustomers.length,
-        page: params.page,
-        limit: params.limit,
-        hasMore: end < filteredCustomers.length
-      };
     } catch (error) {
       console.error("Error searching customers:", error);
       toast.error("Failed to search customers. Please try again.");
@@ -168,30 +112,56 @@ class PraktoraWebApi {
   // Get customer by ID
   async getCustomerById(id: string): Promise<Customer | null> {
     try {
-      // For development, use mock data
-      // In production, this would be an actual API call
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      const customer = mockCustomers.find(c => c.id === id);
-      if (!customer) {
+      return await this.makeRequest<Customer>(`/commandcenter/customer/${id}`);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
         return null;
       }
-      
-      return customer;
-    } catch (error) {
       console.error("Error fetching customer:", error);
       toast.error("Failed to fetch customer details. Please try again.");
       throw error;
     }
   }
   
-  // Set API key for authorization
-  setApiKey(key: string) {
-    this.apiKey = key;
+  // Execute P²RA command
+  async executeCommand(command: string, parameters?: Record<string, any>): Promise<CommandResponse> {
+    try {
+      const request: CommandRequest = { command, parameters };
+      return await this.makeRequest<CommandResponse>('/commandcenter/execute', {
+        method: 'POST',
+        body: JSON.stringify(request),
+      });
+    } catch (error) {
+      console.error("Error executing command:", error);
+      toast.error("Failed to execute command. Please try again.");
+      throw error;
+    }
+  }
+  
+  // Get active engagements
+  async getActiveEngagements(): Promise<any[]> {
+    try {
+      return await this.makeRequest<any[]>('/commandcenter/engagements');
+    } catch (error) {
+      console.error("Error fetching active engagements:", error);
+      toast.error("Failed to fetch active engagements. Please try again.");
+      throw error;
+    }
+  }
+  
+  // Health check
+  async healthCheck(): Promise<{ status: string; timestamp: string }> {
+    try {
+      const response = await fetch(`${this.baseUrl}/commandcenter/health`);
+      return await response.json();
+    } catch (error) {
+      console.error("Health check failed:", error);
+      throw error;
+    }
   }
 }
 
 // Export singleton instance and types
 const praktoraWebApi = new PraktoraWebApi();
 export { praktoraWebApi };
-export type { Customer, SearchParams, SearchResponse };
+export type { Customer, SearchParams, SearchResponse, CommandRequest, CommandResponse };
