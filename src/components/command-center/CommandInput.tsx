@@ -74,7 +74,7 @@ const CommandInput = ({
         {uploadedDocuments.length > 0 && (
           <div className="mb-2">
             <div className="text-xs text-gray-500 mb-1">Attached documents:</div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 max-h-[60px] overflow-y-auto">
               {uploadedDocuments.map((doc) => (
                 <div key={doc.id} className="flex items-center bg-gray-100 rounded-md text-xs p-1 pr-2">
                   <FileText className="h-3 w-3 mr-1 text-gray-500" />
@@ -94,15 +94,17 @@ const CommandInput = ({
           </div>
         )}
         
-        <Textarea 
-          placeholder="Ask any question about clients, policies, or market trends..." 
-          className="min-h-24 mb-2 resize-none focus-visible:ring-0 border-none bg-transparent"
-          value={command}
-          onChange={onCommandChange}
-          onKeyDown={handleKeyDown}
-          maxLength={2000}
-          rows={3}
-        />
+        <div className="flex-1 min-h-[80px] mb-1">
+          <Textarea 
+            placeholder="Ask any question about clients, policies, or market trends..." 
+            className="min-h-24 h-full w-full resize-none focus-visible:ring-0 border-none bg-transparent"
+            value={command}
+            onChange={onCommandChange}
+            onKeyDown={handleKeyDown}
+            maxLength={2000}
+            rows={3}
+          />
+        </div>
         
         <CommandToolbar
           isLoading={isLoading}

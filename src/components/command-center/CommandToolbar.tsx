@@ -49,7 +49,7 @@ const CommandToolbar = ({
   };
 
   return (
-    <div className="flex items-center justify-between relative z-20">
+    <div className="flex items-center justify-between sticky bottom-0 bg-white py-2 z-50">
       <div className="flex gap-2">
         <TooltipProvider>
           <Tooltip>
@@ -81,7 +81,7 @@ const CommandToolbar = ({
           <TooltipTrigger asChild>
             <Button 
               size="sm" 
-              className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap z-20 h-8"
+              className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap z-50 h-8"
               onClick={executeCommand}
               disabled={isLoading || !command.trim()}
             >
