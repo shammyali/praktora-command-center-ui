@@ -47,22 +47,22 @@ const CommandInput = ({
 
   return (
     <Card className="shadow-md border-[#9C2D55]/20 flex flex-col">
-      <CardContent className="p-4 flex flex-col">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium text-lg">P²RA Command Console</h3>
+      <CardContent className="p-3 flex flex-col">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-medium text-base">P²RA Command Console</h3>
           <span className={`text-xs ${characterCount > 1900 ? 'text-red-500' : 'text-gray-500'}`}>
             {characterCount}/2000
           </span>
         </div>
-        <Separator className="my-2" />
+        <Separator className="my-1" />
         
         <Textarea 
           placeholder="Ask any question about clients, policies, or market trends..." 
-          className="min-h-16 mb-4 resize-none focus-visible:ring-0 border-none bg-transparent"
+          className="min-h-14 mb-2 resize-none focus-visible:ring-0 border-none bg-transparent"
           value={command}
           onChange={onCommandChange}
           maxLength={2000}
-          rows={3}
+          rows={2}
         />
         
         <CommandToolbar

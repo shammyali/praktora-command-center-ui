@@ -28,8 +28,8 @@ const CommandCenterContent = ({
   return (
     <div className="fixed left-60 right-80 bottom-0 top-16 overflow-hidden">
       <ResizablePanelGroup direction="vertical" className="h-full">
-        {/* Display Area - 75% of the available space initially */}
-        <ResizablePanel defaultSize={75} minSize={60}>
+        {/* Display Area - 80% of the available space initially */}
+        <ResizablePanel defaultSize={80} minSize={70}>
           <div className="h-full p-5 bg-gradient-to-br from-white to-blue-50 overflow-auto">
             {messages.length === 0 ? (
               <SuggestionsDisplay />
@@ -41,9 +41,9 @@ const CommandCenterContent = ({
         
         <ResizableHandle withHandle />
         
-        {/* Prompt Area - 25% of the available space initially to make it more compact */}
-        <ResizablePanel defaultSize={25} minSize={15}>
-          <div className="h-full p-5 bg-white overflow-visible relative">
+        {/* Prompt Area - 20% of the available space to make it more compact */}
+        <ResizablePanel defaultSize={20} minSize={15}>
+          <div className="h-full p-3 bg-white overflow-visible relative">
             <CommandInput
               command={command}
               characterCount={characterCount}
