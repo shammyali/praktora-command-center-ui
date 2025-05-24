@@ -1,5 +1,6 @@
 
 import { MessageType } from "./types";
+import { FileText } from "lucide-react";
 
 interface MessageListProps {
   messages: MessageType[];
@@ -20,6 +21,14 @@ const MessageList = ({ messages }: MessageListProps) => {
                 : 'bg-white border border-gray-200 shadow-sm'
             }`}
           >
+            {/* Display document icons if the message mentions attached docs */}
+            {message.content.includes("document") && message.content.includes("attached") && (
+              <div className="flex items-center gap-2 mb-2 bg-gray-100/80 p-2 rounded">
+                <FileText className="h-4 w-4 text-gray-600" />
+                <span className="text-xs text-gray-600">Documents attached to this query</span>
+              </div>
+            )}
+            
             <p className="whitespace-pre-wrap">{message.content}</p>
           </div>
         </div>

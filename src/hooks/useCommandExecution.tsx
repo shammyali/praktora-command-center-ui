@@ -41,17 +41,21 @@ export const useCommandExecution = (apiProvider: ApiProvider) => {
       
       // Prepare the command with documents if any
       let enrichedCommand = command;
+      let userMessageDisplay = command;
+      
       if (uploadedDocuments.length > 0) {
-        // Add document references to the command
-        enrichedCommand += `\n\n[Attached Documents: ${uploadedDocuments.map(doc => doc.name).join(", ")}]`;
+        // Add document references to the command for display
+        const docNames = uploadedDocuments.map(doc => doc.name).join(", ");
+        userMessageDisplay = `${command}\n\n[Attached: ${docNames}]`;
+        
+        // Add document references to the actual command sent to API
+        enrichedCommand += `\n\n[Documents attached: ${docNames}]`;
       }
       
       // Add user message to the conversation
       const userMessage: MessageType = {
         role: "user",
-        content: uploadedDocuments.length > 0 
-          ? `${command} (with ${uploadedDocuments.length} document(s) attached)`
-          : command
+        content: userMessageDisplay
       };
       setMessages(prev => [...prev, userMessage]);
       
