@@ -2,6 +2,10 @@
 export type MessageType = {
   role: "user" | "assistant";
   content: string;
+  attachments?: {
+    id: string;
+    name: string;
+  }[];
 };
 
 export interface ActiveEngagement {

@@ -49,7 +49,7 @@ const CommandToolbar = ({
   };
 
   return (
-    <div className="flex items-center justify-between sticky bottom-0 bg-white py-2 z-50 border-t">
+    <div className="flex items-center justify-between sticky bottom-0 bg-white py-2 z-[60] border-t">
       <div className="flex gap-2">
         <TooltipProvider>
           <Tooltip>

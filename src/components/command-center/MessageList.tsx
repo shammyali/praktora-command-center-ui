@@ -21,11 +21,13 @@ const MessageList = ({ messages }: MessageListProps) => {
                 : 'bg-white border border-gray-200 shadow-sm'
             }`}
           >
-            {/* Display document icons if the message mentions attached docs */}
-            {message.content.includes("document") && message.content.includes("attached") && (
+            {/* Display document icons if the message has attachments */}
+            {message.attachments && message.attachments.length > 0 && (
               <div className="flex items-center gap-2 mb-2 bg-gray-100/80 p-2 rounded">
                 <FileText className="h-4 w-4 text-gray-600" />
-                <span className="text-xs text-gray-600">Documents attached to this query</span>
+                <span className="text-xs text-gray-600">
+                  {message.attachments.length} {message.attachments.length === 1 ? 'document' : 'documents'} attached
+                </span>
               </div>
             )}
             

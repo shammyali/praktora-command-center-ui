@@ -102,7 +102,7 @@ const CommandInput = ({
             onChange={onCommandChange}
             onKeyDown={handleKeyDown}
             maxLength={2000}
-            rows={4}
+            rows={6}
           />
         </div>
         
