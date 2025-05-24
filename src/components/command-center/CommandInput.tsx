@@ -4,6 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import CommandToolbar from "./CommandToolbar";
+import { useDocuments } from "./DocumentContext";
+import { X, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CommandInputProps {
   command: string;
@@ -44,6 +47,8 @@ const CommandInput = ({
       { id: 5, name: "Premium Calculation", content: "Calculate premium for a [VEHICLE_TYPE] with value of [VEHICLE_VALUE] for a [CLIENT_TYPE] client", category: "quotes" },
     ],
   });
+  
+  const { uploadedDocuments, removeDocument } = useDocuments();
 
   return (
     <Card className="shadow-md border-[#9C2D55]/20 flex flex-col">
@@ -55,6 +60,30 @@ const CommandInput = ({
           </span>
         </div>
         <Separator className="my-1" />
+        
+        {/* Show attached documents if any */}
+        {uploadedDocuments.length > 0 && (
+          <div className="mb-2">
+            <div className="text-xs text-gray-500 mb-1">Attached documents:</div>
+            <div className="flex flex-wrap gap-1">
+              {uploadedDocuments.map((doc) => (
+                <div key={doc.id} className="flex items-center bg-gray-100 rounded-md text-xs p-1 pr-2">
+                  <FileText className="h-3 w-3 mr-1 text-gray-500" />
+                  <span className="truncate max-w-[100px]">{doc.name}</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-4 w-4 p-0 ml-1" 
+                    onClick={() => removeDocument(doc.id)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Separator className="my-2" />
+          </div>
+        )}
         
         <Textarea 
           placeholder="Ask any question about clients, policies, or market trends..." 

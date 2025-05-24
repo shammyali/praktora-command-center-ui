@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, X, FileText, Check } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { v4 as uuidv4 } from 'uuid';
+import { useDocuments, UploadedDocument } from '../command-center/DocumentContext';
 
 interface DocumentUploadZoneProps {
   onClose: () => void;
@@ -14,6 +16,7 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
+  const { addDocument } = useDocuments();
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -46,7 +49,13 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
     setFiles(newFiles);
   };
 
-  const uploadFiles = () => {
+  const getFileSize = (size: number) => {
+    if (size < 1024) return `${size} B`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const uploadFiles = async () => {
     if (files.length === 0) return;
     
     setUploading(true);
@@ -74,6 +83,35 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
       }, 300);
       
       progressIntervals.push(interval);
+      
+      // Read file content
+      const reader = new FileReader();
+      
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          // Add document to context
+          const docId = uuidv4();
+          const docContent = typeof event.target.result === 'string' 
+            ? event.target.result 
+            : URL.createObjectURL(new Blob([event.target.result]));
+            
+          const newDoc: UploadedDocument = {
+            id: docId,
+            name: file.name,
+            size: getFileSize(file.size),
+            type: file.type,
+            content: docContent
+          };
+          
+          addDocument(newDoc);
+        }
+      };
+      
+      if (file.type.match('text/*') || file.type === 'application/json') {
+        reader.readAsText(file);
+      } else {
+        reader.readAsDataURL(file);
+      }
     });
     
     // Simulate completion
@@ -89,12 +127,6 @@ const DocumentUploadZone = ({ onClose }: DocumentUploadZoneProps) => {
         onClose();
       }, 1000);
     }, files.length * 1000);
-  };
-
-  const getFileSize = (size: number) => {
-    if (size < 1024) return `${size} B`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   return (

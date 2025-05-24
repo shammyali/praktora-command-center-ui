@@ -101,6 +101,81 @@ class MistralApi {
       throw error;
     }
   }
+
+  // Send a command with document content to the Mistral LLM
+  async sendCommandWithDocuments(command: string, contextHistory: string[] = [], documentContent: string = ""): Promise<string> {
+    try {
+      // Create context with documents
+      let context = contextHistory.length > 0 
+        ? contextHistory.join("\n") + "\n"
+        : "";
+      
+      // Add document content at the beginning for better context
+      if (documentContent) {
+        context += "--- DOCUMENT CONTENT START ---\n" + documentContent + "\n--- DOCUMENT CONTENT END ---\n\n";
+      }
+      
+      context += command;
+      
+      const requestBody: MistralRequest = {
+        model: this.defaultModel,
+        prompt: context,
+        max_tokens: 1500, // Increase token limit for document processing
+        temperature: 0.5, // Lower temperature for more focused responses with documents
+      };
+
+      console.log("Sending request with documents to Mistral LLM");
+      
+      // Make the API call
+      const response = await fetch(this.baseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+        cache: "no-cache",
+        credentials: "same-origin",
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error(`HTTP Error: ${response.status} ${response.statusText}`, errorData);
+        
+        if (response.status === 0) {
+          throw new Error("Network error: HTTPS connection failed. Please check your SSL/TLS configuration.");
+        }
+        
+        const errorMessage = this.getErrorMessage(response.status);
+        throw new Error(errorMessage);
+      }
+      
+      const data = await response.json() as MistralResponse;
+      console.log("Received response from Mistral LLM with documents");
+      
+      if (data.choices && data.choices.length > 0) {
+        return data.choices[0].text;
+      } else {
+        throw new Error("No response generated from the LLM");
+      }
+    } catch (error) {
+      console.error("Error calling Mistral LLM with documents:", error);
+      
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      if (errorMessage.includes("SSL") || 
+          errorMessage.includes("certificate") || 
+          errorMessage.includes("TLS")) {
+        toast.error("Secure connection error. Please check SSL/TLS configuration.");
+      } else if (errorMessage.includes("NetworkError") || errorMessage.includes("Network error")) {
+        toast.error("Network error connecting to Mistral LLM. Please check your connection.");
+      } else {
+        toast.error("Failed to process your command with documents. Please try again.");
+      }
+      
+      throw error;
+    }
+  }
   
   // Get appropriate error messages based on status codes
   private getErrorMessage(statusCode: number): string {

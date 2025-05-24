@@ -4,6 +4,7 @@ import { MessageType, ActiveEngagement } from "./types";
 import { mistralApi } from "@/services/api/mistralApi";
 import { openAiApi } from "@/services/api/openAiApi";
 import { toast } from "sonner";
+import { useDocuments } from "./DocumentContext";
 
 // API Provider type
 export type ApiProvider = "mistral" | "openai";
@@ -49,6 +50,9 @@ export const useCommandCenter = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
+  
+  // Access document context
+  const { uploadedDocuments, clearDocuments } = useDocuments();
   
   // API provider state
   const [apiProvider, setApiProvider] = useState<ApiProvider>("mistral");
@@ -113,10 +117,19 @@ export const useCommandCenter = () => {
     try {
       setIsLoading(true);
       
+      // Prepare the command with documents if any
+      let enrichedCommand = command;
+      if (uploadedDocuments.length > 0) {
+        // Add document references to the command
+        enrichedCommand += `\n\n[Attached Documents: ${uploadedDocuments.map(doc => doc.name).join(", ")}]`;
+      }
+      
       // Add user message to the conversation
       const userMessage: MessageType = {
         role: "user",
-        content: command
+        content: uploadedDocuments.length > 0 
+          ? `${command} (with ${uploadedDocuments.length} document(s) attached)`
+          : command
       };
       setMessages(prev => [...prev, userMessage]);
       
@@ -129,11 +142,30 @@ export const useCommandCenter = () => {
           content: msg.content 
         }));
         
-        response = await openAiApi.sendCommand(command, contextHistory);
+        // Add document contents for OpenAI if available
+        if (uploadedDocuments.length > 0) {
+          const documentContents = uploadedDocuments.map(doc => 
+            `Document: ${doc.name}\nContent: ${doc.content?.substring(0, 1000)}${doc.content && doc.content.length > 1000 ? '...(truncated)' : ''}`
+          ).join('\n\n');
+          
+          response = await openAiApi.sendCommandWithDocuments(enrichedCommand, contextHistory, documentContents);
+        } else {
+          response = await openAiApi.sendCommand(enrichedCommand, contextHistory);
+        }
       } else {
         // For Mistral, use the existing format
         const contextHistory = messages.map(msg => `${msg.role}: ${msg.content}`);
-        response = await mistralApi.sendCommand(command, contextHistory);
+        
+        // Add document contents for Mistral if available
+        if (uploadedDocuments.length > 0) {
+          const documentContents = uploadedDocuments.map(doc => 
+            `Document: ${doc.name}\nContent: ${doc.content?.substring(0, 1000)}${doc.content && doc.content.length > 1000 ? '...(truncated)' : ''}`
+          ).join('\n\n');
+          
+          response = await mistralApi.sendCommandWithDocuments(enrichedCommand, contextHistory, documentContents);
+        } else {
+          response = await mistralApi.sendCommand(enrichedCommand, contextHistory);
+        }
       }
       
       // Add assistant message to the conversation
@@ -143,9 +175,10 @@ export const useCommandCenter = () => {
       };
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Clear the command input
+      // Clear the command input and documents
       setCommand("");
       setCharacterCount(0);
+      clearDocuments();
       
     } catch (error) {
       console.error("Error executing command:", error);
