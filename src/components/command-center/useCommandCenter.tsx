@@ -138,7 +138,7 @@ export const useCommandCenter = () => {
       if (apiProvider === "openai") {
         // For OpenAI, we'll format the messages differently
         const contextHistory = messages.map(msg => ({ 
-          role: msg.role === "assistant" ? "assistant" : "user", 
+          role: msg.role === "assistant" ? "assistant" as const : "user" as const, 
           content: msg.content 
         }));
         
