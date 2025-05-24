@@ -1,11 +1,11 @@
 
 import { useState } from "react";
 import { MessageType } from "@/components/command-center/types";
-import { mistralApi } from "@/services/api/mistralApi";
-import { openAiApi } from "@/services/api/openAiApi";
 import { toast } from "sonner";
 import { ApiProvider } from "./useApiProvider";
 import { useDocuments } from "@/components/command-center/DocumentContext";
+import { useDocumentProcessor } from "./useDocumentProcessor";
+import { useApiExecutor } from "./useApiExecutor";
 
 export const useCommandExecution = (apiProvider: ApiProvider) => {
   const [command, setCommand] = useState("");
@@ -15,6 +15,10 @@ export const useCommandExecution = (apiProvider: ApiProvider) => {
   
   // Access document context
   const { uploadedDocuments, clearDocuments } = useDocuments();
+  
+  // Import utilities from extracted hooks
+  const { createUserMessage } = useDocumentProcessor();
+  const { executeWithProvider } = useApiExecutor();
 
   // Handle change in the command textarea
   const handleCommandChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -39,67 +43,24 @@ export const useCommandExecution = (apiProvider: ApiProvider) => {
     try {
       setIsLoading(true);
       
-      // Prepare the command with documents if any
-      let enrichedCommand = command;
-      let userMessageDisplay = command;
-      
-      // Prepare document attachments for the message
-      const docAttachments = uploadedDocuments.map(doc => ({
-        id: doc.id,
-        name: doc.name
-      }));
-      
-      if (uploadedDocuments.length > 0) {
-        // Add document references to the command for display
-        const docNames = uploadedDocuments.map(doc => doc.name).join(", ");
-        userMessageDisplay = `${command}\n\n[Attached: ${docNames}]`;
-        
-        // Add document references to the actual command sent to API
-        enrichedCommand += `\n\n[Documents attached: ${docNames}]`;
-      }
+      // Create user message with document attachments if any
+      const userMessage = createUserMessage(command, uploadedDocuments);
       
       // Add user message to the conversation
-      const userMessage: MessageType = {
-        role: "user",
-        content: userMessageDisplay,
-        attachments: uploadedDocuments.length > 0 ? docAttachments : undefined
-      };
       setMessages(prev => [...prev, userMessage]);
       
-      let response: string;
+      // Prepare the enriched command to send to the API
+      const { enrichedCommand } = userMessage.attachments 
+        ? { enrichedCommand: command + "\n\n[Documents attached]" }
+        : { enrichedCommand: command };
       
-      if (apiProvider === "openai") {
-        // For OpenAI, we'll format the messages differently
-        const contextHistory = messages.map(msg => ({ 
-          role: msg.role === "assistant" ? "assistant" as const : "user" as const, 
-          content: msg.content 
-        }));
-        
-        // Add document contents for OpenAI if available
-        if (uploadedDocuments.length > 0) {
-          const documentContents = uploadedDocuments.map(doc => 
-            `Document: ${doc.name}\nContent: ${doc.content?.substring(0, 1000)}${doc.content && doc.content.length > 1000 ? '...(truncated)' : ''}`
-          ).join('\n\n');
-          
-          response = await openAiApi.sendCommandWithDocuments(enrichedCommand, contextHistory, documentContents);
-        } else {
-          response = await openAiApi.sendCommand(enrichedCommand, contextHistory);
-        }
-      } else {
-        // For Mistral, use the existing format
-        const contextHistory = messages.map(msg => `${msg.role}: ${msg.content}`);
-        
-        // Add document contents for Mistral if available
-        if (uploadedDocuments.length > 0) {
-          const documentContents = uploadedDocuments.map(doc => 
-            `Document: ${doc.name}\nContent: ${doc.content?.substring(0, 1000)}${doc.content && doc.content.length > 1000 ? '...(truncated)' : ''}`
-          ).join('\n\n');
-          
-          response = await mistralApi.sendCommandWithDocuments(enrichedCommand, contextHistory, documentContents);
-        } else {
-          response = await mistralApi.sendCommand(enrichedCommand, contextHistory);
-        }
-      }
+      // Execute the command with the selected provider
+      const response = await executeWithProvider({
+        apiProvider,
+        messages,
+        command: enrichedCommand,
+        uploadedDocuments
+      });
       
       // Add assistant message to the conversation
       const assistantMessage: MessageType = {
