@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
@@ -50,8 +50,17 @@ const CommandInput = ({
   
   const { uploadedDocuments, removeDocument } = useDocuments();
 
+  // Handle Enter key press to execute command
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Check if Enter was pressed without Shift (for new lines)
+    if (e.key === 'Enter' && !e.shiftKey && !isLoading && command.trim()) {
+      e.preventDefault(); // Prevent default to avoid new line
+      executeCommand();
+    }
+  };
+
   return (
-    <Card className="shadow-md border-[#9C2D55]/20 flex flex-col">
+    <Card className="shadow-md border-[#9C2D55]/20 flex flex-col z-50">
       <CardContent className="p-3 flex flex-col">
         <div className="flex items-center justify-between mb-1">
           <h3 className="font-medium text-base">P²RA Command Console</h3>
@@ -87,11 +96,12 @@ const CommandInput = ({
         
         <Textarea 
           placeholder="Ask any question about clients, policies, or market trends..." 
-          className="min-h-14 mb-2 resize-none focus-visible:ring-0 border-none bg-transparent"
+          className="min-h-24 mb-2 resize-none focus-visible:ring-0 border-none bg-transparent"
           value={command}
           onChange={onCommandChange}
+          onKeyDown={handleKeyDown}
           maxLength={2000}
-          rows={2}
+          rows={3}
         />
         
         <CommandToolbar
