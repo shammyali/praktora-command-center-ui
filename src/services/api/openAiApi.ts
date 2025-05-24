@@ -25,16 +25,36 @@ interface OpenAIResponse {
 class OpenAIApi {
   private baseUrl: string = "https://api.openai.com/v1/chat/completions";
   private localStorageKey: string = "p2ra_openai_api_key";
+  private sessionStorageKey: string = "openai_temp_key";
   private defaultModel: string = "gpt-4o-mini"; // Using a compatible model
 
-  // Get the API key from local storage
+  // Get the API key from storage
   getApiKey(): string | null {
+    // First check for a temporary session key
+    const sessionKey = sessionStorage.getItem(this.sessionStorageKey);
+    if (sessionKey) {
+      return sessionKey;
+    }
+    // Fall back to stored key
     return localStorage.getItem(this.localStorageKey);
   }
 
   // Set the API key in local storage
   setApiKey(apiKey: string): void {
     localStorage.setItem(this.localStorageKey, apiKey);
+    // Remove any temporary key
+    sessionStorage.removeItem(this.sessionStorageKey);
+  }
+
+  // Check if using a temporary key
+  isUsingTemporaryKey(): boolean {
+    return !!sessionStorage.getItem(this.sessionStorageKey);
+  }
+
+  // Clear any stored key
+  clearApiKey(): void {
+    localStorage.removeItem(this.localStorageKey);
+    sessionStorage.removeItem(this.sessionStorageKey);
   }
 
   // Send a command to the OpenAI API

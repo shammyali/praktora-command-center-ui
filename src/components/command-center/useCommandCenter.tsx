@@ -70,6 +70,15 @@ export const useCommandCenter = () => {
     if (savedProvider === "openai" && !openAiKeyExists) {
       toast.warning("OpenAI API key is not set. Please configure your API key.");
     }
+
+    // Clear any temporary OpenAI key on page refresh
+    if (openAiApi.isUsingTemporaryKey()) {
+      const tempKey = openAiApi.getApiKey();
+      // We'll save it to session storage so it persists until browser is closed
+      if (tempKey) {
+        sessionStorage.setItem("openai_temp_key", tempKey);
+      }
+    }
   }, []);
   
   // Handle change in the command textarea
@@ -105,6 +114,7 @@ export const useCommandCenter = () => {
     
     openAiApi.setApiKey(apiKey);
     setShowApiKeyModal(false);
+    toast.success("API key saved successfully");
   };
   
   // Execute the command by sending it to the selected AI provider
