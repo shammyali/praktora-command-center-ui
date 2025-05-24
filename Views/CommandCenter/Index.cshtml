@@ -1,0 +1,195 @@
+
+@{
+    ViewData["Title"] = "Command Center";
+    ViewData["Subtitle"] = "Connected. Listening. Ready for Execution...";
+}
+
+<div class="command-center-layout">
+    <!-- Main Command Center -->
+    <div class="command-main">
+        <!-- API Provider Selector -->
+        <div class="api-selector">
+            <div class="dropdown">
+                <select id="apiProviderSelect" class="form-select">
+                    <option value="mistral" selected>Mistral LLM</option>
+                    <option value="openai">OpenAI</option>
+                </select>
+            </div>
+            <div class="api-key-action">
+                <button id="apiKeyButton" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-key"></i> API Key
+                </button>
+            </div>
+            <div class="api-status">
+                <span class="status-indicator"></span>
+                <span class="status-text">Using Mistral LLM</span>
+            </div>
+        </div>
+
+        <!-- Resizable Panels -->
+        <div class="resizable-container">
+            <!-- Messages Display Area -->
+            <div class="messages-panel" id="messagesPanel">
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Empty state - will be filled with actual messages -->
+                    <div class="suggestions-display" id="suggestionsDisplay">
+                        <h3>How can P²RA assist you today?</h3>
+                        <div class="suggestion-cards">
+                            <div class="suggestion-card">
+                                <h4>Analyze Risk</h4>
+                                <p>"Analyze risk profile for client XYZ Corp"</p>
+                                <button class="btn btn-sm btn-outline-primary suggestion-button">Try this</button>
+                            </div>
+                            <div class="suggestion-card">
+                                <h4>Summarize Policy</h4>
+                                <p>"Summarize policy #12345 coverage details"</p>
+                                <button class="btn btn-sm btn-outline-primary suggestion-button">Try this</button>
+                            </div>
+                            <div class="suggestion-card">
+                                <h4>Process Claim</h4>
+                                <p>"Start claim process for customer John Doe"</p>
+                                <button class="btn btn-sm btn-outline-primary suggestion-button">Try this</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resizer Handle -->
+            <div class="resizer-handle" id="resizerHandle"></div>
+
+            <!-- Command Input Area -->
+            <div class="command-panel" id="commandPanel">
+                <div class="command-container">
+                    <div class="command-header">
+                        <h3>P²RA Command Console</h3>
+                        <span class="character-count">0/2000</span>
+                    </div>
+                    
+                    <div class="document-attachments" id="documentAttachments">
+                        <!-- Attached documents will appear here -->
+                    </div>
+                    
+                    <div class="command-input">
+                        <textarea 
+                            id="commandTextarea" 
+                            placeholder="Ask any question about clients, policies, or market trends..."
+                            maxlength="2000"
+                            rows="6"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="command-toolbar">
+                        <div class="toolbar-left">
+                            <button class="btn btn-sm btn-outline-secondary" id="attachButton">
+                                <i class="bi bi-paperclip"></i> Attach
+                            </button>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Templates
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Policy Inquiry</a></li>
+                                    <li><a class="dropdown-item" href="#">Risk Assessment</a></li>
+                                    <li><a class="dropdown-item" href="#">Claims Status</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-sm btn-primary" id="executeButton">
+                                Execute Command
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="command-side-panel">
+        <div class="side-panel-section">
+            <h3>Instant Commands</h3>
+            <div class="instant-commands">
+                <button class="instant-command-btn">Summarize Daily Activity</button>
+                <button class="instant-command-btn">Show Pending Tasks</button>
+                <button class="instant-command-btn">Generate Risk Report</button>
+                <button class="instant-command-btn">Update Client Database</button>
+            </div>
+        </div>
+        
+        <div class="side-panel-section">
+            <h3>Active Engagements</h3>
+            <div class="active-engagements" id="activeEngagements">
+                <!-- Will be populated dynamically -->
+                <div class="empty-engagements">
+                    <i class="bi bi-inbox"></i>
+                    <p>No active engagements</p>
+                    <span>Start a conversation to see it here</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- API Key Modal -->
+<div class="modal fade" id="apiKeyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">OpenAI API Key</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Enter your OpenAI API key to enable OpenAI integration.</p>
+                <div class="mb-3">
+                    <label for="apiKeyInput" class="form-label">API Key</label>
+                    <input type="password" class="form-control" id="apiKeyInput" placeholder="sk-...">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberKeyCheck" checked>
+                    <label class="form-check-label" for="rememberKeyCheck">
+                        Remember API key (saves in browser local storage)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveApiKeyButton">Save API Key</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Upload Modal -->
+<div class="modal fade" id="documentUploadModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Documents</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-zone-content">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <h4>Drag & Drop Files Here</h4>
+                        <p>Or click to browse files</p>
+                        <input type="file" id="fileInput" class="file-input" multiple>
+                    </div>
+                </div>
+                <div class="file-list" id="fileList">
+                    <!-- Files will appear here after selection -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="uploadFilesButton" disabled>Upload Files</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/commandCenter.js"></script>
+}

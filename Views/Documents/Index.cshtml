@@ -1,0 +1,207 @@
+
+@{
+    ViewData["Title"] = "Documents Hub";
+    ViewData["Subtitle"] = "Manage and Analyze Documents";
+}
+
+<div class="documents-layout">
+    <!-- Filter Sidebar -->
+    <div class="filter-sidebar">
+        <div class="filter-section">
+            <h3>Filter Documents</h3>
+            
+            <div class="filter-group">
+                <h4>Document Type</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="pdf" id="pdfCheck">
+                    <label class="form-check-label" for="pdfCheck">PDF Files</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="image" id="imageCheck">
+                    <label class="form-check-label" for="imageCheck">Images</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="word" id="wordCheck">
+                    <label class="form-check-label" for="wordCheck">Word Documents</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="excel" id="excelCheck">
+                    <label class="form-check-label" for="excelCheck">Excel Spreadsheets</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="text" id="textCheck">
+                    <label class="form-check-label" for="textCheck">Text Files</label>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h4>Status</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="uploaded" id="uploadedCheck">
+                    <label class="form-check-label" for="uploadedCheck">Uploaded</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="processed" id="processedCheck">
+                    <label class="form-check-label" for="processedCheck">Processed</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="approved" id="approvedCheck">
+                    <label class="form-check-label" for="approvedCheck">Approved</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="rejected" id="rejectedCheck">
+                    <label class="form-check-label" for="rejectedCheck">Rejected</label>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h4>Source</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="upload" id="uploadSourceCheck">
+                    <label class="form-check-label" for="uploadSourceCheck">Manual Upload</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="email" id="emailSourceCheck">
+                    <label class="form-check-label" for="emailSourceCheck">Email Attachment</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="api" id="apiSourceCheck">
+                    <label class="form-check-label" for="apiSourceCheck">API Import</label>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn btn-sm btn-outline-primary">Apply Filters</button>
+                <button class="btn btn-sm btn-link">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Document Area -->
+    <div class="documents-main">
+        <!-- Document Toolbar -->
+        <div class="document-toolbar">
+            <div class="toolbar-left">
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search documents..." class="form-control form-control-sm">
+                </div>
+            </div>
+            <div class="toolbar-right">
+                <div class="view-toggle btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-sm active" id="gridViewBtn">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="listViewBtn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownSortButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-sort-alpha-down"></i> Sort
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownSortButton">
+                        <li><a class="dropdown-item" href="#">Name (A-Z)</a></li>
+                        <li><a class="dropdown-item" href="#">Date (Newest)</a></li>
+                        <li><a class="dropdown-item" href="#">Size (Largest)</a></li>
+                        <li><a class="dropdown-item" href="#">Type</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary btn-sm" id="uploadDocumentBtn">
+                    <i class="bi bi-upload"></i> Upload
+                </button>
+            </div>
+        </div>
+
+        <!-- Document Upload Zone (Hidden by default) -->
+        <div class="upload-container" id="uploadContainer" style="display: none;">
+            <div class="upload-zone" id="documentDropZone">
+                <div class="upload-zone-content">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <h3>Drag & Drop Files Here</h3>
+                    <p>Or click to browse files</p>
+                    <input type="file" multiple id="documentFileInput" class="file-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Grid View (Default) -->
+        <div class="document-grid" id="documentGrid">
+            <!-- This will be populated with document cards -->
+            <div class="empty-state">
+                <i class="bi bi-file-earmark-text"></i>
+                <h3>No Documents Found</h3>
+                <p>Upload documents to see them here</p>
+                <button class="btn btn-primary" id="emptyStateUploadBtn">
+                    Upload Documents
+                </button>
+            </div>
+        </div>
+
+        <!-- Document List View (Hidden by default) -->
+        <div class="document-list" id="documentList" style="display: none;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="form-check-input" id="selectAllCheck"></th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- This will be populated with document rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Document Details Panel (Hidden by default) -->
+    <div class="document-details-panel" id="documentDetailsPanel" style="display: none;">
+        <div class="panel-header">
+            <h3>Document Details</h3>
+            <button class="btn btn-sm btn-link" id="closeDetailsPanelBtn">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="panel-content">
+            <!-- Document preview and details will be shown here -->
+        </div>
+    </div>
+</div>
+
+<!-- Document Upload Modal -->
+<div class="modal fade" id="documentUploadModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Documents</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="modalUploadZone">
+                    <div class="upload-zone-content">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <h4>Drag & Drop Files Here</h4>
+                        <p>Or click to browse files</p>
+                        <input type="file" id="modalFileInput" class="file-input" multiple>
+                    </div>
+                </div>
+                <div class="file-list" id="modalFileList">
+                    <!-- Files will appear here after selection -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="modalUploadFilesButton" disabled>Upload Files</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/documentsHub.js"></script>
+}
