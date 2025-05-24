@@ -184,13 +184,13 @@ const PolicyholderOverview = ({ customer }: PolicyholderOverviewProps) => {
                 <h3 className="font-medium">KYC Completion Status</h3>
                 <Badge 
                   className={
-                    customer.kycCompletionStatus === "completed" ? "bg-green-500" : 
-                    customer.kycCompletionStatus === "incomplete" ? "bg-red-500" : "bg-amber-500"
+                    customer.kycCompletionStatus === "Completed" ? "bg-green-500" : 
+                    customer.kycCompletionStatus === "Incomplete" ? "bg-red-500" : "bg-amber-500"
                   }
                 >
                   <UserCheck className="h-3 w-3 mr-1" />
-                  {customer.kycCompletionStatus === "completed" ? "Completed" : 
-                   customer.kycCompletionStatus === "incomplete" ? "Incomplete" : "Expiring Soon"}
+                  {customer.kycCompletionStatus === "Completed" ? "Completed" : 
+                   customer.kycCompletionStatus === "Incomplete" ? "Incomplete" : "Expiring Soon"}
                 </Badge>
               </div>
               <Progress 
