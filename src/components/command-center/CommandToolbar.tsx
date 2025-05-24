@@ -49,7 +49,7 @@ const CommandToolbar = ({
   };
 
   return (
-    <div className="flex items-center justify-between mt-2">
+    <div className="flex items-center justify-between pt-2 relative z-10">
       <div className="flex gap-2">
         <TooltipProvider>
           <Tooltip>
@@ -58,6 +58,7 @@ const CommandToolbar = ({
                 variant="outline" 
                 size="sm"
                 onClick={handleAttachClick}
+                className="bg-white"
               >
                 <PaperclipIcon className="h-4 w-4 mr-1" />
                 Attach
@@ -80,7 +81,7 @@ const CommandToolbar = ({
           <TooltipTrigger asChild>
             <Button 
               size="sm" 
-              className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap"
+              className="bg-[#9C2D55] hover:bg-[#9C2D55]/90 text-white whitespace-nowrap z-10"
               onClick={executeCommand}
               disabled={isLoading || !command.trim()}
             >

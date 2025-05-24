@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./ui/resizable";
 import { mistralApi } from "@/services/api/mistralApi";
@@ -225,7 +224,7 @@ const CommandCenter = () => {
             
             {/* Prompt Area - 25% of the available space initially to make it more compact */}
             <ResizablePanel defaultSize={25} minSize={15}>
-              <div className="h-full p-5 bg-white overflow-auto">
+              <div className="h-full p-5 bg-white overflow-visible relative">
                 <CommandInput
                   command={command}
                   characterCount={characterCount}
