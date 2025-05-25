@@ -160,12 +160,14 @@ const PolicyholderProfile = () => {
     <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header
-          title="Policyholder Profile" 
-          subtitle="Customer Intelligence Hub"
-        />
+        <Header />
         
         <main className="flex-1 overflow-auto p-4 md:p-6 pt-20">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-praktora-burgundy mb-2">Policyholder Profile</h1>
+            <p className="text-sm text-gray-600">Customer Intelligence Hub</p>
+          </div>
+          
           <div className="grid gap-6">
             {/* Customer Search Section */}
             <Card className="border-t-4 border-t-[#9C2D55]">
