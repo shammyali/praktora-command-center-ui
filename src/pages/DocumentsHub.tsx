@@ -106,7 +106,7 @@ const DocumentsHub = () => {
 
   return (
     <Layout>
-      <div className="flex h-full">
+      <div className="flex h-full pt-16">
         <DocumentFilterSidebar onFilterChange={handleFilterChange} />
         
         <div className="flex-1 flex flex-col h-full overflow-hidden">

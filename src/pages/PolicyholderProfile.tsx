@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
@@ -166,7 +165,7 @@ const PolicyholderProfile = () => {
           subtitle="Customer Intelligence Hub"
         />
         
-        <main className="flex-1 overflow-auto p-4 md:p-6">
+        <main className="flex-1 overflow-auto p-4 md:p-6 pt-20">
           <div className="grid gap-6">
             {/* Customer Search Section */}
             <Card className="border-t-4 border-t-[#9C2D55]">
