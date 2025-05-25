@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -222,13 +223,15 @@ const P2RARadarHub = () => {
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
+        <Header 
+          title="P²RA Radar" 
+          subtitle="Intelligent Watchtower for Brokerage Execution" 
+        />
         
-        <div className="flex-1 overflow-auto p-4 md:p-6 pt-20">
+        <div className="flex-1 overflow-auto p-4 md:p-6">
           <div className="text-center mb-4">
-            <h1 className="text-2xl font-bold text-praktora-burgundy mb-2">P²RA Radar</h1>
             <p className="text-sm text-gray-600 italic">
-              Intelligent Watchtower for Brokerage Execution - Monitors everything. Misses nothing. Suggests your next best move.
+              Monitors everything. Misses nothing. Suggests your next best move.
             </p>
           </div>
           
