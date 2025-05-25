@@ -19,15 +19,12 @@ const DocumentsHub = () => {
   const [showUploadZone, setShowUploadZone] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [filters, setFilters] = useState<{
-    searchText: string;
     types: DocumentType[];
     statuses: DocumentStatus[];
     sources: DocumentSource[];
   }>({
-    searchText: "",
     types: [],
     statuses: [],
     sources: [],
@@ -36,12 +33,6 @@ const DocumentsHub = () => {
   useEffect(() => {
     // Apply active filters
     let result = [...documents];
-
-    if (filters.searchText) {
-      result = result.filter((doc) =>
-        doc.fileName.toLowerCase().includes(filters.searchText.toLowerCase())
-      );
-    }
 
     if (filters.types.length > 0) {
       result = result.filter((doc) => filters.types.includes(doc.type));
@@ -55,14 +46,8 @@ const DocumentsHub = () => {
       result = result.filter((doc) => filters.sources.includes(doc.source));
     }
 
-    if (searchQuery) {
-      result = result.filter((doc) =>
-        doc.fileName.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
     setFilteredDocuments(result);
-  }, [documents, filters, searchQuery]);
+  }, [documents, filters]);
 
   const handleDocumentSelect = (doc: Document, selected: boolean) => {
     if (doc.id === 'all') {
@@ -88,7 +73,6 @@ const DocumentsHub = () => {
 
   const handleFilterChange = (newFilters: any) => {
     setFilters({
-      searchText: newFilters.searchText || "",
       types: newFilters.types || [],
       statuses: newFilters.statuses || [],
       sources: newFilters.sources || [],
@@ -111,8 +95,6 @@ const DocumentsHub = () => {
         
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <DocumentToolbar 
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
             viewMode={viewMode}
             setViewMode={setViewMode}
             selectedDocuments={selectedDocuments}
