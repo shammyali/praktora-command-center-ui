@@ -169,7 +169,6 @@ const CommandCenter = () => {
       setActiveEngagements(engagements);
     } catch (error) {
       console.error("Failed to load active engagements:", error);
-      // Fallback to empty array if API fails
       setActiveEngagements([]);
     } finally {
       setIsLoading(false);

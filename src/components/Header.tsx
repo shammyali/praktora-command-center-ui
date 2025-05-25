@@ -10,10 +10,11 @@ interface HeaderProps {
 }
 
 const Header = ({ title, subtitle }: HeaderProps) => {
-  return <header className="border-b border-gray-200 bg-white shadow-sm">
+  return (
+    <header className="border-b border-gray-200 bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center">
-          {/* Logo with subtle intelligent animation */}
+        {/* Left Section - Logo */}
+        <div className="flex items-center flex-shrink-0">
           <img 
             src="/lovable-uploads/ec2aba3b-11d1-4ded-818c-83bc51c65a53.png" 
             alt="Praktora Práxis Logo" 
@@ -21,8 +22,8 @@ const Header = ({ title, subtitle }: HeaderProps) => {
           />
         </div>
         
-        {/* Command Panel in the center */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+        {/* Center Section - Title */}
+        <div className="flex flex-col items-center justify-center flex-1 px-4">
           <h1 className="text-lg font-semibold text-praktora-burgundy relative">
             {title || "P²RA: Intelligence in Motion"}
             <span className="absolute bottom-0 left-0 h-[2px] w-full bg-praktora-burgundy overflow-hidden">
@@ -32,7 +33,8 @@ const Header = ({ title, subtitle }: HeaderProps) => {
           <p className="text-xs text-[#9C2D55]">{subtitle || "Connected. Listening. Ready for Execution..."}</p>
         </div>
         
-        <div className="flex items-center gap-4">
+        {/* Right Section - Actions */}
+        <div className="flex items-center gap-4 flex-shrink-0">
           <div className="flex items-center mr-2">
             <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5 animate-pulse-slow"></span>
             <span className="text-xs text-gray-600">P²RA Status: Online</span>
@@ -55,7 +57,8 @@ const Header = ({ title, subtitle }: HeaderProps) => {
           <CommandIdentityTrigger />
         </div>
       </div>
-    </header>;
+    </header>
+  );
 };
 
 export default Header;
