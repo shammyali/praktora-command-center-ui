@@ -10,7 +10,7 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-white to-blue-50">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden pt-16">
         <Sidebar />
         <div className="flex-1 overflow-auto">
           <div className="p-8 flex flex-col items-center justify-center">
